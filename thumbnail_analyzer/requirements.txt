@@ -1,4 +1,6 @@
-anthropic>=0.40.0
+# Structured Outputs(messages.parse)를 사용하므로 anthropic 1.x 이상이 필요합니다.
+anthropic>=1.7.0
+pydantic>=2.0.0
 pandas>=2.0.0
 openpyxl>=3.1.0
 Pillow>=10.0.0

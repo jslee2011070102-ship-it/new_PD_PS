@@ -11,6 +11,9 @@ source venv/bin/activate   # Windows는 venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+> `anthropic` 1.7.0 이상이 필요합니다 (Structured Outputs 사용).
+> 예전 버전(0.x)이 깔려 있다면 `pip install -U -r requirements.txt`로 올려주세요.
+
 `ANTHROPIC_API_KEY` 환경변수 설정 필요 (Claude Console에서 발급):
 
 ```bash
@@ -37,6 +40,8 @@ python analyze_thumbnails.py \
 ```
 thumbnail_analyzer/
 ├── analyze_thumbnails.py   # 2단계: 썸네일 → 구조화 데이터 추출
+│                           #   ProductInfo 클래스가 추출 항목의 설계도.
+│                           #   항목을 바꾸려면 이 클래스만 수정하면 됩니다.
 ├── requirements.txt
 ├── CLAUDE.md                # 프로젝트 전체 맥락 (Claude Code용)
 └── README.md                 # 이 파일
