@@ -57,8 +57,20 @@ from pathlib import Path
 from typing import Literal
 
 import pandas as pd
-from PIL import Image
+from PIL import Image, ImageOps
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
+
+# 아이폰으로 캡처하면 .HEIC 형식으로 저장됩니다. Pillow는 이 형식을 기본으로
+# 못 읽기 때문에, pillow-heif가 "이 형식도 읽을 줄 안다"고 등록해 줍니다.
+# (외국어 사전을 한 권 꽂아주는 것과 같습니다. 꽂아야 그 언어를 읽습니다.)
+# 설치돼 있지 않아도 jpg/png 작업은 그대로 되도록, 없으면 넘어갑니다.
+try:
+    import pillow_heif
+
+    pillow_heif.register_heif_opener()
+    HEIF_SUPPORTED = True
+except ImportError:
+    HEIF_SUPPORTED = False
 
 # ------------------------------------------------------------
 # 1. 뽑아낼 항목의 "설계도" (스키마)
@@ -117,7 +129,8 @@ SYSTEM_PROMPT = """너는 한국 이커머스(쿠팡 등) 생활용품 카테고
 
 USER_PROMPT = "이 제품 썸네일 이미지를 분석해줘."
 
-IMAGE_SUFFIXES = (".jpg", ".jpeg", ".png", ".webp")
+HEIF_SUFFIXES = (".heic", ".heif")
+IMAGE_SUFFIXES = (".jpg", ".jpeg", ".png", ".webp", *HEIF_SUFFIXES)
 MAX_BATCH_BYTES = 256 * 1024 * 1024  # 배치 하나의 크기 상한 (API 제한)
 
 
@@ -152,6 +165,12 @@ def run_ant(args: list[str], stdin_data: bytes | None = None) -> str:
 # ------------------------------------------------------------
 def encode_image(path: Path, max_dim: int = 1024) -> tuple[str, str]:
     img = Image.open(path)
+
+    # 폰 사진은 "세로로 찍었음" 같은 회전 정보를 파일 안에 따로 들고 있습니다.
+    # 이걸 실제 픽셀에 반영해두지 않으면 옆으로 누운 이미지가 전달되어
+    # 글자를 제대로 못 읽습니다.
+    img = ImageOps.exif_transpose(img)
+
     if img.mode not in ("RGB", "L"):
         img = img.convert("RGB")
 
@@ -231,9 +250,27 @@ def cmd_submit(args) -> None:
     if not folder.is_dir():
         sys.exit(f"폴더를 찾을 수 없습니다: {folder}")
 
-    image_paths = sorted(p for p in folder.iterdir() if p.suffix.lower() in IMAGE_SUFFIXES)
+    files = [f for f in folder.iterdir() if f.is_file() and not f.name.startswith(".")]
+    image_paths = sorted(f for f in files if f.suffix.lower() in IMAGE_SUFFIXES)
+    skipped = sorted(f for f in files if f.suffix.lower() not in IMAGE_SUFFIXES)
+
+    # HEIC 파일이 있는데 읽을 준비가 안 됐다면, 조용히 건너뛰지 않고 여기서 멈춥니다.
+    # (모르고 일부만 분석한 엑셀을 받는 것이 제일 나쁜 결과이기 때문입니다.)
+    heic_found = [f for f in image_paths if f.suffix.lower() in HEIF_SUFFIXES]
+    if heic_found and not HEIF_SUPPORTED:
+        sys.exit(f"HEIC 이미지가 {len(heic_found)}장 있는데 읽을 수 없습니다.\n"
+                 "  다음을 실행해 주세요:  pip install pillow-heif\n"
+                 "  (아이폰 캡처는 보통 .HEIC로 저장됩니다)")
+
     if not image_paths:
-        sys.exit("폴더 안에 이미지 파일이 없습니다.")
+        sys.exit(f"폴더 안에 분석할 이미지가 없습니다: {folder}\n"
+                 f"  지원 형식: {', '.join(IMAGE_SUFFIXES)}")
+
+    # 이미지가 아닌 파일이 섞여 있으면 알려줍니다 (무엇이 빠졌는지 알 수 있도록).
+    if skipped:
+        names = ", ".join(f.name for f in skipped[:5])
+        more = f" 외 {len(skipped) - 5}개" if len(skipped) > 5 else ""
+        print(f"참고: 이미지가 아니라 제외한 파일 {len(skipped)}개 - {names}{more}")
 
     ant_path()  # 이미지를 다 읽고 나서 실패하지 않도록, 미리 확인해 둡니다
 

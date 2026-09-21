@@ -47,7 +47,7 @@ python analyze_thumbnails.py status
 python analyze_thumbnails.py fetch --output 결과/캡슐세제_분석.xlsx
 ```
 
-- `--folder`: 이미지가 들어있는 폴더 (jpg / jpeg / png / webp)
+- `--folder`: 이미지가 들어있는 폴더 (jpg / jpeg / png / webp / **heic** / heif)
 - `--channel` / `--category`: 태깅용 (분석에 영향 없음, 나중에 필터링용)
 - `--model`: 기본값 `claude-sonnet-5`. 비용을 더 아끼려면 `claude-haiku-4-5-20251001`
 - `--output`: 저장할 엑셀 경로. 같은 파일이 이미 있으면 아래에 이어붙임
@@ -57,6 +57,14 @@ python analyze_thumbnails.py fetch --output 결과/캡슐세제_분석.xlsx
 전부 같은 엑셀에 모을 수 있다. 회수한 작업은 다시 회수되지 않는다.
 
 ### 알아둘 점
+
+- **아이폰 캡처(.HEIC)를 그대로 넣어도 된다.** 변환할 필요 없다.
+  `pillow-heif`가 설치돼 있어야 하며, `requirements.txt`에 포함돼 있다.
+  혹시 빠져 있으면 제출 전에 멈추고 설치 방법을 알려준다 (조용히 건너뛰지 않는다).
+- 폰 사진의 회전 정보(EXIF)를 반영해서 보낸다. 옆으로 누운 채 전달돼 글자를
+  못 읽는 일이 없다.
+- 이미지가 아닌 파일이 폴더에 섞여 있으면 제외하고 그 사실을 알려준다.
+  (`.DS_Store` 같은 숨김 파일은 알림에서 제외)
 
 - 배치는 **24시간 안에 끝나지 않으면 만료**된다. 만료된 요청은 요금이 청구되지 않으며,
   해당 행의 비고란에 만료 표시가 남는다. 다시 `submit` 하면 된다.

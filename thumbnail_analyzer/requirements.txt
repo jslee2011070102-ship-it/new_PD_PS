@@ -6,3 +6,5 @@ pydantic>=2.0.0
 pandas>=2.0.0
 openpyxl>=3.1.0
 Pillow>=10.0.0
+# 아이폰 캡처(.HEIC)를 읽기 위해 필요합니다.
+pillow-heif>=0.13.0
