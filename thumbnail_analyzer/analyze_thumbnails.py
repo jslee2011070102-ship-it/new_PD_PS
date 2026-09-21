@@ -120,6 +120,20 @@ class ProductInfo(BaseModel):
         description="product_form과 product_role을 그렇게 판단한 짧은 근거 "
                     "(예: '주둥이 달린 파우치, 제품명에 리필 표기')"
     )
+    category_rank_text: str | None = Field(
+        description="카테고리 순위 표기를 원문 그대로 (예: '살균소독제 구매 25위', "
+                    "'액체섬유유연제 구매 4위'). 순위 표기가 없으면 null"
+    )
+    review_count: int | None = Field(
+        description="별점 옆 괄호 안의 리뷰 수를 정수로 (예: (46,753) -> 46753). "
+                    "안 보이면 null"
+    )
+    monthly_buyers_text: str | None = Field(
+        description="'한 달간 300명 이상 구매했어요' 같은 구매자수 문구를 원문 그대로. "
+                    "주의: '만족했어요'로 끝나는 문구는 구매자수가 아니라 만족한 사람 수이다. "
+                    "그 경우에도 본 문구를 그대로 옮겨 적되 임의로 바꾸지 마라 "
+                    "(구매인지 만족인지는 프로그램이 문구를 보고 판단한다). 없으면 null"
+    )
     notes: str | None = Field(
         description="특이사항이나 애매해서 사람이 재확인해야 할 부분. 없으면 null"
     )
@@ -147,6 +161,11 @@ USER_PROMPT = "이 제품 썸네일 이미지를 분석해줘."
 HEIF_SUFFIXES = (".heic", ".heif")
 IMAGE_SUFFIXES = (".jpg", ".jpeg", ".png", ".webp", *HEIF_SUFFIXES)
 MAX_BATCH_BYTES = 256 * 1024 * 1024  # 배치 하나의 크기 상한 (API 제한)
+
+# 추정 월매출 = 월구매자수 x 판매가 x 아래 배수
+# 한 상품 페이지에 여러 옵션(용량·향 등)이 묶여 있고 구매자수는 페이지 단위로
+# 표시되므로, 다른 옵션 매출을 감안해 2를 곱한다. 어디까지나 어림값이다.
+REVENUE_OPTION_MULTIPLIER = 2
 
 
 # ------------------------------------------------------------
@@ -247,6 +266,32 @@ def parse_unit_price_text(text: str | None):
     if basis <= 0:
         return None, None
     return price / basis * 100, unit  # 100ml(또는 100g)당 가격으로 통일
+
+
+def parse_category_rank(text: str | None) -> int | None:
+    """'액체섬유유연제 구매 4위' -> 4"""
+    if not text:
+        return None
+    m = re.search(r"(\d+)\s*위", text)
+    return int(m.group(1)) if m else None
+
+
+def parse_monthly_buyers(text: str | None) -> int | None:
+    """'한 달간 2만명 이상 구매했어요' -> 20000
+
+    주의: 쿠팡은 같은 자리에 '만족했어요' 문구를 보여주기도 하는데, 그건
+    구매자수가 아니다. 그래서 '구매'라는 글자가 있을 때만 숫자로 인정한다.
+    (문구 판단을 AI에게 맡기지 않고 코드가 직접 확인한다.)
+    '이상'이 붙은 하한값이므로, 나온 숫자는 최소치로 봐야 한다.
+    """
+    if not text or "구매" not in text:
+        return None
+    m = re.search(r"([\d,.]+)\s*(만|천)?\s*명", text.replace(" ", ""))
+    if not m:
+        return None
+    value = float(m.group(1).replace(",", ""))
+    scale = {"만": 10_000, "천": 1_000}.get(m.group(2), 1)
+    return int(value * scale)
 
 
 def compare_unit_price(ours: float | None, shown: float | None,
@@ -445,7 +490,9 @@ def row_from_result(entry: dict, job: dict) -> dict:
         info = ProductInfo(
             brand=None, product_name=None, price_krw=None,
             capacity_text=None, composition_text=None, unit_price_text=None,
-            product_form="기타", product_role="불명", form_reason=None, notes=note,
+            product_form="기타", product_role="불명", form_reason=None,
+            category_rank_text=None, review_count=None, monthly_buyers_text=None,
+            notes=note,
         )
 
     capacity_val, unit = parse_capacity(info.capacity_text)
@@ -460,6 +507,15 @@ def row_from_result(entry: dict, job: dict) -> dict:
     # 화면에 적혀 있던 단가와 대조 (읽기는 AI, 환산·비교는 코드)
     shown_price, shown_unit = parse_unit_price_text(info.unit_price_text)
     verdict = compare_unit_price(unit_price, shown_price, unit, shown_unit)
+
+    rank = parse_category_rank(info.category_rank_text)
+    buyers = parse_monthly_buyers(info.monthly_buyers_text)
+
+    # 추정 월매출. 구매자수가 '이상'으로 표시되는 하한값이고 옵션 배수도 어림이므로,
+    # 절대액보다는 제품 간 규모 비교용으로 쓰는 것이 맞다.
+    est_revenue = None
+    if buyers and price:
+        est_revenue = buyers * price * REVENUE_OPTION_MULTIPLIER
 
     return {
         "조사일자": job["survey_date"],
@@ -478,6 +534,12 @@ def row_from_result(entry: dict, job: dict) -> dict:
         "단가검증": verdict,
         "제품형태": info.product_form,
         "제품역할": info.product_role,
+        "순위": rank,
+        "순위_원문": info.category_rank_text,
+        "리뷰수": info.review_count,
+        "월구매자수(명)": buyers,
+        "구매자수_원문": info.monthly_buyers_text,
+        "추정월매출(원)": est_revenue,
         "형태_판단근거": info.form_reason,
         "비고": info.notes,
     }
