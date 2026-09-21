@@ -73,13 +73,51 @@ python analyze_thumbnails.py build --input 추출.json \
   "만족했어요"였다는 뜻이다. 만족한 사람 수는 구매자수가 아니므로 매출 계산에서
   제외된다. 오류가 아니다.
 
+## 상세페이지 USP 분석 (`analyze_details.py`)
+
+썸네일이 "얼마에 파는가"라면, 이쪽은 **"왜 그 값을 받는가"**를 뽑는다.
+
+```bash
+# 1) 캡처 파일 확인 (쪽수/크기 점검 + 번호 매기기)
+python analyze_details.py inventory --folder ./상세캡처 --out ./상세준비됨
+
+# 2) Claude가 DetailPageInfo 스키마대로 추출 → JSON
+
+# 3) 검증·집계·엑셀 (썸네일 결과를 주면 순위·단가가 함께 붙는다)
+python analyze_details.py build --input usp추출.json \
+  --category 캡슐세제 --output 결과/캡슐세제_USP.xlsx \
+  --thumbnails 결과/쿠팡_생활용품_전체.xlsx
+```
+
+출력 엑셀은 시트 3개다.
+
+- **유형별집계** — 이 카테고리에서 무엇이 표준 소구점인지. 등장수/제품수/상단배치/강조
+- **제품별요약** — 제품당 USP 개수, 상단 배치 수, 주요 유형, 경쟁사 비교 유무, 인증 수
+  (`--thumbnails`를 주면 순위·단가·리뷰수가 붙어 **"비싼 제품은 뭘 내세우나"**를 볼 수 있다)
+- **USP전체** — 소구점 한 줄 = 한 행. `근거문구`는 페이지에 적힌 원문 그대로다
+
+### 상세페이지 캡처 방법 (PC 크롬 권장)
+
+```
+1. 상세페이지를 열고 → 맨 아래까지 한 번 쭉 스크롤   ← 반드시
+2. Ctrl + P  →  "PDF로 저장"
+```
+
+**맨 아래까지 먼저 내리는 게 핵심이다.** 쿠팡 상세페이지 이미지는 화면에 보일 때
+비로소 불러오므로(lazy loading), 안 내리고 저장하면 빈 칸투성이 PDF가 된다.
+`inventory`가 쪽수를 세서 1~2쪽짜리를 "스크롤 전에 저장한 것 같다"고 알려준다.
+
+갤럭시에서 찍는다면, 캡처 후 뜨는 툴바의 **아래 화살표(⌄)**를 계속 누르면
+스크롤하며 한 장으로 이어붙여진다.
+
 ## 폴더 구조
 
 ```
 thumbnail_analyzer/
-├── analyze_thumbnails.py   # prepare / build 두 명령
+├── analyze_thumbnails.py   # 2단계: 썸네일 → 가격·시장지표 (prepare / build)
 │                           #   ProductInfo 클래스가 추출 항목의 설계도.
-│                           #   항목을 바꾸려면 이 클래스만 수정하면 된다.
+├── analyze_details.py      # 4단계: 상세페이지 → USP (inventory / build)
+│                           #   DetailPageInfo, UspItem이 설계도.
 ├── requirements.txt
 ├── CLAUDE.md               # 프로젝트 전체 맥락 (Claude Code용)
 └── README.md               # 이 파일
