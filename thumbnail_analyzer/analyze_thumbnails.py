@@ -96,16 +96,22 @@ class ProductInfo(BaseModel):
                     "(예: 12900). 가격이 안 보이면 null"
     )
     capacity_text: str | None = Field(
-        description="용량 표기를 이미지에 적힌 원문 그대로 (예: '500ml', '1L', '3kg'). "
-                    "단위 환산은 하지 말 것. 없으면 null"
+        description="한 팩(한 개)의 크기 표기를 원문 그대로. 액체류는 용량 "
+                    "(예: '500ml', '1L', '3kg'), 캡슐·시트처럼 개수로 파는 제품은 "
+                    "개수 (예: '26개입', '100개입'). 제품명이 '...,26개입, 1개' 형태면 "
+                    "앞쪽('26개입')이 여기에 해당한다. 단위 환산이나 곱셈은 하지 말 것. "
+                    "없으면 null"
     )
     composition_text: str | None = Field(
-        description="구성/수량 표기 원문 (예: '2개입', '1개', '리필 3개 세트'). 없으면 null"
+        description="몇 팩 묶음인지를 나타내는 수량 표기 원문 (예: '1개', '2개'). "
+                    "제품명이 '...,26개입, 1개' 형태면 뒤쪽('1개')이 여기에 해당한다. "
+                    "없으면 null"
     )
     unit_price_text: str | None = Field(
         description="화면에 이미 적혀 있는 단위당 가격 표기를 원문 그대로 "
-                    "(예: '100ml당 1,190원'). 이건 우리 계산이 맞는지 대조하는 용도이므로 "
-                    "직접 계산하지 말고, 적혀 있을 때만 그대로 옮겨라. 없으면 null"
+                    "(예: '100ml당 1,190원', '1개입당 545원'). 이건 우리 계산이 맞는지 "
+                    "대조하는 용도이므로 직접 계산하지 말고, 적혀 있을 때만 그대로 옮겨라. "
+                    "없으면 null"
     )
     product_form: Literal["용기", "파우치", "말통", "기타"] = Field(
         description="제품의 겉모습(포장 형태)만 판단. 본품인지 리필인지는 여기 넣지 말 것. "
@@ -223,10 +229,15 @@ def encode_image(path: Path, max_dim: int = 1024) -> tuple[str, str]:
 # 5. "500ml", "1L", "3kg" 같은 텍스트를 표준 단위(ml 또는 g)로 환산
 # ------------------------------------------------------------
 def parse_capacity(text: str | None):
+    """'500ml' -> (500, 'ml'), '1L' -> (1000, 'ml'), '26개입' -> (26, '개')
+
+    생활용품은 액체처럼 용량으로 파는 것도 있고, 캡슐세제처럼 개수로 파는 것도
+    있습니다. 둘을 같은 함수에서 처리하고 단위를 함께 돌려줍니다.
+    """
     if not text:
         return None, None
     text = text.replace(" ", "").lower()
-    m = re.search(r"([\d.]+)\s*(ml|l|g|kg)", text)
+    m = re.search(r"([\d.]+)\s*(ml|l|kg|g|개)", text)
     if not m:
         return None, None
     value, unit = float(m.group(1)), m.group(2)
@@ -234,7 +245,18 @@ def parse_capacity(text: str | None):
         return value * 1000, "ml"
     if unit == "kg":
         return value * 1000, "g"
-    return value, unit  # ml 또는 g 그대로
+    return value, unit  # ml / g / 개 그대로
+
+
+# 개수로 파는 제품은 '1개당 얼마'가, 액체는 '100ml당 얼마'가 자연스러운 기준입니다.
+# (달걀은 한 알에 얼마, 우유는 100ml에 얼마로 따지는 것과 같습니다.)
+def unit_price_basis(unit: str | None) -> tuple[int, str] | tuple[None, None]:
+    """단위에 맞는 (기준 수량, 표시용 이름)을 돌려줍니다."""
+    if unit == "개":
+        return 1, "1개당"
+    if unit in ("ml", "g"):
+        return 100, f"100{unit}당"
+    return None, None
 
 
 def parse_composition_count(text: str | None) -> float:
@@ -255,7 +277,7 @@ def parse_unit_price_text(text: str | None):
     if not text:
         return None, None
     t = text.replace(" ", "").replace(",", "").lower()
-    m = re.search(r"([\d.]+)(ml|l|g|kg)당([\d.]+)원", t)
+    m = re.search(r"([\d.]+)(ml|l|kg|g|개)(?:입)?당([\d.]+)원", t)
     if not m:
         return None, None
     basis, unit, price = float(m.group(1)), m.group(2), float(m.group(3))
@@ -265,7 +287,10 @@ def parse_unit_price_text(text: str | None):
         basis, unit = basis * 1000, "g"
     if basis <= 0:
         return None, None
-    return price / basis * 100, unit  # 100ml(또는 100g)당 가격으로 통일
+    scale, _ = unit_price_basis(unit)
+    if scale is None:
+        return None, None
+    return price / basis * scale, unit  # 우리 계산과 같은 기준으로 맞춤
 
 
 def parse_category_rank(text: str | None) -> int | None:
@@ -500,9 +525,12 @@ def row_from_result(entry: dict, job: dict) -> dict:
     price = info.price_krw  # 스키마가 int|None 을 보장하므로 바로 계산에 씁니다
 
     total_capacity = capacity_val * comp_count if capacity_val else None
+
+    # 기준은 단위에 따라 달라집니다: 액체는 100ml/100g당, 개수 제품은 1개당.
+    scale, basis_label = unit_price_basis(unit)
     unit_price = None
-    if total_capacity and price:
-        unit_price = round(price / total_capacity * 100, 1)  # 100ml/g당 가격
+    if total_capacity and price and scale:
+        unit_price = round(price / total_capacity * scale, 1)
 
     # 화면에 적혀 있던 단가와 대조 (읽기는 AI, 환산·비교는 코드)
     shown_price, shown_unit = parse_unit_price_text(info.unit_price_text)
@@ -529,7 +557,8 @@ def row_from_result(entry: dict, job: dict) -> dict:
         "구성_원문": info.composition_text,
         "총용량": total_capacity,
         "단위": unit,
-        "단위당가격(100당,원)": unit_price,
+        "단위당가격(원)": unit_price,
+        "단가기준": basis_label,
         "쿠팡표기단가": info.unit_price_text,
         "단가검증": verdict,
         "제품형태": info.product_form,
