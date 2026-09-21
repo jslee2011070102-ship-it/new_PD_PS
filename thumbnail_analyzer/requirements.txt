@@ -1,5 +1,7 @@
-# Structured Outputs(messages.parse)를 사용하므로 anthropic 1.x 이상이 필요합니다.
-anthropic>=1.7.0
+# API 호출은 Anthropic 공식 CLI(`ant`)가 담당하므로 anthropic SDK는 필요 없습니다.
+#   설치:  brew install anthropics/tap/ant   (macOS)
+#          https://github.com/anthropics/anthropic-cli  (그 외 OS)
+#   로그인: ant auth login
 pydantic>=2.0.0
 pandas>=2.0.0
 openpyxl>=3.1.0

@@ -1,0 +1,13 @@
+# 배치 제출 기록 (로컬 상태)
+.batch_jobs/
+
+# 분석 결과물
+*.xlsx
+
+# 캡처 이미지
+images/
+
+# 파이썬
+venv/
+__pycache__/
+*.pyc
