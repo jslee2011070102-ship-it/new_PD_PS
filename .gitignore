@@ -11,3 +11,6 @@ images/
 venv/
 __pycache__/
 *.pyc
+
+# 추출 결과 JSON은 data/extracted 에 보관 (재현 가능하도록 커밋)
+!data/extracted/*.json
