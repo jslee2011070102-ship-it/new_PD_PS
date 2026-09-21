@@ -1,58 +1,42 @@
 """
-썸네일 이미지 일괄 분석 스크립트 (Batch API / ant CLI 방식)
-==========================================================
-사용법:
-    # 1) 제출 - 이미지를 묶어서 보내고 바로 끝납니다 (터미널 닫아도 됩니다)
-    python analyze_thumbnails.py submit --folder ./images/쿠팡_캡슐세제 \
-        --channel 쿠팡 --category 캡슐세제
+썸네일 분석 도구
+================
+쿠팡 등 이커머스 제품 썸네일에서 가격·용량·시장지표를 뽑아 엑셀로 정리합니다.
 
-    # 2) 확인 - 다 됐는지 봅니다
-    python analyze_thumbnails.py status
+작업 흐름 (Claude가 이미지를 읽는 방식)
+    1) prepare - 캡처 폴더를 읽기 좋게 정리합니다.
+                 HEIC를 JPG로 바꾸고, 회전 정보를 반영하고, 크기를 줄이고,
+                 01.jpg, 02.jpg ... 로 번호를 매깁니다.
 
-    # 3) 회수 - 끝난 작업의 결과를 엑셀로 받습니다
-    python analyze_thumbnails.py fetch --output 결과/캡슐세제_분석.xlsx
+           python analyze_thumbnails.py prepare --folder ./캡처 --out ./준비됨
 
-무엇을 하는 스크립트인가?
-    1. 폴더 안의 제품 썸네일을 전부 하나의 "배치"로 묶어 Claude에게 한 번에 맡깁니다.
-       한 장씩 즉시 처리하는 대신 맡겨두고 나중에 찾아가는 방식이라 요금이 절반입니다.
-       (퀵서비스 대신 택배로 보내는 셈입니다. 보통 1시간 이내에 끝납니다.)
-    2. Claude가 이미지 안의 텍스트(브랜드명/용량/가격 등)를 읽고,
-       이미지 형태(본품 용기인지, 리필 파우치인지, 말통인지)까지 판단합니다.
-       이때 Structured Outputs(구조화 출력)로 아래 ProductInfo 스키마를 강제하므로,
-       틀을 벗어난 응답 자체가 나올 수 없습니다.
-    3. "용량당 가격(단위당단가)"은 AI가 아니라 파이썬이 직접 계산합니다.
-       (AI에게 계산까지 시키면 가끔 산수를 틀리기 때문에, 텍스트 인식은 AI /
-        숫자 계산은 코드, 로 역할을 나눴습니다.)
-    4. 결과를 엑셀 파일로 저장합니다. 이미 같은 엑셀 파일이 있으면
-       새로 분석한 내용을 아래에 이어 붙입니다 (누적 데이터베이스처럼 사용 가능).
+    2) (사람/Claude) 준비된 이미지를 보고 아래 ProductInfo 스키마대로
+       추출 결과를 JSON 파일로 적습니다. 형식은 다음과 같습니다.
+
+           [ {"file": "01.jpg", "brand": "...", "price_krw": 14160, ... }, ... ]
+
+    3) build - 그 JSON을 검증하고, 계산하고, 엑셀로 저장합니다.
+
+           python analyze_thumbnails.py build --input 추출.json \
+               --channel 쿠팡 --category 캡슐세제 --output 결과/캡슐세제.xlsx
+
+왜 이렇게 나눠져 있나?
+    "이미지를 읽는 일"과 "숫자를 다루는 일"을 분리하기 위해서입니다.
+    읽기는 사람이나 AI가 하지만, 환산·계산·검산은 전부 이 코드가 합니다.
+    (AI에게 산수를 맡기면 가끔 틀리기 때문에 의도적으로 갈라놨습니다.)
+
+    build 단계에서 추출 결과를 ProductInfo 스키마로 검증하므로,
+    칸을 빠뜨리거나 정해진 값이 아닌 걸 적으면 그 자리에서 걸러집니다.
 
 준비물:
     pip install -r requirements.txt
-
-    Anthropic 공식 CLI(`ant`)를 설치하고 로그인해 두어야 합니다.
-    API 키를 따로 발급받을 필요가 없습니다 - 브라우저 로그인 한 번이면 됩니다.
-
-        brew install anthropics/tap/ant      # macOS
-        ant auth login                       # 브라우저가 열립니다
-        ant auth status                      # 로그인 확인
-
-    (그 외 OS 설치 방법은 https://github.com/anthropics/anthropic-cli 참고)
-
-비용 참고:
-    Batch API는 일반 요청의 50% 가격입니다. 대신 즉시 답이 오지 않고
-    보통 1시간 이내(최대 24시간)에 완료됩니다. 24시간을 넘기면 만료되며,
-    만료된 요청은 요금이 청구되지 않습니다.
 """
 
 import argparse
-import base64
-import io
 import json
 import re
-import shutil
-import subprocess
 import sys
-from datetime import date, datetime, timezone
+from datetime import date
 from pathlib import Path
 from typing import Literal
 
@@ -72,17 +56,26 @@ try:
 except ImportError:
     HEIF_SUPPORTED = False
 
+HEIF_SUFFIXES = (".heic", ".heif")
+IMAGE_SUFFIXES = (".jpg", ".jpeg", ".png", ".webp", *HEIF_SUFFIXES)
+
+# 추정 월매출 = 월구매자수 x 판매가 x 아래 배수
+# 한 상품 페이지에 여러 옵션(용량·향 등)이 묶여 있고 구매자수는 페이지 단위로
+# 표시되므로, 다른 옵션 매출을 감안해 2를 곱합니다. 어디까지나 어림값입니다.
+REVENUE_OPTION_MULTIPLIER = 2
+
+
 # ------------------------------------------------------------
 # 1. 뽑아낼 항목의 "설계도" (스키마)
 # ------------------------------------------------------------
-# 이 클래스가 곧 출력 양식입니다. Claude는 이 틀을 벗어난 답을 만들 수 없습니다.
-# (빈칸이 정해진 서류를 건네주는 것과 같습니다. 칸 밖에 쓸 수가 없습니다.)
+# 이 클래스가 곧 추출 양식이자 검증 규칙입니다.
+# (빈칸이 정해진 서류와 같습니다. 칸 밖에 쓰거나 칸을 비우면 build가 거부합니다.)
 #
 # - `| None` 은 "이미지에서 확인 못 하면 비워도 된다"는 뜻입니다.
 # - `price_krw: int | None` 처럼 타입을 못박아두면, "12,900원" 같은 글자가
 #   섞여 들어오는 일 자체가 생기지 않습니다. 뒤에서 하는 나눗셈이 안전해집니다.
-# - Field(description=...) 에 적은 설명도 Claude가 함께 읽습니다.
-#   즉 "무엇을 어떻게 채울지"에 대한 지시를 프롬프트가 아니라 여기에 적습니다.
+# - Field(description=...) 이 각 칸을 어떻게 채워야 하는지 설명합니다.
+#   추출 항목을 바꾸려면 이 클래스만 고치면 됩니다.
 # - extra="forbid" 는 "정해준 칸 외에 다른 칸을 만들지 마라"는 뜻입니다.
 
 
@@ -144,10 +137,10 @@ class ProductInfo(BaseModel):
         description="특이사항이나 애매해서 사람이 재확인해야 할 부분. 없으면 null"
     )
 
-
 # ------------------------------------------------------------
-# 2. Claude에게 줄 지시 (항목 정의는 위 스키마가 대신하므로 태도/원칙만 남김)
+# 2. 이미지를 읽을 때 지켜야 할 원칙
 # ------------------------------------------------------------
+# 항목별 설명은 위 스키마가 담당하므로, 여기에는 태도/원칙만 남깁니다.
 SYSTEM_PROMPT = """너는 한국 이커머스(쿠팡 등) 생활용품 카테고리 제품 썸네일 이미지를 분석하는 MD 보조원이다.
 
 원칙:
@@ -162,53 +155,17 @@ SYSTEM_PROMPT = """너는 한국 이커머스(쿠팡 등) 생활용품 카테고
   notes에 가려서 확인 불가라고 적어라.
 """
 
-USER_PROMPT = "이 제품 썸네일 이미지를 분석해줘."
-
-HEIF_SUFFIXES = (".heic", ".heif")
-IMAGE_SUFFIXES = (".jpg", ".jpeg", ".png", ".webp", *HEIF_SUFFIXES)
-MAX_BATCH_BYTES = 256 * 1024 * 1024  # 배치 하나의 크기 상한 (API 제한)
-
-# 추정 월매출 = 월구매자수 x 판매가 x 아래 배수
-# 한 상품 페이지에 여러 옵션(용량·향 등)이 묶여 있고 구매자수는 페이지 단위로
-# 표시되므로, 다른 옵션 매출을 감안해 2를 곱한다. 어디까지나 어림값이다.
-REVENUE_OPTION_MULTIPLIER = 2
-
 
 # ------------------------------------------------------------
-# 3. ant CLI 호출 (API 키 대신 `ant auth login` 자격증명을 사용)
+# 3. prepare - 캡처 폴더를 읽기 좋게 정리
 # ------------------------------------------------------------
-def ant_path() -> str:
-    """`ant` 실행파일을 찾습니다. 없으면 설치 안내와 함께 종료합니다."""
-    found = shutil.which("ant")
-    if not found:
-        sys.exit(
-            "`ant`(Anthropic 공식 CLI)를 찾을 수 없습니다.\n"
-            "  설치: brew install anthropics/tap/ant   (macOS)\n"
-            "        https://github.com/anthropics/anthropic-cli  (그 외 OS)\n"
-            "  로그인: ant auth login"
-        )
-    return found
-
-
-def run_ant(args: list[str], stdin_data: bytes | None = None) -> str:
-    """`ant ...`를 실행하고 표준출력을 돌려줍니다."""
-    proc = subprocess.run([ant_path(), *args], input=stdin_data, capture_output=True)
-    if proc.returncode != 0:
-        err = proc.stderr.decode("utf-8", "replace").strip()
-        sys.exit(f"ant 명령 실패 ({' '.join(args)}):\n{err}\n\n"
-                 "인증 문제라면 `ant auth status`로 로그인 상태를 확인해 보세요.")
-    return proc.stdout.decode("utf-8", "replace")
-
-
-# ------------------------------------------------------------
-# 4. 이미지 인코딩 (용량이 크면 리사이즈해서 비용/속도 절약)
-# ------------------------------------------------------------
-def encode_image(path: Path, max_dim: int = 1024) -> tuple[str, str]:
-    img = Image.open(path)
+def normalize_image(src: Path, dst: Path, max_dim: int = 1024) -> tuple[int, int]:
+    """HEIC 변환 + 회전 반영 + 축소해서 JPG로 저장합니다."""
+    img = Image.open(src)
 
     # 폰 사진은 "세로로 찍었음" 같은 회전 정보를 파일 안에 따로 들고 있습니다.
-    # 이걸 실제 픽셀에 반영해두지 않으면 옆으로 누운 이미지가 전달되어
-    # 글자를 제대로 못 읽습니다.
+    # 이걸 실제 픽셀에 반영해두지 않으면 옆으로 누운 이미지가 되어
+    # 글자를 제대로 읽을 수 없습니다.
     img = ImageOps.exif_transpose(img)
 
     if img.mode not in ("RGB", "L"):
@@ -216,17 +173,58 @@ def encode_image(path: Path, max_dim: int = 1024) -> tuple[str, str]:
 
     if max(img.size) > max_dim:
         ratio = max_dim / max(img.size)
-        new_size = (int(img.width * ratio), int(img.height * ratio))
-        img = img.resize(new_size, Image.LANCZOS)
+        img = img.resize((int(img.width * ratio), int(img.height * ratio)), Image.LANCZOS)
 
-    buf = io.BytesIO()
-    img.save(buf, format="JPEG", quality=88)
-    b64 = base64.standard_b64encode(buf.getvalue()).decode("utf-8")
-    return b64, "image/jpeg"
+    img.save(dst, format="JPEG", quality=88)
+    return img.size
+
+
+def cmd_prepare(args) -> None:
+    folder = Path(args.folder)
+    if not folder.is_dir():
+        sys.exit(f"폴더를 찾을 수 없습니다: {folder}")
+
+    files = [f for f in folder.iterdir() if f.is_file() and not f.name.startswith(".")]
+    images = sorted(f for f in files if f.suffix.lower() in IMAGE_SUFFIXES)
+    skipped = sorted(f for f in files if f.suffix.lower() not in IMAGE_SUFFIXES)
+
+    # HEIC가 있는데 읽을 준비가 안 됐다면 조용히 건너뛰지 않고 여기서 멈춥니다.
+    # (모르고 일부만 분석한 엑셀을 받는 것이 제일 나쁜 결과이기 때문입니다.)
+    heic = [f for f in images if f.suffix.lower() in HEIF_SUFFIXES]
+    if heic and not HEIF_SUPPORTED:
+        sys.exit(f"HEIC 이미지가 {len(heic)}장 있는데 읽을 수 없습니다.\n"
+                 "  다음을 실행해 주세요:  pip install pillow-heif\n"
+                 "  (아이폰 캡처는 보통 .HEIC로 저장됩니다)")
+
+    if not images:
+        sys.exit(f"폴더 안에 이미지가 없습니다: {folder}\n"
+                 f"  지원 형식: {', '.join(IMAGE_SUFFIXES)}")
+
+    if skipped:
+        names = ", ".join(f.name for f in skipped[:5])
+        more = f" 외 {len(skipped) - 5}개" if len(skipped) > 5 else ""
+        print(f"참고: 이미지가 아니라 제외한 파일 {len(skipped)}개 - {names}{more}")
+
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+
+    mapping = {}
+    for i, path in enumerate(images, 1):
+        name = f"{i:02d}.jpg"
+        size = normalize_image(path, out / name)
+        mapping[name] = path.name
+        print(f"  {name}  <-  {path.name}  ({size[0]}x{size[1]})")
+
+    # 번호와 원본 파일명의 대응표. build가 엑셀에 원본 이름을 적을 때 씁니다.
+    (out / "mapping.json").write_text(
+        json.dumps(mapping, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    print(f"\n{len(images)}장 준비 완료: {out.resolve()}")
+    print(f"  대응표: {(out / 'mapping.json').name}")
 
 
 # ------------------------------------------------------------
-# 5. "500ml", "1L", "3kg" 같은 텍스트를 표준 단위(ml 또는 g)로 환산
+# 4. 단위 환산과 검산 (읽기는 사람/AI, 계산은 전부 여기서)
 # ------------------------------------------------------------
 def parse_capacity(text: str | None):
     """'500ml' -> (500, 'ml'), '1L' -> (1000, 'ml'), '26개입' -> (26, '개')
@@ -333,193 +331,11 @@ def compare_unit_price(ours: float | None, shown: float | None,
         return "일치"
     return f"불일치(표기 {shown:.0f} / 계산 {ours:.0f})"
 
-
 # ------------------------------------------------------------
-# 6. 작업 기록 파일 (제출과 회수 사이를 이어주는 메모)
+# 5. build - 추출 결과를 검증하고 계산해서 엑셀로
 # ------------------------------------------------------------
-# 제출과 회수가 서로 다른 실행이라, 그 사이의 기억을 파일로 남겨둡니다.
-# (세탁소 보관증과 같습니다. 이 종이가 있어야 나중에 찾아올 수 있습니다.)
-# 배치 결과에는 custom_id(img-0001 같은 번호)만 돌아오므로,
-# 그 번호가 어느 파일이었는지도 여기에 적어둡니다.
-def job_path(jobs_dir: Path, batch_id: str) -> Path:
-    return jobs_dir / f"{batch_id}.json"
-
-
-def load_jobs(jobs_dir: Path) -> list[dict]:
-    if not jobs_dir.is_dir():
-        return []
-    return [json.loads(p.read_text(encoding="utf-8")) for p in sorted(jobs_dir.glob("*.json"))]
-
-
-def save_job(jobs_dir: Path, job: dict) -> None:
-    jobs_dir.mkdir(parents=True, exist_ok=True)
-    job_path(jobs_dir, job["batch_id"]).write_text(
-        json.dumps(job, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
-
-
-def batch_state(batch_id: str) -> dict:
-    """배치의 현재 상태를 조회합니다."""
-    return json.loads(run_ant(
-        ["messages:batches", "retrieve", "--message-batch-id", batch_id, "--format", "json"]
-    ))
-
-
-# ------------------------------------------------------------
-# 7. submit - 이미지를 묶어서 제출
-# ------------------------------------------------------------
-def cmd_submit(args) -> None:
-    folder = Path(args.folder)
-    if not folder.is_dir():
-        sys.exit(f"폴더를 찾을 수 없습니다: {folder}")
-
-    files = [f for f in folder.iterdir() if f.is_file() and not f.name.startswith(".")]
-    image_paths = sorted(f for f in files if f.suffix.lower() in IMAGE_SUFFIXES)
-    skipped = sorted(f for f in files if f.suffix.lower() not in IMAGE_SUFFIXES)
-
-    # HEIC 파일이 있는데 읽을 준비가 안 됐다면, 조용히 건너뛰지 않고 여기서 멈춥니다.
-    # (모르고 일부만 분석한 엑셀을 받는 것이 제일 나쁜 결과이기 때문입니다.)
-    heic_found = [f for f in image_paths if f.suffix.lower() in HEIF_SUFFIXES]
-    if heic_found and not HEIF_SUPPORTED:
-        sys.exit(f"HEIC 이미지가 {len(heic_found)}장 있는데 읽을 수 없습니다.\n"
-                 "  다음을 실행해 주세요:  pip install pillow-heif\n"
-                 "  (아이폰 캡처는 보통 .HEIC로 저장됩니다)")
-
-    if not image_paths:
-        sys.exit(f"폴더 안에 분석할 이미지가 없습니다: {folder}\n"
-                 f"  지원 형식: {', '.join(IMAGE_SUFFIXES)}")
-
-    # 이미지가 아닌 파일이 섞여 있으면 알려줍니다 (무엇이 빠졌는지 알 수 있도록).
-    if skipped:
-        names = ", ".join(f.name for f in skipped[:5])
-        more = f" 외 {len(skipped) - 5}개" if len(skipped) > 5 else ""
-        print(f"참고: 이미지가 아니라 제외한 파일 {len(skipped)}개 - {names}{more}")
-
-    ant_path()  # 이미지를 다 읽고 나서 실패하지 않도록, 미리 확인해 둡니다
-
-    schema = ProductInfo.model_json_schema()
-    print(f"총 {len(image_paths)}장 준비 중...")
-
-    requests = []
-    id_to_name: dict[str, str] = {}
-
-    for i, path in enumerate(image_paths, 1):
-        custom_id = f"img-{i:04d}"  # 파일명에 한글·공백이 섞여도 안전하도록 번호를 씁니다
-        id_to_name[custom_id] = path.name
-        b64, media_type = encode_image(path)
-        requests.append({
-            "custom_id": custom_id,
-            "params": {
-                "model": args.model,
-                "max_tokens": 2000,
-                "system": SYSTEM_PROMPT,
-                "messages": [{
-                    "role": "user",
-                    "content": [
-                        {"type": "image",
-                         "source": {"type": "base64", "media_type": media_type, "data": b64}},
-                        {"type": "text", "text": USER_PROMPT},
-                    ],
-                }],
-                # 여기가 스키마를 강제하는 부분입니다.
-                "output_config": {"format": {"type": "json_schema", "schema": schema}},
-            },
-        })
-
-    payload = json.dumps({"requests": requests}, ensure_ascii=False).encode("utf-8")
-    if len(payload) > MAX_BATCH_BYTES:
-        sys.exit(f"배치 크기가 상한(256MB)을 넘었습니다: {len(payload) / 1024 / 1024:.0f}MB\n"
-                 "폴더를 나눠서 여러 번 제출해 주세요.")
-
-    print(f"제출 중... ({len(payload) / 1024 / 1024:.1f}MB)")
-    created = json.loads(run_ant(["messages:batches", "create", "--format", "json"], payload))
-    batch_id = created["id"]
-
-    jobs_dir = Path(args.jobs_dir)
-    save_job(jobs_dir, {
-        "batch_id": batch_id,
-        "submitted_at": datetime.now(timezone.utc).isoformat(),
-        "survey_date": date.today().isoformat(),
-        "channel": args.channel,
-        "category": args.category,
-        "model": args.model,
-        "folder": str(folder),
-        "images": id_to_name,
-        "fetched": False,
-    })
-
-    print(f"\n제출 완료: {batch_id}")
-    print(f"  기록 위치: {job_path(jobs_dir, batch_id)}")
-    print("  보통 1시간 이내에 끝납니다. 터미널을 닫아도 됩니다.")
-    print("\n  진행 확인:  python analyze_thumbnails.py status")
-    print("  결과 회수:  python analyze_thumbnails.py fetch --output 결과.xlsx")
-
-
-# ------------------------------------------------------------
-# 8. status - 진행 상황 확인
-# ------------------------------------------------------------
-def cmd_status(args) -> None:
-    jobs = [j for j in load_jobs(Path(args.jobs_dir)) if not j["fetched"]]
-    if not jobs:
-        print("회수 대기 중인 작업이 없습니다.")
-        return
-
-    for job in jobs:
-        state = batch_state(job["batch_id"])
-        counts = state.get("request_counts", {})
-        done = sum(counts.get(k, 0) for k in ("succeeded", "errored", "canceled", "expired"))
-        ended = state.get("processing_status") == "ended"
-
-        print(f"[{'완료 - 회수 가능' if ended else '처리 중'}] {job['batch_id']}")
-        print(f"    {job['channel']} / {job['category']} · 이미지 {len(job['images'])}장"
-              f" · 제출 {job['submitted_at'][:16].replace('T', ' ')} UTC")
-        print(f"    진행: {done}/{len(job['images'])}  "
-              f"(성공 {counts.get('succeeded', 0)} / 실패 {counts.get('errored', 0)}"
-              f" / 만료 {counts.get('expired', 0)})")
-
-
-# ------------------------------------------------------------
-# 9. fetch - 끝난 작업의 결과를 엑셀로
-# ------------------------------------------------------------
-def row_from_result(entry: dict, job: dict) -> dict:
-    """배치 결과 한 줄(jsonl 한 행)을 엑셀 한 행으로 바꿉니다."""
-    custom_id = entry["custom_id"]
-    filename = job["images"].get(custom_id, custom_id)
-    outcome = entry.get("result", {})
-    kind = outcome.get("type")
-
-    info: ProductInfo | None = None
-    note: str | None = None
-
-    if kind == "succeeded":
-        message = outcome.get("message", {})
-        text = next((b.get("text", "") for b in message.get("content", [])
-                     if b.get("type") == "text"), "")
-        try:
-            info = ProductInfo.model_validate_json(text)
-        except ValidationError as e:
-            # 스키마는 강제되지만, 답이 중간에 잘리면(max_tokens) 내용이 부족할 수 있습니다.
-            note = (f"[분석 실패] 응답 종료 사유: {message.get('stop_reason')} / "
-                    f"{str(e).splitlines()[0]}")
-    elif kind == "errored":
-        err = outcome.get("error", {}).get("error", {})
-        note = f"[요청 오류] {err.get('type')}: {err.get('message')}"
-    elif kind == "expired":
-        note = "[만료] 24시간 안에 처리되지 못했습니다 (요금 미청구). 다시 제출해 주세요."
-    elif kind == "canceled":
-        note = "[취소됨]"
-    else:
-        note = f"[알 수 없는 결과] {kind}"
-
-    if info is None:
-        info = ProductInfo(
-            brand=None, product_name=None, price_krw=None,
-            capacity_text=None, composition_text=None, unit_price_text=None,
-            product_form="기타", product_role="불명", form_reason=None,
-            category_rank_text=None, review_count=None, monthly_buyers_text=None,
-            notes=note,
-        )
-
+def row_from_info(info: ProductInfo, filename: str, meta: dict) -> dict:
+    """검증을 마친 추출 결과 하나를 엑셀 한 행으로 바꿉니다."""
     capacity_val, unit = parse_capacity(info.capacity_text)
     comp_count = parse_composition_count(info.composition_text)
     price = info.price_krw  # 스키마가 int|None 을 보장하므로 바로 계산에 씁니다
@@ -532,7 +348,7 @@ def row_from_result(entry: dict, job: dict) -> dict:
     if total_capacity and price and scale:
         unit_price = round(price / total_capacity * scale, 1)
 
-    # 화면에 적혀 있던 단가와 대조 (읽기는 AI, 환산·비교는 코드)
+    # 화면에 적혀 있던 단가와 대조 (읽기는 사람/AI, 환산·비교는 코드)
     shown_price, shown_unit = parse_unit_price_text(info.unit_price_text)
     verdict = compare_unit_price(unit_price, shown_price, unit, shown_unit)
 
@@ -540,15 +356,13 @@ def row_from_result(entry: dict, job: dict) -> dict:
     buyers = parse_monthly_buyers(info.monthly_buyers_text)
 
     # 추정 월매출. 구매자수가 '이상'으로 표시되는 하한값이고 옵션 배수도 어림이므로,
-    # 절대액보다는 제품 간 규모 비교용으로 쓰는 것이 맞다.
-    est_revenue = None
-    if buyers and price:
-        est_revenue = buyers * price * REVENUE_OPTION_MULTIPLIER
+    # 절대액보다는 제품 간 규모 비교용으로 쓰는 것이 맞습니다.
+    est_revenue = buyers * price * REVENUE_OPTION_MULTIPLIER if (buyers and price) else None
 
     return {
-        "조사일자": job["survey_date"],
-        "채널": job["channel"],
-        "카테고리": job["category"],
+        "조사일자": meta["survey_date"],
+        "채널": meta["channel"],
+        "카테고리": meta["category"],
         "원본파일명": filename,
         "브랜드명": info.brand,
         "제품명": info.product_name,
@@ -574,44 +388,45 @@ def row_from_result(entry: dict, job: dict) -> dict:
     }
 
 
-def cmd_fetch(args) -> None:
-    jobs_dir = Path(args.jobs_dir)
-    jobs = [j for j in load_jobs(jobs_dir) if not j["fetched"]]
-    if not jobs:
-        print("회수 대기 중인 작업이 없습니다.")
-        return
+def cmd_build(args) -> None:
+    in_path = Path(args.input)
+    if not in_path.is_file():
+        sys.exit(f"추출 결과 파일을 찾을 수 없습니다: {in_path}")
 
-    rows: list[dict] = []
-    fetched_jobs: list[dict] = []
+    entries = json.loads(in_path.read_text(encoding="utf-8"))
+    if not isinstance(entries, list) or not entries:
+        sys.exit("추출 결과는 비어 있지 않은 JSON 배열이어야 합니다.")
 
-    for job in jobs:
-        if batch_state(job["batch_id"]).get("processing_status") != "ended":
-            print(f"아직 처리 중이라 건너뜁니다: {job['batch_id']} "
-                  f"({job['channel']}/{job['category']})")
+    # 번호 -> 원본 파일명 대응표 (prepare가 만들어 둔 것)
+    mapping = {}
+    map_path = Path(args.mapping) if args.mapping else in_path.parent / "mapping.json"
+    if map_path.is_file():
+        mapping = json.loads(map_path.read_text(encoding="utf-8"))
+        print(f"대응표 사용: {map_path}")
+
+    meta = {"survey_date": args.date or date.today().isoformat(),
+            "channel": args.channel, "category": args.category}
+
+    rows, errors = [], []
+    for i, entry in enumerate(entries, 1):
+        entry = dict(entry)
+        key = entry.pop("file", None) or f"{i:02d}.jpg"
+        try:
+            info = ProductInfo.model_validate(entry)
+        except ValidationError as e:
+            # 조용히 넘기지 않습니다. 어느 항목이 왜 틀렸는지 알려주고 멈춥니다.
+            first = e.errors()[0]
+            errors.append(f"  {key}: {'.'.join(str(x) for x in first['loc'])} - {first['msg']}")
             continue
+        rows.append(row_from_info(info, mapping.get(key, key), meta))
 
-        print(f"회수 중: {job['batch_id']} ({job['channel']}/{job['category']})")
-        out = run_ant(["messages:batches", "results",
-                       "--message-batch-id", job["batch_id"],
-                       "--format", "jsonl", "--max-items", "-1"])
-        got = 0
-        for line in out.splitlines():
-            line = line.strip()
-            if not line:
-                continue
-            rows.append(row_from_result(json.loads(line), job))
-            got += 1
-        print(f"    {got}건 수집")
-        fetched_jobs.append(job)
-
-    if not rows:
-        print("회수할 결과가 없습니다.")
-        return
+    if errors:
+        sys.exit(f"추출 결과 {len(errors)}건이 스키마에 맞지 않습니다:\n" + "\n".join(errors))
 
     new_df = pd.DataFrame(rows)
 
     out_path = Path(args.output)
-    if out_path.parent != Path(""):
+    if str(out_path.parent) not in ("", "."):
         out_path.parent.mkdir(parents=True, exist_ok=True)
 
     if out_path.exists():
@@ -623,39 +438,37 @@ def cmd_fetch(args) -> None:
 
     combined.to_excel(out_path, index=False)
 
-    # 엑셀에 무사히 저장된 뒤에야 "회수 완료" 표시를 합니다.
-    # (저장이 실패하면 표시도 안 되므로, fetch를 다시 실행하면 됩니다.)
-    for job in fetched_jobs:
-        job["fetched"] = True
-        save_job(jobs_dir, job)
+    # 단가검증 결과를 요약해 줍니다. '일치'가 아닌 행만 확인하면 됩니다.
+    counts = new_df["단가검증"].value_counts()
+    print("\n단가검증:", ", ".join(f"{k} {v}건" for k, v in counts.items()))
+    bad = new_df[~new_df["단가검증"].isin(["일치", "표기없음"])]
+    if not bad.empty:
+        print("확인 필요:", ", ".join(bad["원본파일명"].tolist()))
 
     print(f"완료: {out_path.resolve()}")
 
 
 # ------------------------------------------------------------
-# 10. 명령 정의
+# 6. 명령 정의
 # ------------------------------------------------------------
 def main():
-    parser = argparse.ArgumentParser(
-        description="제품 썸네일 이미지 일괄 분석 (Batch API) → 엑셀 출력")
-    parser.add_argument("--jobs-dir", default=".batch_jobs",
-                        help="제출 기록을 보관할 폴더 (기본: .batch_jobs)")
+    parser = argparse.ArgumentParser(description="제품 썸네일 분석 → 엑셀 출력")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    p_submit = sub.add_parser("submit", help="폴더의 이미지를 배치로 제출")
-    p_submit.add_argument("--folder", required=True, help="이미지가 들어있는 폴더 경로")
-    p_submit.add_argument("--channel", default="", help="채널명 (예: 쿠팡)")
-    p_submit.add_argument("--category", default="", help="카테고리명 (예: 캡슐세제)")
-    p_submit.add_argument("--model", default="claude-sonnet-5", help="사용할 모델")
-    p_submit.set_defaults(func=cmd_submit)
+    p_prep = sub.add_parser("prepare", help="캡처 폴더를 읽기 좋게 정리 (HEIC/회전/축소/번호)")
+    p_prep.add_argument("--folder", required=True, help="원본 캡처가 들어있는 폴더")
+    p_prep.add_argument("--out", required=True, help="정리된 이미지를 저장할 폴더")
+    p_prep.set_defaults(func=cmd_prepare)
 
-    p_status = sub.add_parser("status", help="제출한 배치의 진행 상황 확인")
-    p_status.set_defaults(func=cmd_status)
-
-    p_fetch = sub.add_parser("fetch", help="완료된 배치 결과를 엑셀로 회수")
-    p_fetch.add_argument("--output", default="thumbnail_analysis.xlsx",
-                         help="출력 엑셀 파일 경로")
-    p_fetch.set_defaults(func=cmd_fetch)
+    p_build = sub.add_parser("build", help="추출 결과 JSON을 검증·계산해 엑셀로 저장")
+    p_build.add_argument("--input", required=True, help="추출 결과 JSON 경로")
+    p_build.add_argument("--output", default="thumbnail_analysis.xlsx", help="출력 엑셀 경로")
+    p_build.add_argument("--channel", default="", help="채널명 (예: 쿠팡)")
+    p_build.add_argument("--category", default="", help="카테고리명 (예: 캡슐세제)")
+    p_build.add_argument("--mapping", default=None,
+                         help="번호-원본파일명 대응표 (기본: 입력 파일 옆의 mapping.json)")
+    p_build.add_argument("--date", default=None, help="조사일자 (기본: 오늘)")
+    p_build.set_defaults(func=cmd_build)
 
     args = parser.parse_args()
     args.func(args)
