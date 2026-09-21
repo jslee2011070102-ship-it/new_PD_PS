@@ -102,12 +102,23 @@ class ProductInfo(BaseModel):
     composition_text: str | None = Field(
         description="구성/수량 표기 원문 (예: '2개입', '1개', '리필 3개 세트'). 없으면 null"
     )
-    product_form: Literal["용기", "리필파우치", "말통", "세트", "기타"] = Field(
-        description="제품 이미지의 겉모습으로 판단한 포장 형태"
+    unit_price_text: str | None = Field(
+        description="화면에 이미 적혀 있는 단위당 가격 표기를 원문 그대로 "
+                    "(예: '100ml당 1,190원'). 이건 우리 계산이 맞는지 대조하는 용도이므로 "
+                    "직접 계산하지 말고, 적혀 있을 때만 그대로 옮겨라. 없으면 null"
+    )
+    product_form: Literal["용기", "파우치", "말통", "기타"] = Field(
+        description="제품의 겉모습(포장 형태)만 판단. 본품인지 리필인지는 여기 넣지 말 것. "
+                    "용기=뚜껑·펌프·스프레이가 달린 통, 파우치=비닐 주머니, "
+                    "말통=손잡이 달린 대용량 통"
+    )
+    product_role: Literal["본품", "리필", "불명"] = Field(
+        description="이 제품이 본품인지 리필인지. 보통 제품명에 '본품'/'리필'로 적혀 있으니 "
+                    "그 글자를 근거로 판단하라. 적혀 있지 않고 확신할 수 없으면 '불명'"
     )
     form_reason: str | None = Field(
-        description="product_form을 그렇게 판단한 짧은 근거 "
-                    "(예: '파우치형 포장에 리필 문구 확인')"
+        description="product_form과 product_role을 그렇게 판단한 짧은 근거 "
+                    "(예: '주둥이 달린 파우치, 제품명에 리필 표기')"
     )
     notes: str | None = Field(
         description="특이사항이나 애매해서 사람이 재확인해야 할 부분. 없으면 null"
@@ -125,6 +136,10 @@ SYSTEM_PROMPT = """너는 한국 이커머스(쿠팡 등) 생활용품 카테고
 - 용량·가격은 이미지에 적힌 그대로 읽어라. 단위 환산이나 계산은 네 일이 아니다
   (그건 프로그램이 따로 처리한다).
 - 할인 전 정가와 할인가가 같이 보이면, 실제 판매가(더 낮은 쪽)를 price_krw에 넣어라.
+- '겉모습(product_form)'과 '본품/리필(product_role)'은 서로 다른 질문이다.
+  손잡이 달린 말통이면서 동시에 리필 제품일 수 있으니 각각 따로 판단하라.
+- 화면 하단이 버튼 바 등에 가려 일부 정보가 안 보이면, 추측하지 말고 null로 두고
+  notes에 가려서 확인 불가라고 적어라.
 """
 
 USER_PROMPT = "이 제품 썸네일 이미지를 분석해줘."
@@ -209,6 +224,44 @@ def parse_composition_count(text: str | None) -> float:
         return 1.0
     m = re.search(r"(\d+)\s*개", text)
     return float(m.group(1)) if m else 1.0
+
+
+def parse_unit_price_text(text: str | None):
+    """'100ml당 1,190원' 같은 표기를 (100단위당 가격, 단위)로 환산.
+
+    쿠팡은 단위당 가격을 이미 화면에 찍어줍니다. 그걸 그대로 읽어두면
+    우리 계산이 맞는지 대조할 수 있습니다 (문제집에 딸려온 답안지인 셈).
+    기준이 100이 아닌 경우(예: '1L당')도 100 기준으로 맞춰서 돌려줍니다.
+    """
+    if not text:
+        return None, None
+    t = text.replace(" ", "").replace(",", "").lower()
+    m = re.search(r"([\d.]+)(ml|l|g|kg)당([\d.]+)원", t)
+    if not m:
+        return None, None
+    basis, unit, price = float(m.group(1)), m.group(2), float(m.group(3))
+    if unit == "l":
+        basis, unit = basis * 1000, "ml"
+    elif unit == "kg":
+        basis, unit = basis * 1000, "g"
+    if basis <= 0:
+        return None, None
+    return price / basis * 100, unit  # 100ml(또는 100g)당 가격으로 통일
+
+
+def compare_unit_price(ours: float | None, shown: float | None,
+                       our_unit: str | None, shown_unit: str | None) -> str:
+    """우리 계산과 화면 표기를 대조합니다."""
+    if shown is None:
+        return "표기없음"
+    if ours is None:
+        return "계산불가"
+    if our_unit != shown_unit:
+        return f"단위불일치({our_unit} vs {shown_unit})"
+    # 반올림 차이는 허용하고, 그보다 크게 벌어질 때만 확인 대상으로 봅니다.
+    if abs(ours - shown) <= max(1.0, shown * 0.01):
+        return "일치"
+    return f"불일치(표기 {shown:.0f} / 계산 {ours:.0f})"
 
 
 # ------------------------------------------------------------
@@ -391,8 +444,8 @@ def row_from_result(entry: dict, job: dict) -> dict:
     if info is None:
         info = ProductInfo(
             brand=None, product_name=None, price_krw=None,
-            capacity_text=None, composition_text=None,
-            product_form="기타", form_reason=None, notes=note,
+            capacity_text=None, composition_text=None, unit_price_text=None,
+            product_form="기타", product_role="불명", form_reason=None, notes=note,
         )
 
     capacity_val, unit = parse_capacity(info.capacity_text)
@@ -403,6 +456,10 @@ def row_from_result(entry: dict, job: dict) -> dict:
     unit_price = None
     if total_capacity and price:
         unit_price = round(price / total_capacity * 100, 1)  # 100ml/g당 가격
+
+    # 화면에 적혀 있던 단가와 대조 (읽기는 AI, 환산·비교는 코드)
+    shown_price, shown_unit = parse_unit_price_text(info.unit_price_text)
+    verdict = compare_unit_price(unit_price, shown_price, unit, shown_unit)
 
     return {
         "조사일자": job["survey_date"],
@@ -417,7 +474,10 @@ def row_from_result(entry: dict, job: dict) -> dict:
         "총용량": total_capacity,
         "단위": unit,
         "단위당가격(100당,원)": unit_price,
+        "쿠팡표기단가": info.unit_price_text,
+        "단가검증": verdict,
         "제품형태": info.product_form,
+        "제품역할": info.product_role,
         "형태_판단근거": info.form_reason,
         "비고": info.notes,
     }
