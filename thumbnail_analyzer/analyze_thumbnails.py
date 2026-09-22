@@ -39,6 +39,7 @@ import sys
 from datetime import date
 from pathlib import Path
 from typing import Literal
+from urllib.parse import quote_plus
 
 import pandas as pd
 from PIL import Image, ImageOps
@@ -132,6 +133,10 @@ class ProductInfo(BaseModel):
                     "주의: '만족했어요'로 끝나는 문구는 구매자수가 아니라 만족한 사람 수이다. "
                     "그 경우에도 본 문구를 그대로 옮겨 적되 임의로 바꾸지 마라 "
                     "(구매인지 만족인지는 프로그램이 문구를 보고 판단한다). 없으면 null"
+    )
+    product_url: str | None = Field(
+        description="상품 페이지 주소. 브라우저에서 보고 있다면 주소창의 URL을 그대로 옮겨라. "
+                    "앱 화면 캡처처럼 주소를 알 수 없으면 null. 절대 추측해서 만들지 마라"
     )
     notes: str | None = Field(
         description="특이사항이나 애매해서 사람이 재확인해야 할 부분. 없으면 null"
@@ -334,6 +339,23 @@ def compare_unit_price(ours: float | None, shown: float | None,
 # ------------------------------------------------------------
 # 5. build - 추출 결과를 검증하고 계산해서 엑셀로
 # ------------------------------------------------------------
+def coupang_search_url(product_name: str | None, brand: str | None) -> str | None:
+    """제품명으로 쿠팡 검색 주소를 만듭니다.
+
+    상품 페이지 주소가 아니라 '검색 결과' 주소입니다. 캡처 화면에는 주소가 찍히지
+    않아 실제 URL을 알 수 없기 때문에, 추측해서 만드는 대신 한 번에 찾아갈 수 있는
+    검색 링크를 대신 넣습니다. (주소를 지어내면 엉뚱한 상품으로 가게 됩니다.)
+    """
+    # 쿠팡 제품명에는 브랜드가 이미 들어 있는 경우가 많아, 그대로 붙이면
+    # "피지 피지 모락셀라..."처럼 중복됩니다. 없을 때만 앞에 붙입니다.
+    name = (product_name or "").strip()
+    b = (brand or "").strip()
+    q = name if (not b or b in name) else f"{b} {name}".strip()
+    if not q:
+        return None
+    return "https://www.coupang.com/np/search?q=" + quote_plus(q)
+
+
 def row_from_info(info: ProductInfo, filename: str, meta: dict) -> dict:
     """검증을 마친 추출 결과 하나를 엑셀 한 행으로 바꿉니다."""
     capacity_val, unit = parse_capacity(info.capacity_text)
@@ -384,6 +406,8 @@ def row_from_info(info: ProductInfo, filename: str, meta: dict) -> dict:
         "구매자수_원문": info.monthly_buyers_text,
         "추정월매출(원)": est_revenue,
         "형태_판단근거": info.form_reason,
+        "상품URL": info.product_url,
+        "검색링크": coupang_search_url(info.product_name, info.brand),
         "비고": info.notes,
     }
 

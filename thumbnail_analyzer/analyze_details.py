@@ -122,7 +122,77 @@ SYSTEM_PROMPT = """너는 한국 이커머스 제품 상세페이지를 분석�
 
 
 # ------------------------------------------------------------
-# 2. inventory - 캡처 파일 확인
+# 2. prompt - 다른 곳(Claude in Chrome 등)에 붙여넣을 추출 지시문 생성
+# ------------------------------------------------------------
+# 상세페이지를 사람이 캡처하는 대신, 브라우저에서 읽게 할 수도 있습니다.
+# 그때 쓸 지시문을 여기서 만들어 줍니다.
+#
+# 지시문을 손으로 적어두지 않고 코드로 만드는 이유:
+# 스키마(DetailPageInfo)를 고치면 지시문도 자동으로 따라 바뀝니다.
+# 따로 적어두면 둘이 어긋나고, 그러면 받은 결과가 build에서 전부 튕깁니다.
+# (계약서 원본과 사본을 따로 관리하지 않고, 원본에서 사본을 뽑아 쓰는 것과 같습니다.)
+TYPE_NAMES = {str: "문자열", int: "정수", bool: "true 또는 false", type(None): "null"}
+
+
+def type_label(ann) -> str:
+    """파이썬 타입을 사람이 읽을 말로 바꿉니다."""
+    if ann in TYPE_NAMES:
+        return TYPE_NAMES[ann]
+    args = getattr(ann, "__args__", None)
+    if args:
+        # Literal["가","나"] -> 고를 수 있는 값을 그대로 보여줍니다.
+        if all(isinstance(a, str) for a in args):
+            return "다음 중 하나: " + " / ".join(f'"{a}"' for a in args)
+        # list[UspItem] -> 항목 설명은 따로 적으므로 이름만.
+        if getattr(ann, "__origin__", None) is list:
+            return f"{type_label(args[0])} 배열"
+        # str | None 같은 조합
+        return " 또는 ".join(type_label(a) for a in args)
+    return getattr(ann, "__name__", str(ann))
+
+
+def field_lines(model, indent="  ") -> list[str]:
+    """스키마의 각 칸을 '이름 (타입): 설명' 형태로 풀어 씁니다."""
+    return [f"{indent}- {name} ({type_label(f.annotation)})\n{indent}    {f.description}"
+            for name, f in model.model_fields.items()]
+
+
+def cmd_prompt(args) -> None:
+    n = args.count
+    print(f"""아래 작업을 해줘.
+
+[대상]
+지금 열려 있는 쿠팡 상품 상세페이지{"들" if n != 1 else ""}. 총 {n}개.
+
+[먼저 할 일]
+각 페이지마다 **맨 아래까지 끝까지 스크롤**해서 모든 이미지가 불러와지게 해.
+쿠팡 상세 이미지는 화면에 보여야 로딩되기 때문에, 스크롤하지 않으면 내용이 비어 있어.
+
+[역할]
+{SYSTEM_PROMPT.strip()}
+
+[출력 형식]
+제품 하나당 객체 하나씩, JSON 배열로만 출력해. 설명 문장은 붙이지 마.
+각 객체는 아래 칸을 모두 가져야 해.
+
+{chr(10).join(field_lines(DetailPageInfo))}
+
+  usps 배열의 각 항목은 아래 칸을 모두 가져야 해.
+
+{chr(10).join(field_lines(UspItem, indent="    "))}
+
+  추가로 각 객체에 "file" 칸을 넣고, 그 제품을 알아볼 수 있는 이름을 적어줘
+  (예: "액츠_캡슐세제"). 나중에 결과를 맞춰보는 데 쓴다.
+
+[주의]
+- 값이 정해져 있는 칸은 반드시 그 목록 안에서 골라. 다른 말을 지어내면 안 된다.
+- evidence는 페이지에 적힌 문구 그대로. 요약하지 마라.
+- 확인할 수 없는 칸은 null로 두고, 왜 못 봤는지 notes에 적어라.
+""")
+
+
+# ------------------------------------------------------------
+# 3. inventory - 캡처 파일 확인
 # ------------------------------------------------------------
 def cmd_inventory(args) -> None:
     folder = Path(args.folder)
@@ -198,7 +268,7 @@ def image_size_label(path: Path) -> str:
 
 
 # ------------------------------------------------------------
-# 3. build - 검증 + 집계 + 엑셀
+# 4. build - 검증 + 집계 + 엑셀
 # ------------------------------------------------------------
 def cmd_build(args) -> None:
     in_path = Path(args.input)
@@ -304,11 +374,16 @@ def join_thumbnails(products: pd.DataFrame, path: Path, category: str) -> pd.Dat
 
 
 # ------------------------------------------------------------
-# 4. 명령 정의
+# 5. 명령 정의
 # ------------------------------------------------------------
 def main():
     parser = argparse.ArgumentParser(description="상세페이지 USP 분석 → 엑셀 출력")
     sub = parser.add_subparsers(dest="command", required=True)
+
+    p_prompt = sub.add_parser("prompt",
+                              help="브라우저 등 다른 곳에 붙여넣을 추출 지시문 출력")
+    p_prompt.add_argument("--count", type=int, default=1, help="한 번에 분석할 제품 수")
+    p_prompt.set_defaults(func=cmd_prompt)
 
     p_inv = sub.add_parser("inventory", help="캡처한 상세페이지 파일 확인 및 번호 매기기")
     p_inv.add_argument("--folder", required=True, help="상세페이지 캡처가 들어있는 폴더")

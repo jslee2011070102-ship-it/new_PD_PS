@@ -13,7 +13,8 @@
   "category_rank_text": "캡슐세제 구매 1위",
   "review_count": 14723,
   "monthly_buyers_text": "한 달간 3만명 이상 구매했어요",
-  "notes": null
+  "notes": null,
+  "product_url": null
  },
  {
   "file": "02.jpg",
@@ -29,7 +30,8 @@
   "category_rank_text": "캡슐세제 구매 2위",
   "review_count": 27885,
   "monthly_buyers_text": "한 달간 3만명 이상 구매했어요",
-  "notes": null
+  "notes": null,
+  "product_url": null
  },
  {
   "file": "03.jpg",
@@ -45,7 +47,8 @@
   "category_rank_text": "캡슐세제 구매 3위",
   "review_count": 13989,
   "monthly_buyers_text": "한 달간 2만명 이상 구매했어요",
-  "notes": null
+  "notes": null,
+  "product_url": null
  },
  {
   "file": "04.jpg",
@@ -61,7 +64,8 @@
   "category_rank_text": "캡슐세제 구매 4위",
   "review_count": 3750,
   "monthly_buyers_text": "한 달간 1만명 이상 구매했어요",
-  "notes": "정가 19,800원 / 65% 할인"
+  "notes": "정가 19,800원 / 65% 할인",
+  "product_url": null
  },
  {
   "file": "05.jpg",
@@ -77,7 +81,8 @@
   "category_rank_text": "캡슐세제 구매 5위",
   "review_count": 21000,
   "monthly_buyers_text": "한 달간 1만명 이상 구매했어요",
-  "notes": "캡슐 1개당 16g 표기"
+  "notes": "캡슐 1개당 16g 표기",
+  "product_url": null
  },
  {
   "file": "06.jpg",
@@ -93,7 +98,8 @@
   "category_rank_text": "캡슐세제 구매 6위",
   "review_count": 18427,
   "monthly_buyers_text": "한 달간 1만명 이상 구매했어요",
-  "notes": null
+  "notes": null,
+  "product_url": null
  },
  {
   "file": "07.jpg",
@@ -109,7 +115,8 @@
   "category_rank_text": "캡슐세제 구매 7위",
   "review_count": 1951,
   "monthly_buyers_text": "한 달간 1만명 이상 구매했어요",
-  "notes": "정가 11,900원 / 50% 할인"
+  "notes": "정가 11,900원 / 50% 할인",
+  "product_url": null
  },
  {
   "file": "08.jpg",
@@ -125,7 +132,8 @@
   "category_rank_text": "캡슐세제 구매 8위",
   "review_count": 29139,
   "monthly_buyers_text": "한 달간 1만명 이상 구매했어요",
-  "notes": "정가 32,900원 / 61% 할인"
+  "notes": "정가 32,900원 / 61% 할인",
+  "product_url": null
  },
  {
   "file": "09.jpg",
@@ -141,7 +149,8 @@
   "category_rank_text": "캡슐세제 구매 9위",
   "review_count": 33830,
   "monthly_buyers_text": "한 달간 1만명 이상 구매했어요",
-  "notes": null
+  "notes": null,
+  "product_url": null
  },
  {
   "file": "10.jpg",
@@ -157,7 +166,8 @@
   "category_rank_text": "캡슐세제 구매 10위",
   "review_count": 3922,
   "monthly_buyers_text": "한 달간 8,000명 이상 구매했어요",
-  "notes": "캡슐 1개당 14g 표기"
+  "notes": "캡슐 1개당 14g 표기",
+  "product_url": null
  },
  {
   "file": "11.jpg",
@@ -173,7 +183,8 @@
   "category_rank_text": "캡슐세제 구매 11위",
   "review_count": 9929,
   "monthly_buyers_text": "한 달간 7,000명 이상 구매했어요",
-  "notes": null
+  "notes": null,
+  "product_url": null
  },
  {
   "file": "12.jpg",
@@ -189,7 +200,8 @@
   "category_rank_text": "캡슐세제 구매 12위",
   "review_count": 13247,
   "monthly_buyers_text": "한 달간 8,000명 이상 구매했어요",
-  "notes": null
+  "notes": null,
+  "product_url": null
  },
  {
   "file": "13.jpg",
@@ -205,7 +217,8 @@
   "category_rank_text": "캡슐세제 구매 13위",
   "review_count": 9988,
   "monthly_buyers_text": "한 달간 6,000명 이상 구매했어요",
-  "notes": null
+  "notes": null,
+  "product_url": null
  },
  {
   "file": "14.jpg",
@@ -221,7 +234,8 @@
   "category_rank_text": "캡슐세제 구매 14위",
   "review_count": 9035,
   "monthly_buyers_text": "한 달간 6,000명 이상 구매했어요",
-  "notes": null
+  "notes": null,
+  "product_url": null
  },
  {
   "file": "15.jpg",
@@ -237,7 +251,8 @@
   "category_rank_text": "캡슐세제 구매 15위",
   "review_count": 9072,
   "monthly_buyers_text": "한 달간 6,000명 이상 구매했어요",
-  "notes": "정가 25,000원 / 65% 할인"
+  "notes": "정가 25,000원 / 65% 할인",
+  "product_url": null
  },
  {
   "file": "16.jpg",
@@ -253,7 +268,8 @@
   "category_rank_text": "캡슐세제 구매 16위",
   "review_count": 11085,
   "monthly_buyers_text": "한 달간 5,000명 이상 구매했어요",
-  "notes": "정가 28,000원 / 47% 할인"
+  "notes": "정가 28,000원 / 47% 할인",
+  "product_url": null
  },
  {
   "file": "17.jpg",
@@ -269,7 +285,8 @@
   "category_rank_text": "캡슐세제 구매 17위",
   "review_count": 1574,
   "monthly_buyers_text": "한 달간 5,000명 이상 구매했어요",
-  "notes": null
+  "notes": null,
+  "product_url": null
  },
  {
   "file": "18.jpg",
@@ -285,7 +302,8 @@
   "category_rank_text": "캡슐세제 구매 18위",
   "review_count": 17300,
   "monthly_buyers_text": "한 달간 4,000명 이상 구매했어요",
-  "notes": null
+  "notes": null,
+  "product_url": null
  },
  {
   "file": "19.jpg",
@@ -301,7 +319,8 @@
   "category_rank_text": "캡슐세제 구매 19위",
   "review_count": 14742,
   "monthly_buyers_text": "한 달간 4,000명 이상 구매했어요",
-  "notes": "할인 표기 없음(정가 판매)"
+  "notes": "할인 표기 없음(정가 판매)",
+  "product_url": null
  },
  {
   "file": "20.jpg",
@@ -317,7 +336,8 @@
   "category_rank_text": "캡슐세제 구매 20위",
   "review_count": 11130,
   "monthly_buyers_text": "한 달간 4,000명 이상 구매했어요",
-  "notes": "할인 표기 없음(정가 판매)"
+  "notes": "할인 표기 없음(정가 판매)",
+  "product_url": null
  },
  {
   "file": "21.jpg",
@@ -333,7 +353,8 @@
   "category_rank_text": "캡슐세제 구매 21위",
   "review_count": 505,
   "monthly_buyers_text": "한 달간 3,000명 이상 구매했어요",
-  "notes": "정가 29,990원 / 73% 할인"
+  "notes": "정가 29,990원 / 73% 할인",
+  "product_url": null
  },
  {
   "file": "22.jpg",
@@ -349,7 +370,8 @@
   "category_rank_text": "캡슐세제 구매 22위",
   "review_count": 13985,
   "monthly_buyers_text": "한 달간 3,000명 이상 구매했어요",
-  "notes": null
+  "notes": null,
+  "product_url": null
  },
  {
   "file": "23.jpg",
@@ -365,7 +387,8 @@
   "category_rank_text": "캡슐세제 구매 23위",
   "review_count": 12311,
   "monthly_buyers_text": "한 달간 3,000명 이상 구매했어요",
-  "notes": "캡슐 1개당 11g 표기"
+  "notes": "캡슐 1개당 11g 표기",
+  "product_url": null
  },
  {
   "file": "24.jpg",
@@ -381,7 +404,8 @@
   "category_rank_text": "캡슐세제 구매 24위",
   "review_count": 10224,
   "monthly_buyers_text": "한 달간 3,000명 이상 구매했어요",
-  "notes": "캡슐 1개당 18g 표기"
+  "notes": "캡슐 1개당 18g 표기",
+  "product_url": null
  },
  {
   "file": "25.jpg",
@@ -397,6 +421,7 @@
   "category_rank_text": "캡슐세제 구매 25위",
   "review_count": 4505,
   "monthly_buyers_text": "한 달간 3,000명 이상 구매했어요",
-  "notes": "정가 19,600원 / 49% 할인"
+  "notes": "정가 19,600원 / 49% 할인",
+  "product_url": null
  }
 ]
