@@ -86,7 +86,14 @@ python analyze_thumbnails.py urls --excel 결과/분석.xlsx \
 
 # 한 카테고리 전체
 python analyze_thumbnails.py urls --excel 결과/분석.xlsx --category 캡슐세제
+
+# 묶음 크기 조정 (기본 4개씩, 0이면 진행 방식 지시 없음)
+python analyze_thumbnails.py urls --excel 결과/분석.xlsx --category 캡슐세제 --pace 5
 ```
+
+`--pace`는 **중간에 멈춰도 결과를 건지기 위한 것**이다. 한 번에 몰아서 시키면
+12개째에서 끊겼을 때 처음부터 다시 해야 한다. 묶음마다 결과를 먼저 내놓게 하면
+거기까지는 남는다. 검색 사이에 쉬라는 지시도 함께 들어간다.
 
 출력된 글을 그대로 브라우저 확장에 붙여넣으면 된다. **파일 첨부는 필요 없다** —
 확장은 브라우저 화면을 보는 것이라 파일을 읽지 않는다.

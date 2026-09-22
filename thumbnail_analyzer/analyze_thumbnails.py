@@ -540,6 +540,21 @@ def cmd_urls(args) -> None:
         label = name if (not isinstance(brand, str) or brand in name) else f"{brand} {name}"
         names.append(f"- {label}")
 
+    # 한 번에 몰아서 시키면 중간에 멈췄을 때 그때까지 한 게 통째로 날아갑니다.
+    # 묶음마다 결과를 내놓게 하면, 멈춰도 거기까지는 건집니다.
+    # (등산 중간중간 베이스캠프를 두는 것과 같습니다.)
+    pace = ""
+    if args.pace and args.pace < len(names):
+        batches = (len(names) + args.pace - 1) // args.pace
+        pace = f"""
+[진행 방식]
+- {args.pace}개씩 묶어서 처리해라. 총 {batches}묶음이다.
+- **한 묶음이 끝날 때마다 그 묶음의 JSON 배열을 먼저 출력하고** 다음 묶음으로 넘어가라.
+  마지막에 한꺼번에 모아서 내지 마라. 중간에 중단되면 그때까지 한 것이 사라진다.
+- 검색과 검색 사이에는 몇 초 쉬어라. 쉬지 않고 연달아 요청하지 마라.
+- 도중에 오류가 나거나 막히면, 멈추기 전에 그때까지의 결과를 먼저 출력해라.
+"""
+
     print(f"""쿠팡에서 아래 제품들을 하나씩 검색해서, 검색 결과 중 제품명이 가장 잘 맞는
 상품의 제품명과 URL을 찾아줘. 총 {len(names)}개다.
 
@@ -552,7 +567,7 @@ def cmd_urls(args) -> None:
 - 검색 결과에 확실히 같은 제품이 없으면 product_url을 null로 두고
   product_name에 가장 비슷했던 상품명을 적어라. 억지로 고르지 마라.
 - 광고(AD) 표시가 붙은 상품은 건너뛰고 일반 검색 결과에서 골라라.
-
+{pace}
 [제품 목록]
 {chr(10).join(names)}
 """)
@@ -574,6 +589,8 @@ def main():
     p_urls.add_argument("--excel", required=True, help="썸네일 분석 엑셀 경로")
     p_urls.add_argument("--category", default=None, help="특정 카테고리만 (예: 캡슐세제)")
     p_urls.add_argument("--ranks", default=None, help="특정 순위만, 쉼표로 구분 (예: 11,12,13)")
+    p_urls.add_argument("--pace", type=int, default=4,
+                        help="몇 개씩 묶어서 처리하게 할지 (기본 4). 0이면 진행 방식 지시를 넣지 않음")
     p_urls.add_argument("--select", nargs="+", default=None,
                         help='여러 카테고리에서 골라 뽑기. "카테고리:순위,순위" 형식 '
                              '(예: --select 캡슐세제:11,12 세탁세제:1,2)')
