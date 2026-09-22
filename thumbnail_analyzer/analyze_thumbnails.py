@@ -473,7 +473,93 @@ def cmd_build(args) -> None:
 
 
 # ------------------------------------------------------------
-# 6. 명령 정의
+# 6. urls - 브라우저에 붙여넣을 "상품 URL 수집" 지시문 생성
+# ------------------------------------------------------------
+# 캡처 화면에는 주소가 없어 상품 URL을 알 수 없습니다. 브라우저(Claude in Chrome 등)에
+# 대신 찾아달라고 할 때 쓸 지시문을, 엑셀의 제품명으로 채워서 만들어 줍니다.
+# 제품명을 손으로 옮기다 빠뜨리는 일을 막기 위한 것입니다.
+def read_product_sheet(src: Path, sheet: str | None = None) -> pd.DataFrame:
+    """엑셀에서 제품 목록이 들어 있는 시트를 찾아 읽습니다.
+
+    우리가 만든 엑셀은 첫 시트가 '요약'이라 그냥 읽으면 제품명 칸이 없습니다.
+    그래서 필요한 칸(제품명)이 있는 시트를 찾아서 씁니다.
+    """
+    book = pd.read_excel(src, sheet_name=None)  # 전체 시트를 딕셔너리로
+    if sheet:
+        if sheet not in book:
+            sys.exit(f"'{sheet}' 시트가 없습니다. 있는 시트: {', '.join(book)}")
+        return book[sheet]
+    for name in ("전체", *book):          # '전체' 시트를 우선 보고, 없으면 순서대로
+        if name in book and "제품명" in book[name].columns:
+            return book[name]
+    sys.exit(f"제품명 칸이 있는 시트를 찾지 못했습니다. 있는 시트: {', '.join(book)}")
+
+
+def cmd_urls(args) -> None:
+    src = Path(args.excel)
+    if not src.is_file():
+        sys.exit(f"엑셀을 찾을 수 없습니다: {src}")
+
+    df = read_product_sheet(src, args.sheet)
+
+    # --select 로 "카테고리:순위,순위" 를 여러 개 줄 수 있습니다.
+    # (여러 카테고리에서 골라 뽑는 일이 잦아서, 명령 한 번으로 끝나게 했습니다.)
+    if args.select:
+        picked = []
+        for spec in args.select:
+            if ":" not in spec:
+                sys.exit(f"--select 형식이 잘못됐습니다: {spec}\n"
+                         "  예: --select 캡슐세제:11,12,13 세탁세제:1,2,3")
+            cat, ranks = spec.split(":", 1)
+            try:
+                want = {int(x) for x in ranks.split(",") if x.strip()}
+            except ValueError:
+                sys.exit(f"--select 의 순위는 숫자여야 합니다: {spec}")
+            sub = df[(df["카테고리"] == cat) & (df["순위"].isin(want))]
+            missing = want - set(sub["순위"].dropna().astype(int))
+            if missing:
+                sys.exit(f"'{cat}'에서 순위 {sorted(missing)}를 찾지 못했습니다.")
+            picked.append(sub)
+        df = pd.concat(picked)
+    else:
+        if args.category:
+            df = df[df["카테고리"] == args.category]
+        if args.ranks:
+            want = {int(x) for x in args.ranks.split(",")}
+            df = df[df["순위"].isin(want)]
+
+    df = df[df["제품명"].notna()].sort_values(["카테고리", "순위"])
+    if df.empty:
+        sys.exit("조건에 맞는 제품이 없습니다. --select / --category / --ranks 를 확인해 주세요.")
+
+    names = []
+    for _, r in df.iterrows():
+        brand = r.get("브랜드명")
+        name = str(r["제품명"])
+        # 제품명에 브랜드가 이미 있으면 중복해서 붙이지 않습니다.
+        label = name if (not isinstance(brand, str) or brand in name) else f"{brand} {name}"
+        names.append(f"- {label}")
+
+    print(f"""쿠팡에서 아래 제품들을 하나씩 검색해서, 검색 결과 중 제품명이 가장 잘 맞는
+상품의 제품명과 URL을 찾아줘. 총 {len(names)}개다.
+
+찾은 결과는 아래 형태의 JSON 배열로만 출력해. 설명 문장은 붙이지 마.
+
+[{{"query": "내가 준 제품명 그대로", "product_name": "쿠팡에 표시된 제품명", "product_url": "https://www.coupang.com/vp/products/..."}}]
+
+주의:
+- product_url은 주소창의 실제 주소를 그대로 옮겨라. 만들어내지 마라.
+- 검색 결과에 확실히 같은 제품이 없으면 product_url을 null로 두고
+  product_name에 가장 비슷했던 상품명을 적어라. 억지로 고르지 마라.
+- 광고(AD) 표시가 붙은 상품은 건너뛰고 일반 검색 결과에서 골라라.
+
+[제품 목록]
+{chr(10).join(names)}
+""")
+
+
+# ------------------------------------------------------------
+# 7. 명령 정의
 # ------------------------------------------------------------
 def main():
     parser = argparse.ArgumentParser(description="제품 썸네일 분석 → 엑셀 출력")
@@ -483,6 +569,16 @@ def main():
     p_prep.add_argument("--folder", required=True, help="원본 캡처가 들어있는 폴더")
     p_prep.add_argument("--out", required=True, help="정리된 이미지를 저장할 폴더")
     p_prep.set_defaults(func=cmd_prepare)
+
+    p_urls = sub.add_parser("urls", help="상품 URL 수집용 지시문 생성 (브라우저에 붙여넣기)")
+    p_urls.add_argument("--excel", required=True, help="썸네일 분석 엑셀 경로")
+    p_urls.add_argument("--category", default=None, help="특정 카테고리만 (예: 캡슐세제)")
+    p_urls.add_argument("--ranks", default=None, help="특정 순위만, 쉼표로 구분 (예: 11,12,13)")
+    p_urls.add_argument("--select", nargs="+", default=None,
+                        help='여러 카테고리에서 골라 뽑기. "카테고리:순위,순위" 형식 '
+                             '(예: --select 캡슐세제:11,12 세탁세제:1,2)')
+    p_urls.add_argument("--sheet", default=None, help="읽을 시트 이름 (기본: 제품명 칸이 있는 시트)")
+    p_urls.set_defaults(func=cmd_urls)
 
     p_build = sub.add_parser("build", help="추출 결과 JSON을 검증·계산해 엑셀로 저장")
     p_build.add_argument("--input", required=True, help="추출 결과 JSON 경로")

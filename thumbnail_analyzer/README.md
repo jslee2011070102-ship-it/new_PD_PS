@@ -73,6 +73,27 @@ python analyze_thumbnails.py build --input 추출.json \
   "만족했어요"였다는 뜻이다. 만족한 사람 수는 구매자수가 아니므로 매출 계산에서
   제외된다. 오류가 아니다.
 
+## 브라우저로 수집하기 (캡처 없이)
+
+캡처 화면에는 주소가 없어 상품 URL을 알 수 없다. 브라우저 확장(Claude in Chrome 등)에
+대신 찾아달라고 할 수 있고, 그때 쓸 지시문을 명령으로 만들어 준다.
+**제품명을 손으로 옮기다 빠뜨리는 일을 막기 위한 것이다.**
+
+```bash
+# 상품 URL 수집 지시문 (여러 카테고리에서 골라 뽑기)
+python analyze_thumbnails.py urls --excel 결과/분석.xlsx \
+  --select 캡슐세제:7,11,12,13 세탁세제:1,2,3
+
+# 한 카테고리 전체
+python analyze_thumbnails.py urls --excel 결과/분석.xlsx --category 캡슐세제
+```
+
+출력된 글을 그대로 브라우저 확장에 붙여넣으면 된다. **파일 첨부는 필요 없다** —
+확장은 브라우저 화면을 보는 것이라 파일을 읽지 않는다.
+
+받아온 JSON의 `product_url`을 추출 JSON의 `product_url` 칸에 넣고 다시 `build` 하면,
+다음 회차부터는 검색 없이 바로 열 수 있다.
+
 ## 상세페이지 USP 분석 (`analyze_details.py`)
 
 썸네일이 "얼마에 파는가"라면, 이쪽은 **"왜 그 값을 받는가"**를 뽑는다.
