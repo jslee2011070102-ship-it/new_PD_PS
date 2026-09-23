@@ -70,6 +70,7 @@ async function run() {
 
     await page.locator('[data-page="data"]').click();
     await page.locator('[data-action="upload"]').first().click();
+    await page.locator('dialog [data-action="json-upload"]').click();
     await page
       .locator("#upload-file")
       .setInputFiles({
@@ -97,7 +98,7 @@ async function run() {
     await page.waitForSelector(".form-success");
     await page.locator("#apply-import").click();
     await page.waitForSelector(".session-banner");
-    assert.match(await page.locator(".section-heading").innerText(), /126/);
+    assert.match(await page.locator(".section-heading").last().innerText(), /126/);
     await page.locator('[data-category-go="세탁세제"]').click();
     await page.waitForSelector("tr[data-product]");
     assert.equal(await page.locator("tr[data-product]").count(), 1);

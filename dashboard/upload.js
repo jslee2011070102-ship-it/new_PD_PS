@@ -22,6 +22,7 @@ function selectedCategory(prefix) {
   return value;
 }
 function openFolderUpload() {
+  if (uploadingFolder) { toast('이미지 업로드가 진행 중입니다. 업로드 완료 후 새 작업을 시작하세요.'); return; }
   clearTimeout(jobTimer);
   const generation = ++folderGeneration;
   folderFiles = [];
@@ -99,8 +100,8 @@ async function analyzeFolder() {
     const target = $('#folder-error') || $('#job-error');
     if(target) target.innerHTML = `<div class="form-error">${esc(error.message)}${currentJob ? '<br>업로드 오류는 이미지를 확인한 뒤 새 작업으로 다시 선택하세요. 업로드 완료 후 시작 오류는 아래 재시도 버튼을 사용하세요.' : ''}</div>`;
     else toast(error.message);
-    if(currentJob && $('#analysis-progress')) { currentJob = await (await api(`/api/analysis/${currentJob.id}`)).json().catch(()=>currentJob); drawJob(currentJob); }
-  } finally { uploadingFolder = false; updateFolderButton(); }
+    if(currentJob && $('#analysis-progress')) { try { currentJob = await (await api(`/api/analysis/${currentJob.id}`)).json(); drawJob(currentJob); } catch { /* Keep the original upload error visible. */ } }
+  } finally { uploadingFolder = false; updateFolderButton(); if(currentJob && $('#analysis-progress')) drawJob(currentJob); }
 }
 const jobLabels = {uploading:'이미지 업로드 중',upload_error:'이미지 확인 필요',ready:'업로드 완료 · 분석 대기',running:'AI 분석 중',partial:'일부 이미지 분석 실패',interrupted:'서버 재시작으로 중단됨',review:'분석 완료 · 결과 검토',applied:'결과 저장 완료'};
 const fileLabels = {pending:'업로드 대기',uploaded:'분석 대기',upload_error:'업로드 실패',analyzing:'분석 중',done:'완료',error:'분석 실패'};
@@ -120,8 +121,8 @@ function drawJob(job) {
   const progress = (uploading ? uploaded : done + failed) / job.files.length * 100;
   $('#analysis-progress').innerHTML = `<div class="selection-summary"><strong>${jobLabels[job.status] || esc(job.status)}</strong><span>${uploading ? `업로드 ${uploaded}` : `완료 ${done} · 실패 ${failed}`} / ${job.files.length}장</span></div><progress class="analysis-meter" max="100" value="${progress}" aria-label="분석 진행률"></progress><p class="form-hint">${job.status === 'running' ? '이미지별로 순차 분석합니다. 새로고침 후에도 ‘최근 분석 이어보기’에서 확인할 수 있습니다.' : job.status === 'partial' ? '성공한 파일은 보존됩니다. 실패 파일만 재분석하며, 실패를 해결하기 전에는 대시보드에 반영하지 않습니다.' : job.status === 'applied' ? '이 서버에 저장했습니다. 새로고침해도 유지됩니다. 원본 이미지는 서버에서 삭제되었습니다.' : 'AI 결과는 오류가 있을 수 있습니다. 상품명·가격·규격을 검토한 뒤 저장하세요.'}</p>`;
   $('#job-files').innerHTML = `<ul class="selected-files job-file-list">${job.files.map(f=>`<li>${icon(f.status==='done'?'check':f.status==='analyzing'?'clock':'file')}<div><span>${esc(f.name)}</span>${f.error ? `<small class="file-error">${esc(f.error)}</small>` : ''}</div><span class="pill ${f.status==='done'?'green':['error','upload_error'].includes(f.status)?'red':''}">${fileLabels[f.status]}</span></li>`).join('')}</ul>`;
-  const rows = job.files.flatMap(f=>f.entries.map(e=>({...e,filename:f.name})));
-  $('#job-review').innerHTML = rows.length ? `<div class="detail-section"><h3>추출된 제품 ${rows.length}개 · 저장 전 검토</h3><div class="analysis-review table-scroll"><table><thead><tr><th>원본 / 상품명</th><th>판매가</th><th>용량 · 구성</th><th>화면 표기 단가</th></tr></thead><tbody>${rows.map(p=>`<tr><td class="product-name">${esc(p.product_name || p.brand)}<small>${esc(p.filename)}</small></td><td>${won(p.price_krw)}</td><td>${esc(p.capacity_text || '미확인')} × ${esc(p.composition_text || '미확인')}</td><td>${esc(p.unit_price_text || '표기없음')}</td></tr>`).join('')}</tbody></table></div><p class="form-hint">수정이 필요하면 추출 JSON을 내려받아 수정한 뒤 JSON 불러오기를 사용하세요. 가격·구매자수가 보이지 않으면 추정하지 않고 비워 둡니다. 신규 목표 규격/견적서는 자동 생성하지 않습니다.</p></div>` : '';
+  const rows = job.files.flatMap(f=>f.entries.map((e,i)=>({...e,filename:f.name,validation:f.validation?.[i] || '계산 대기'})));
+  $('#job-review').innerHTML = rows.length ? `<div class="detail-section"><h3>추출된 제품 ${rows.length}개 · 저장 전 검토</h3><div class="analysis-review table-scroll"><table><thead><tr><th>원본 / 상품명</th><th>판매가</th><th>용량 · 구성</th><th>화면 표기 단가</th><th>단가 검증</th></tr></thead><tbody>${rows.map(p=>`<tr><td class="product-name">${esc(p.product_name || p.brand)}<small>${esc(p.filename)}</small></td><td>${won(p.price_krw)}</td><td>${esc(p.capacity_text || '미확인')} × ${esc(p.composition_text || '미확인')}</td><td>${esc(p.unit_price_text || '표기없음')}</td><td>${badge(p.validation)}</td></tr>`).join('')}</tbody></table></div><p class="form-hint">수정이 필요하면 추출 JSON을 내려받아 수정한 뒤 JSON 불러오기를 사용하세요. 가격·구매자수가 보이지 않으면 추정하지 않고 비워 둡니다. 신규 목표 규격/견적서는 자동 생성하지 않습니다.</p></div>` : '';
   $('#job-actions').innerHTML = `${rows.length ? `<a class="button small" href="/api/analysis/${job.id}/results.json" download>추출 JSON</a>` : ''}${['ready','partial','interrupted'].includes(job.status) ? '<button class="button primary" data-action="retry-analysis">'+(job.status==='ready'?'분석 시작':'실패 파일 재분석')+'</button>' : ''}${job.status==='review' ? '<button class="button primary" data-action="apply-analysis">검토 완료 · 결과 저장</button>' : ''}${job.status==='applied' ? '<button class="button primary" data-action="view-analysis">시장 분석에서 보기</button>' : ''}${job.status==='upload_error' || job.status==='uploading' && !uploadingFolder ? '<button class="button" data-action="new-folder">폴더 다시 선택</button>' : ''}`;
 }
 async function pollJob(id) {
