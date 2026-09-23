@@ -10,6 +10,7 @@ import math
 from pathlib import Path
 import sys
 import re
+import importlib.util
 from urllib.parse import quote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -22,11 +23,13 @@ from pydantic import ValidationError  # noqa: E402
 CATEGORIES = ["세탁세제", "캡슐세제", "섬유유연제", "섬유탈취제", "주방세제", "살균소독제"]
 SURVEY_DATE = "2026-09-21"
 MAX_BODY = 4 * 1024 * 1024
+_spec = importlib.util.spec_from_file_location("dashboard_image_jobs", ROOT / "dashboard/image_jobs.py")
+image_jobs = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(image_jobs)
 
 
 def normalize(category, entries, survey_date=SURVEY_DATE):
-    if category not in CATEGORIES:
-        raise ValueError("지원하지 않는 카테고리입니다.")
+    category = image_jobs.category_name(category)
     if not isinstance(entries, list) or not 1 <= len(entries) <= 1000:
         raise ValueError("JSON은 1~1,000개 항목의 배열이어야 합니다.")
     products = []
@@ -63,7 +66,18 @@ def normalize(category, entries, survey_date=SURVEY_DATE):
 
 
 def load_products():
-    return [p for cat in CATEGORIES for p in normalize(cat, json.loads((ROOT / "data/extracted" / f"{cat}.json").read_text(encoding="utf-8")))]
+    saved = image_jobs.datasets()
+    products = []
+    for cat in list(dict.fromkeys([*CATEGORIES, *saved])):
+        if cat in saved:
+            data = saved[cat]
+            group = normalize(cat, data["entries"], data["survey_date"])
+            for product, survey_date in zip(group, data.get("dates", [data["survey_date"]] * len(group))):
+                product["row"]["조사일자"] = survey_date
+            products.extend(group)
+        else:
+            products.extend(normalize(cat, json.loads((ROOT / "data/extracted" / f"{cat}.json").read_text(encoding="utf-8"))))
+    return products
 
 
 def load_specs():
@@ -73,7 +87,7 @@ def load_specs():
 def summarize(products):
     counts = Counter(p["validation"] for p in products)
     categories = []
-    for cat in CATEGORIES:
+    for cat in dict.fromkeys(p["category"] for p in products):
         group = [p for p in products if p["category"] == cat]
         categories.append({"name": cat, "count": len(group), "revenue": sum(p["revenue"] or 0 for p in group),
                            "known_revenue": sum(p["revenue"] is not None for p in group),
@@ -88,6 +102,7 @@ def summarize(products):
 def snapshot(products, imported=False):
     return {"products": products, "summary": summarize(products), "specs": load_specs(),
             "survey_date": SURVEY_DATE, "channel": "쿠팡", "imported": imported,
+            "saved_categories": list(image_jobs.datasets()),
             "notice": "추정월매출 = 월구매자수 × 판매가 × 2. 조사 표본의 규모 비교용이며 실제 시장 전체 매출이 아닙니다."}
 
 
@@ -95,15 +110,17 @@ def products_from_payload(payload):
     if not isinstance(payload, dict):
         raise ValueError("JSON 객체가 필요합니다.")
     overrides = payload.get("overrides", {})
-    if not isinstance(overrides, dict) or any(c not in CATEGORIES for c in overrides):
+    if not isinstance(overrides, dict) or len(overrides) > 100:
         raise ValueError("카테고리 데이터를 확인하세요.")
-    products = []
-    for cat in CATEGORIES:
-        if cat in overrides:
-            products.extend(normalize(cat, overrides[cat], "업로드 데이터 (조사일 미확인)"))
-        else:
-            products.extend(normalize(cat, json.loads((ROOT / "data/extracted" / f"{cat}.json").read_text(encoding="utf-8"))))
-    return products
+    for cat in overrides:
+        if image_jobs.category_name(cat) != cat:
+            raise ValueError("카테고리 양끝의 공백을 제거하세요.")
+    products = [p for p in load_products() if p["category"] not in overrides]
+    for cat, entries in overrides.items():
+        products.extend(normalize(cat, entries, "업로드 데이터 (조사일 미확인)"))
+    order = list(dict.fromkeys([*CATEGORIES, *image_jobs.datasets(), *overrides]))
+    return sorted(products, key=lambda p: order.index(p["category"]))
+
 
 
 def make_workbook(products):
@@ -128,7 +145,7 @@ def make_workbook(products):
     notes = book.create_sheet("안내")
     notes.append(["추정월매출은 월구매자수 × 판매가 × 2이며 제품 간 규모 비교용입니다."])
     notes.append(["단가기준이 다른 행의 단가를 직접 비교하지 마세요."])
-    notes.append(["업로드 데이터는 브라우저 탭에서만 사용되며 원본 저장소를 변경하지 않습니다."])
+    notes.append(["JSON 탭 미리보기와 서버에 저장된 분석 결과를 포함합니다. Git 원본은 변경하지 않습니다."])
     buffer = BytesIO()
     book.save(buffer)
     return buffer.getvalue()
@@ -172,6 +189,18 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         path = urlsplit(self.path).path
+        if path == "/api/analysis/config":
+            return self.send(200, image_jobs.capabilities())
+        match = re.fullmatch(r"/api/analysis/([0-9a-f]{32})(/results.json)?", path)
+        if match:
+            try:
+                job = image_jobs.get_job(match[1])
+                if match[2]:
+                    entries = [entry for item in job["files"] for entry in item["entries"]]
+                    return self.send(200, json.dumps(entries, ensure_ascii=False, indent=2).encode(), "application/json", "extracted_products.json")
+                return self.send(200, image_jobs.public_job(job))
+            except ValueError as exc:
+                return self.send(404, {"error": str(exc)})
         if path == "/api/dashboard":
             return self.send(200, snapshot(load_products()))
         if path == "/api/export.xlsx":
@@ -195,7 +224,18 @@ class Handler(BaseHTTPRequestHandler):
         self.send(404, {"error": "요청한 파일을 찾을 수 없습니다."})
 
     def do_POST(self):
-        if urlsplit(self.path).path not in ("/api/import", "/api/export.xlsx", "/api/simulate"):
+        path = urlsplit(self.path).path
+        upload_match = re.fullmatch(r"/api/analysis/([0-9a-f]{32})/files/(\d+)", path)
+        if upload_match:
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                if not 0 < length <= image_jobs.MAX_FILE_BYTES:
+                    return self.send(413, {"error": "이미지는 파일당 15MB 이하여야 합니다."})
+                return self.send(200, image_jobs.upload_image(upload_match[1], int(upload_match[2]), self.rfile.read(length)))
+            except (ValueError, TypeError) as exc:
+                return self.send(400, {"error": str(exc)})
+        action_match = re.fullmatch(r"/api/analysis/([0-9a-f]{32})/(start|apply)", path)
+        if path not in ("/api/import", "/api/export.xlsx", "/api/simulate", "/api/analysis", "/api/import/save") and not action_match:
             return self.send(404, {"error": "지원하지 않는 요청입니다."})
         if self.headers.get_content_type() != "application/json":
             return self.send(415, {"error": "application/json 형식으로 전송하세요."})
@@ -204,7 +244,21 @@ class Handler(BaseHTTPRequestHandler):
             if not 0 < length <= MAX_BODY:
                 return self.send(413, {"error": "최대 4MB까지 전송할 수 있습니다."})
             payload = json.loads(self.rfile.read(length))
-            path = urlsplit(self.path).path
+            if not isinstance(payload, dict):
+                raise ValueError("JSON 객체가 필요합니다.")
+            if path == "/api/analysis":
+                return self.send(201, image_jobs.create_job(payload))
+            if action_match:
+                if action_match[2] == "start":
+                    return self.send(202, image_jobs.start_job(action_match[1], payload.get("consent"), normalize))
+                image_jobs.apply_job(action_match[1], normalize)
+                return self.send(200, snapshot(load_products()))
+            if path == "/api/import/save":
+                category = image_jobs.category_name(payload.get("category"))
+                entries = payload.get("entries")
+                normalize(category, entries, "업로드 데이터 (조사일 미확인)")
+                image_jobs.save_category(category, entries, "업로드 데이터 (조사일 미확인)", payload.get("mode", "append"))
+                return self.send(200, snapshot(load_products()))
             if path == "/api/simulate":
                 return self.send(200, simulate(payload))
             products = products_from_payload(payload)
@@ -223,6 +277,7 @@ def main():
     parser.add_argument("--port", type=int, default=3000)
     parser.add_argument("--host", default="127.0.0.1")
     args = parser.parse_args()
+    image_jobs.recover_jobs()
     server = ThreadingHTTPServer((args.host, args.port), Handler)
     print(f"Dashboard: http://{args.host}:{args.port}", flush=True)
     server.serve_forever()

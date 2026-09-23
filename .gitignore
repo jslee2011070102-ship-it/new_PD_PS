@@ -17,3 +17,6 @@ __pycache__/
 
 # Node 모듈
 node_modules/
+
+# Private local dashboard uploads, jobs, and saved results
+data/dashboard/
