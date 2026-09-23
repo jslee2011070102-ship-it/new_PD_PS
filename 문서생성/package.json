@@ -1,0 +1,11 @@
+{
+  "name": "munseo-saengseong",
+  "private": true,
+  "description": "생산 견적 요청서(docx) 생성기",
+  "scripts": {
+    "build": "node 견적요청서_생성.js"
+  },
+  "dependencies": {
+    "docx": "^9.7.1"
+  }
+}

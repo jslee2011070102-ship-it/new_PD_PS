@@ -1,11 +1,17 @@
 const fs = require("fs");
+const path = require("path");
 const {
   Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType,
   Table, TableRow, TableCell, WidthType, ShadingType, BorderStyle,
   PageBreak, LevelFormat, convertInchesToTwip,
 } = require("docx");
 
-const D = JSON.parse(fs.readFileSync("data.json", "utf8"));
+// 데이터와 결과물은 이 스크립트와 같은 폴더를 기준으로 삼는다
+// (어느 위치에서 node로 실행하든 같게 동작하도록).
+const HERE = __dirname;
+const DATA_FILE = path.join(HERE, "견적요청서_데이터.json");
+const OUT_FILE  = path.join(HERE, "..", "신제품_생산견적요청서.docx");
+const D = JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
 const won = (n) => n.toLocaleString("ko-KR") + "원";
 
 // A4 본문 폭 ≈ 9026 DXA (21cm - 좌우 여백 2cm씩)
@@ -256,6 +262,6 @@ const doc = new Document({
 });
 
 Packer.toBuffer(doc).then((b) => {
-  fs.writeFileSync("신제품_생산견적요청서.docx", b);
-  console.log("생성 완료:", b.length, "bytes");
+  fs.writeFileSync(OUT_FILE, b);
+  console.log("생성 완료:", OUT_FILE, b.length, "bytes");
 });
