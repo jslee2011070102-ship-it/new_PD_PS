@@ -63,7 +63,7 @@ const revenue = (value) =>
     : value >= 100000000
       ? `${(value / 100000000).toFixed(1)}억`
       : `${number(Math.round(value / 10000))}만`;
-const cats = [
+let cats = [
   "세탁세제",
   "캡슐세제",
   "섬유유연제",
@@ -71,6 +71,7 @@ const cats = [
   "주방세제",
   "살균소독제",
 ];
+const originalCats = [...cats];
 const catStyles = ["blue", "purple", "pink", "mint", "yellow", ""];
 const catIcons = ["bottle", "capsule", "leaf", "spray", "bottle", "shield"];
 const pages = {
@@ -107,7 +108,7 @@ function hydrateIcons(root = document) {
   });
 }
 function catIcon(cat) {
-  const index = cats.indexOf(cat);
+  const index = originalCats.indexOf(cat);
   return `<span class="category-icon ${catStyles[index] || ""}">${icon(catIcons[index])}</span>`;
 }
 function badge(validation) {
@@ -144,7 +145,7 @@ function pageHeading(title, subtitle, actions = true) {
 }
 function sessionBanner() {
   return Object.keys(state.overrides).length
-    ? `<div class="session-banner">${icon("info")}업로드 데이터 적용 중 · 새로고침 시 초기화됩니다. 기획 규격과 견적서는 원본 기준입니다.<button class="text-button" data-action="reset-data">원본으로 복원 ${icon("refresh")}</button></div>`
+    ? `<div class="session-banner">${icon("info")}업로드 데이터 적용 중 · 새로고침 시 초기화됩니다. 기획 규격과 견적서는 원본 기준입니다.<button class="text-button" data-action="reset-data">탭 미리보기 해제 ${icon("refresh")}</button></div>`
     : "";
 }
 function heroArt() {
@@ -202,7 +203,7 @@ function overview() {
       .join("")}</div></section></div>
     <div class="stats-grid">${cards.map(([label, value, unit, i, foot]) => `<article class="stat-card"><div class="stat-label">${label}<span class="stat-icon">${icon(i)}</span></div><div class="stat-number">${number(value)}<small>${unit}</small></div><div class="stat-foot">${foot}</div></article>`).join("")}</div>
     <div class="charts-grid"><section class="panel chart-panel"><div class="panel-heading"><div><h2>카테고리별 추정 월매출</h2><p>조사 제품의 매출 규모를 한눈에 비교해 보세요.</p></div><span class="chart-legend"><i></i>추정 월매출</span></div>${barChart(s.categories)}<div class="chart-note">${icon("info")}월구매자수 × 판매가 × 2 · 표본 내 규모 비교용이며 실제 전체 시장 매출이 아닙니다.</div></section>
-    <section class="panel role-panel"><div class="panel-heading"><h2>본품 · 리필 구성</h2><select id="role-category" class="select-small" aria-label="제품 구성 카테고리"><option>전체 카테고리</option>${cats.map((c) => `<option>${c}</option>`).join("")}</select></div><div id="role-chart">${roleChart(s.roles)}</div><div class="role-insight">${icon("bulb")}제품의 <b>형태와 역할</b>은 구분해서 확인하세요.</div></section></div>
+    <section class="panel role-panel"><div class="panel-heading"><h2>본품 · 리필 구성</h2><select id="role-category" class="select-small" aria-label="제품 구성 카테고리"><option>전체 카테고리</option>${cats.map((c) => `<option>${esc(c)}</option>`).join("")}</select></div><div id="role-chart">${roleChart(s.roles)}</div><div class="role-insight">${icon("bulb")}제품의 <b>형태와 역할</b>은 구분해서 확인하세요.</div></section></div>
     <section><div class="section-heading"><div><h2>신제품 기획 한눈에 보기 <small>12종</small></h2><p>시장 가격대를 바탕으로 도출한 목표 규격과 생산원가입니다.</p></div><a class="text-button" href="#specs">전체 보기 ${icon("arrow-right")}</a></div><div class="table-panel"><div class="table-scroll"><table><thead><tr><th>카테고리</th><th>제품 역할</th><th>목표 규격</th><th>목표 판매가</th><th>목표 생산원가</th><th>경쟁 기준 대비</th><th></th></tr></thead><tbody>${ordered.map((p) => `<tr class="clickable" data-spec="${specs.indexOf(p)}" tabindex="0" aria-label="${esc(p.cat)} ${esc(p.role)} 상세"><td><div class="category-cell">${catIcon(p.cat)}${esc(p.cat)}</div></td><td>${roleBadge(p.role)}</td><td>${esc(p.spec)}</td><td class="amount">${won(p.price)}</td><td class="amount green">${won(p.cost)}</td><td><span class="pill green">${icon("arrow-down")}${number(Math.abs(p.benchDiff))}%</span></td><td>${icon("chevron-right")}</td></tr>`).join("")}</tbody></table></div><div class="table-foot"><span>생산원가 = 목표 판매가 ÷ 3.5 · 묶음 전체 기준</span><a class="text-button" href="/api/document" download>${icon("download")}견적요청서 다운로드</a></div></div></section>
     <div class="insight-strip">${icon("bulb")}<div><strong>다음 리서치 단계</strong>목표 제품의 상세페이지를 수집하고, 경쟁 제품의 핵심 USP를 비교해 보세요.</div><a class="text-button" href="#usp">USP 분석 준비 ${icon("arrow-right")}</a></div>`;
 }
@@ -210,7 +211,7 @@ function barChart(categories) {
   const ordered = [...categories].sort((a, b) => b.revenue - a.revenue);
   const max = Math.max(...ordered.map((c) => c.revenue / 1e8), 1);
   const ceiling = Math.ceil(max / 20) * 20;
-  return `<div class="chart" aria-label="카테고리별 추정 월매출 막대 차트"><div class="chart-gridlines">${[4, 3, 2, 1, 0].map((i) => `<div class="gridline"><span>${number((ceiling * i) / 4)}억</span></div>`).join("")}</div><div class="chart-bars">${ordered.map((c) => `<button class="bar-group" data-category-go="${esc(c.name)}" aria-label="${esc(c.name)} 추정월매출 ${revenue(c.revenue)}원, 제품 보기" title="${esc(c.name)} · 추정월매출 ${won(c.revenue)} · 매출 산출 ${c.known_revenue}/${c.count}건"><span class="bar-value" style="bottom:calc(${((c.revenue / 1e8 / ceiling) * 100).toFixed(2)}% + 6px)">${revenue(c.revenue)}</span><span class="bar" style="height:${((c.revenue / 1e8 / ceiling) * 100).toFixed(2)}%"></span><span class="bar-label">${esc(c.name)}</span></button>`).join("")}</div></div>`;
+  return `<div class="chart" style="min-width:${Math.max(420, categories.length * 72)}px" aria-label="카테고리별 추정 월매출 막대 차트"><div class="chart-gridlines">${[4, 3, 2, 1, 0].map((i) => `<div class="gridline"><span>${number((ceiling * i) / 4)}억</span></div>`).join("")}</div><div class="chart-bars">${ordered.map((c) => `<button class="bar-group" data-category-go="${esc(c.name)}" aria-label="${esc(c.name)} 추정월매출 ${revenue(c.revenue)}원, 제품 보기" title="${esc(c.name)} · 추정월매출 ${won(c.revenue)} · 매출 산출 ${c.known_revenue}/${c.count}건"><span class="bar-value" style="bottom:calc(${((c.revenue / 1e8 / ceiling) * 100).toFixed(2)}% + 6px)">${revenue(c.revenue)}</span><span class="bar" style="height:${((c.revenue / 1e8 / ceiling) * 100).toFixed(2)}%"></span><span class="bar-label">${esc(c.name)}</span></button>`).join("")}</div></div>`;
 }
 function roleChart(roles) {
   const total = Object.values(roles).reduce((a, b) => a + b, 0);
@@ -220,7 +221,7 @@ function roleChart(roles) {
   return `<div class="donut-area"><div class="donut" role="img" aria-label="본품 ${roles["본품"] || 0}개, 리필 ${roles["리필"] || 0}개, 불명 ${roles["불명"] || 0}개" style="background:conic-gradient(${colors[0]} 0 ${a}%,${colors[1]} ${a}% ${b}%,${colors[2]} ${b}% 100%)"><div class="donut-center"><small>전체 제품</small><strong>${number(total)}<span>개</span></strong></div></div><div class="donut-legend">${["본품", "리필", "불명"].map((role, i) => `<div><i class="legend-dot" style="background:${colors[i]}"></i><span>${role}</span><strong>${roles[role] || 0}</strong></div>`).join("")}</div></div>`;
 }
 function categoryTabs(selected, attr = "category") {
-  return `<div class="category-tabs" role="group" aria-label="카테고리 선택">${["전체", ...cats].map((c) => `<button class="tab ${selected === c ? "active" : ""}" data-${attr}="${esc(c)}" aria-pressed="${selected === c}">${c}${attr === "category" ? `<small>${c === "전체" ? state.data.products.length : state.data.summary.categories.find((x) => x.name === c).count}</small>` : ""}</button>`).join("")}</div>`;
+  return `<div class="category-tabs" role="group" aria-label="카테고리 선택">${["전체", ...cats].map((c) => `<button class="tab ${selected === c ? "active" : ""}" data-${attr}="${esc(c)}" aria-pressed="${selected === c}">${esc(c)}${attr === "category" ? `<small>${c === "전체" ? state.data.products.length : state.data.summary.categories.find((x) => x.name === c).count}</small>` : ""}</button>`).join("")}</div>`;
 }
 function market() {
   return `${pageHeading("시장 분석", "경쟁 제품의 가격, 규격, 시장 지표를 탐색하고 기회의 근거를 확인하세요.")}${sessionBanner()}<section class="filter-panel">${categoryTabs(state.category)}<div class="filter-row"><label class="search-field">${icon("search")}<input id="product-search" type="search" aria-label="제품 또는 브랜드 검색" placeholder="제품명 또는 브랜드를 검색하세요" value="${esc(state.query)}"></label><select id="role-filter" class="filter-select" aria-label="제품 역할"><option value="">역할 전체</option>${["본품", "리필", "불명"].map((v) => `<option ${v === state.role ? "selected" : ""}>${v}</option>`).join("")}</select><select id="basis-filter" class="filter-select" aria-label="단가 기준"><option value="">단가 기준 전체</option>${["100ml당", "100g당", "1개당"].map((v) => `<option ${v === state.basis ? "selected" : ""}>${v}</option>`).join("")}</select><select id="validation-filter" class="filter-select" aria-label="단가 검증 상태"><option value="">검증 전체</option>${["일치", "표기없음", "확인 필요"].map((v) => `<option ${v === state.validation ? "selected" : ""}>${v}</option>`).join("")}</select><select id="sort-filter" class="filter-select" aria-label="정렬"><option value="rank">카테고리 · 순위순</option><option value="price">판매가 낮은 순</option><option value="revenue">추정매출 높은 순</option><option value="reviews">리뷰 많은 순</option></select><span class="result-count" id="result-count"></span></div></section><div id="market-results"></div><div class="chart-note">${icon("info")}단가 기준이 다른 제품은 직접 비교하지 마세요. 매출은 비교용 추정치이며 ‘만족했어요’ 문구는 구매자수에서 제외됩니다.</div>`;
@@ -280,7 +281,7 @@ function specsPage() {
   const specs = state.data.specs.filter(
     (s) => state.specCategory === "전체" || s.cat === state.specCategory,
   );
-  return `${pageHeading("신제품 기획", "실제 시장 가격대를 기준으로, 가성비 포지셔닝을 위한 목표 규격을 설계합니다.", false)}${sessionBanner()}<div class="category-filters-heading">${categoryTabs(state.specCategory, "spec-category")}<a class="button small" href="/api/document" download>${icon("download")}견적요청서</a></div><div class="spec-grid">${specs.map((s) => `<article class="spec-card"><div class="spec-card-top">${catIcon(s.cat)}<strong>${esc(s.cat)}</strong>${roleBadge(s.role)}</div><div class="spec-name">${esc(s.spec)}</div><div class="spec-form">${esc(s.form)} · ${esc(s.basis)} ${won(s.unit)}</div><div class="spec-prices"><div><small>목표 판매가</small><strong>${number(s.price)}<span>원</span></strong></div><div><small>목표 생산원가</small><strong>${number(s.cost)}<span>원</span></strong></div></div><div class="spec-benchmark"><span>${esc(s.benchBrand)} ${esc(s.basis)} 대비</span><span class="pill green">${number(s.benchDiff)}%</span></div><button class="button soft" data-spec="${state.data.specs.indexOf(s)}">선정 근거 · 원가 시뮬레이션 ${icon("arrow-right")}</button></article>`).join("")}</div><div class="insight-strip">${icon("info")}<div>단독 최저가 이상치를 제외한 실제 가격대에서 약 5% 낮게 설정한 기획안입니다. 자동 추천이 아닌 1차 조사 판단 결과입니다.</div></div>`;
+  return `${pageHeading("신제품 기획", "실제 시장 가격대를 기준으로, 가성비 포지셔닝을 위한 목표 규격을 설계합니다.", false)}${sessionBanner()}<div class="category-filters-heading">${categoryTabs(state.specCategory, "spec-category")}<a class="button small" href="/api/document" download>${icon("download")}견적요청서</a></div><div class="spec-grid">${!specs.length ? '<div class="notice-box">이 카테고리의 목표 규격은 아직 없습니다. 시장 분석 결과를 검토한 뒤 기획안을 작성해 주세요.</div>' : ""}${specs.map((s) => `<article class="spec-card"><div class="spec-card-top">${catIcon(s.cat)}<strong>${esc(s.cat)}</strong>${roleBadge(s.role)}</div><div class="spec-name">${esc(s.spec)}</div><div class="spec-form">${esc(s.form)} · ${esc(s.basis)} ${won(s.unit)}</div><div class="spec-prices"><div><small>목표 판매가</small><strong>${number(s.price)}<span>원</span></strong></div><div><small>목표 생산원가</small><strong>${number(s.cost)}<span>원</span></strong></div></div><div class="spec-benchmark"><span>${esc(s.benchBrand)} ${esc(s.basis)} 대비</span><span class="pill green">${number(s.benchDiff)}%</span></div><button class="button soft" data-spec="${state.data.specs.indexOf(s)}">선정 근거 · 원가 시뮬레이션 ${icon("arrow-right")}</button></article>`).join("")}</div><div class="insight-strip">${icon("info")}<div>단독 최저가 이상치를 제외한 실제 가격대에서 약 5% 낮게 설정한 기획안입니다. 자동 추천이 아닌 1차 조사 판단 결과입니다.</div></div>`;
 }
 function uspPage() {
   return `${pageHeading("USP 분석", "가격 너머의 이유, 경쟁 제품이 고객에게 전달하는 핵심 가치를 살펴보세요.", false)}<section class="panel"><div class="panel-heading"><h2>상세페이지 리서치</h2><span class="pill amber">데이터 수집 대기</span></div><div class="empty-state"><div class="empty-icon">${icon("sparkles")}</div><h2>좋은 제품에는, 선택받는 이유가 있습니다.</h2><p>상세페이지 USP 분석 도구는 준비되어 있습니다.<br>목표 제품의 캡처를 수집한 후, 핵심 소구점과 근거 문구를 분석해 보세요.<br>아직 수집된 데이터가 없어 분석 결과는 표시하지 않습니다.</p><button class="button primary" data-action="usp-guide">${icon("book")}상세페이지 수집 가이드</button> <a href="#market" class="button">분석할 제품 찾기 ${icon("arrow-right")}</a></div></section><div class="steps-grid">${[
@@ -345,18 +346,18 @@ function documentsPage() {
     )}</div><div class="notice-box">${icon("info")}견적요청서와 목표 규격 JSON은 저장소의 <strong>2026년 9월 1차 조사 원본</strong>입니다. 업로드 데이터나 시뮬레이션은 이 문서에 반영되지 않습니다. 목표 원가에는 3.5배수에 반영된 수수료·배송비를 중복 차감하지 않습니다.</div>`;
 }
 function dataPage() {
-  return `${pageHeading("데이터 관리", "조사 원본을 확인하고, 새로운 추출 데이터를 검증해 워크스페이스에 불러오세요.")}${sessionBanner()}<div class="upload-callout">${icon("upload")}<div><h2>새로운 리서치 데이터를 준비하셨나요?</h2><p>ProductInfo 형식의 추출 JSON을 불러오면 단가 계산과 검증이 자동으로 진행됩니다.<br>이미지 자동 인식은 지원하지 않으며, 이 탭에서만 적용됩니다.</p></div><button class="button primary" data-action="upload">JSON 불러오기 ${icon("arrow-right")}</button></div><div class="section-heading"><h2>카테고리별 데이터 <small>${state.data.products.length}건</small></h2><a class="text-button" href="/api/template.json" download>JSON 예시 다운로드 ${icon("download")}</a></div><div class="table-panel"><div class="table-scroll"><table class="data-table"><thead><tr><th>카테고리</th><th>제품 수</th><th>단가 일치</th><th>표기없음 / 확인 필요</th><th>데이터 출처</th><th></th></tr></thead><tbody>${state.data.summary.categories
+  return `${pageHeading("데이터 관리", "조사 원본을 확인하고, 새로운 추출 데이터를 검증해 워크스페이스에 불러오세요.")}${sessionBanner()}<div class="upload-callout">${icon("upload")}<div><h2>새로운 리서치 데이터를 준비하셨나요?</h2><p>새 카테고리를 만들고 로컬 이미지 폴더를 통째로 분석하세요.<br>AI가 상품 정보를 추출하고 Python이 단가를 검증합니다. 결과는 검토 후 서버에 저장합니다.</p></div><button class="button primary" data-action="upload">이미지 폴더 분석 ${icon("arrow-right")}</button></div><div class="section-heading"><div class="flex-actions"><button class="text-button" data-action="resume-analysis">최근 분석 이어보기</button><button class="text-button" data-action="json-upload">JSON 불러오기</button></div></div><div class="section-heading"><h2>카테고리별 데이터 <small>${state.data.products.length}건</small></h2><a class="text-button" href="/api/template.json" download>JSON 예시 다운로드 ${icon("download")}</a></div><div class="table-panel"><div class="table-scroll"><table class="data-table"><thead><tr><th>카테고리</th><th>제품 수</th><th>단가 일치</th><th>표기없음 / 확인 필요</th><th>데이터 출처</th><th></th></tr></thead><tbody>${state.data.summary.categories
     .map((c) => {
       const products = state.data.products.filter((p) => p.category === c.name);
       const matched = products.filter((p) => p.validation === "일치").length;
       const missing = products.filter(
         (p) => p.validation === "표기없음",
       ).length;
-      return `<tr><td><div class="category-cell">${catIcon(c.name)}${c.name}</div></td><td>${c.count}개</td><td>${icon("check")} ${matched}건</td><td>${missing}건 / ${c.count - matched - missing}건</td><td><span class="pill ${state.overrides[c.name] ? "amber" : "green"}">${state.overrides[c.name] ? "탭 임시 데이터" : "저장소 원본"}</span></td><td><button class="text-button" data-category-go="${c.name}">제품 보기 ${icon("arrow-right")}</button></td></tr>`;
+      return `<tr><td><div class="category-cell">${catIcon(c.name)}${esc(c.name)}</div></td><td>${c.count}개</td><td>${icon("check")} ${matched}건</td><td>${missing}건 / ${c.count - matched - missing}건</td><td><span class="pill ${state.overrides[c.name] ? "amber" : "green"}">${state.overrides[c.name] ? "탭 임시 데이터" : state.data.saved_categories?.includes(c.name) ? "서버 저장 데이터" : "저장소 원본"}</span></td><td><button class="text-button" data-category-go="${esc(c.name)}">제품 보기 ${icon("arrow-right")}</button></td></tr>`;
     })
     .join(
       "",
-    )}</tbody></table></div></div><div class="insight-strip">${icon("shield")}<div><strong>원본은 안전하게 보존됩니다.</strong>불러오기는 해당 카테고리의 탭 내 데이터를 교체하며, Git 저장소나 서버의 원본 파일을 수정하지 않습니다.</div></div>`;
+    )}</tbody></table></div></div><div class="insight-strip">${icon("shield")}<div><strong>원본은 안전하게 보존됩니다.</strong>분석 결과는 서버의 별도 데이터 파일에 저장됩니다. 기존 Git 원본과 사용자 PC의 이미지 폴더는 수정하지 않습니다.</div></div>`;
 }
 function navigate(page, options = {}) {
   if (!Object.hasOwn(pages, page)) page = "overview";
@@ -375,6 +376,7 @@ function navigate(page, options = {}) {
 }
 function render() {
   if (!state.data) return;
+  cats = state.data.summary.categories.map(c => c.name);
   const nextPage = location.hash.slice(1);
   state.page = Object.hasOwn(pages, nextPage) ? nextPage : "overview";
   document.title = `${pages[state.page]} — Product Lab`;
@@ -462,7 +464,7 @@ function guide(usp = false) {
         ],
         [
           "USP JSON을 추출하고 기존 도구로 검증하세요",
-          "AI 또는 사람이 성분·기능·인증과 원문 근거를 DetailPageInfo 형식으로 추출합니다. 웹앱은 자동 OCR이나 USP 업로드를 아직 지원하지 않습니다.",
+          "AI 또는 사람이 성분·기능·인증과 원문 근거를 DetailPageInfo 형식으로 추출합니다. 이 폴더 분석은 상품 카드의 가격·규격 추출용입니다. 상세페이지 USP 업로드·병합 분석은 아직 지원하지 않습니다.",
         ],
       ]
     : [
@@ -475,8 +477,8 @@ function guide(usp = false) {
           "12개 목표 규격의 선정 이유와 경쟁사 단가를 비교하고, 목표 판매가에 따른 생산원가를 시뮬레이션하세요.",
         ],
         [
-          "추출 JSON을 불러오세요",
-          "데이터 불러오기에서 카테고리를 선택하고 ProductInfo 배열 JSON을 검증하세요. 적용은 현재 탭에서만 유지됩니다. 엑셀로 결과를 보관하세요.",
+          "이미지 폴더로 새 카테고리를 분석하세요",
+          "데이터 불러오기 → 새 카테고리 입력 → 폴더 선택 → AI 전송 동의 → 분석 시작 순서입니다. 완료 후 검토·저장하면 새로고침해도 유지됩니다. JSON 불러오기도 지원합니다.",
         ],
         [
           "산출물을 다운로드하세요",
@@ -490,14 +492,17 @@ function guide(usp = false) {
     `<button class="button primary" data-action="close">확인했습니다 ${icon("check")}</button>`,
   );
 }
-function openUpload() {
+function openUpload() { openFolderUpload(); }
+function openJsonUpload() {
   state.pendingImport = null;
   showDialog(
     "리서치 데이터 불러오기",
-    "추출 JSON을 검증하고 선택한 카테고리의 데이터를 교체합니다.",
-    `<label class="field-label" for="upload-category">카테고리</label><select id="upload-category" class="form-field">${cats.map((c) => `<option>${c}</option>`).join("")}</select><label class="dropzone" id="dropzone">${icon("upload")}<strong>추출 JSON 파일을 선택하거나 여기에 놓으세요</strong><small>JSON 배열 · 최대 3MB · 카테고리당 1,000개 제품</small><input id="upload-file" type="file" accept=".json,application/json" aria-label="추출 JSON 파일 선택"></label><div id="upload-result" aria-live="polite"></div><p class="form-hint">이미지/PDF의 자동 인식은 지원하지 않습니다. 검증된 데이터는 현재 탭에서만 사용되며, 새로고침하면 저장소 원본으로 돌아갑니다.</p><a class="text-button" href="/api/template.json" download>${icon("download")}ProductInfo JSON 예시 다운로드</a>`,
-    '<button class="button" data-action="close">취소</button><button class="button primary" id="apply-import" data-action="apply-import" disabled>검증 후 적용</button>',
+    "새 카테고리 또는 기존 카테고리에 JSON 데이터를 검증해서 추가합니다.",
+    `${categoryFields('upload')}<label class="dropzone" id="dropzone">${icon("upload")}<strong>추출 JSON 파일을 선택하거나 여기에 놓으세요</strong><small>JSON 배열 · 최대 3MB · 카테고리당 1,000개 제품</small><input id="upload-file" type="file" accept=".json,application/json" aria-label="추출 JSON 파일 선택"></label><div id="upload-result" aria-live="polite"></div><label class="field-label" for="json-save-mode">서버 저장 방식</label><select id="json-save-mode" class="form-field"><option value="append">기존 데이터에 추가</option><option value="replace">카테고리 전체 교체</option></select><p class="form-hint">‘탭 미리보기’는 새로고침하면 초기화됩니다. ‘서버에 저장’은 새로고침해도 유지됩니다. 새 카테고리도 등록할 수 있습니다.</p><a class="text-button" href="/api/template.json" download>${icon("download")}ProductInfo JSON 예시 다운로드</a>`,
+    '<button class="button" data-action="close">취소</button><button class="button" id="apply-import" data-action="apply-import" disabled>탭 미리보기</button><button class="button primary" id="save-json-import" data-action="save-json-import" disabled>서버에 저장</button>',
   );
+  $("#upload-category").value = cats[0];
+  $("#upload-new-wrap").hidden = true;
   const zone = $("#dropzone");
   zone.addEventListener("dragover", (e) => {
     e.preventDefault();
@@ -515,6 +520,7 @@ async function validateUpload(file) {
   const sequence = ++uploadSequence;
   state.pendingImport = null;
   $("#apply-import").disabled = true;
+  $("#save-json-import").disabled = true;
   if (!file) return;
   $("#upload-result").innerHTML =
     '<p class="form-hint">파일의 스키마와 단가를 검증하고 있습니다…</p>';
@@ -534,18 +540,19 @@ async function validateUpload(file) {
         "JSON 문법이 올바르지 않습니다. 쉼표, 따옴표, 배열 형식을 확인하세요.",
       );
     }
-    const category = $("#upload-category").value;
+    const category = selectedCategory("upload");
     const overrides = { ...state.overrides, [category]: entries };
     const result = await (await api("/api/import", { overrides })).json();
     if (sequence !== uploadSequence || !dialog.open || !$("#upload-result"))
       return;
-    state.pendingImport = { result, overrides };
+    state.pendingImport = { result, overrides, category, entries };
     const products = result.products.filter((p) => p.category === category);
     const match = products.filter((p) => p.validation === "일치").length;
     $("#upload-result").innerHTML =
       `<div class="form-success">${icon("check")} ${esc(file.name)} · ${products.length}개 제품 검증 완료<br>단가 일치 ${match}건 · 표기없음 ${products.filter((p) => p.validation === "표기없음").length}건 · 확인 필요 ${products.filter((p) => !["일치", "표기없음"].includes(p.validation)).length}건<br>${esc(category)}의 현재 데이터를 교체합니다. 원본 파일은 변경하지 않습니다.</div>`;
     $("#apply-import").disabled = false;
-    $("#apply-import").textContent = "워크스페이스에 적용";
+    $("#save-json-import").disabled = false;
+    $("#apply-import").textContent = "탭 미리보기";
   } catch (error) {
     if (sequence === uploadSequence && $("#upload-result"))
       $("#upload-result").innerHTML =
@@ -671,7 +678,7 @@ document.addEventListener("click", (e) => {
       state.overrides = {};
       resetFilters();
       render();
-      toast("저장소 원본 데이터로 복원했습니다.");
+      toast("탭 미리보기를 해제했습니다. 서버에 저장된 데이터는 유지됩니다.");
       break;
     case "show-unverified":
       dialog.close();
@@ -689,6 +696,12 @@ document.addEventListener("click", (e) => {
   }
 });
 document.addEventListener("input", (e) => {
+  if (e.target.id === "upload-new-category") {
+    uploadSequence++; state.pendingImport = null;
+    $("#apply-import").disabled = true; $("#save-json-import").disabled = true;
+    clearTimeout(window.jsonCategoryTimer);
+    window.jsonCategoryTimer = setTimeout(() => { if ($("#upload-file")?.files[0]) validateUpload($("#upload-file").files[0]); }, 450);
+  }
   if (e.target.id === "product-search") {
     state.query = e.target.value;
     state.pageNumber = 1;
@@ -720,6 +733,7 @@ document.addEventListener("change", (e) => {
     uploadSequence++;
     state.pendingImport = null;
     $("#apply-import").disabled = true;
+    $("#save-json-import").disabled = true;
     $("#upload-result").innerHTML = "";
     if ($("#upload-file").files[0]) validateUpload($("#upload-file").files[0]);
   }

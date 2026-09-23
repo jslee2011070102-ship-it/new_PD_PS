@@ -215,6 +215,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(200, {"status": "ok"})
         # Explicit allowlist: never expose the repository, .git, or arbitrary paths.
         assets = {"/": ("index.html", "text/html; charset=utf-8"), "/app.js": ("app.js", "text/javascript; charset=utf-8"),
+                  "/upload.js": ("upload.js", "text/javascript; charset=utf-8"),
                   "/styles.css": ("styles.css", "text/css; charset=utf-8"), "/favicon.svg": ("favicon.svg", "image/svg+xml")}
         if path in assets:
             name, content_type = assets[path]
