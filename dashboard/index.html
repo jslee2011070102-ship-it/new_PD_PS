@@ -1,49 +1,151 @@
 <!doctype html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#176b57">
-  <meta name="description" content="쿠팡 생활용품 시장 데이터에서 다음 제품의 가능성을 발견하는 제품기획 리서치 대시보드">
-  <title>Product Lab — 제품기획 리서치</title>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
-  <script src="/app.js" defer></script>
-</head>
-<body>
-  <a class="skip-link" href="#main">본문 바로가기</a>
-  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
-  <aside class="sidebar" id="sidebar" aria-label="주 메뉴">
-    <a class="brand" href="#overview"><span class="brand-mark"><svg viewBox="0 0 28 28" fill="none"><path d="m14 3 10 6v11l-10 6L4 20V9l10-6Z" stroke="currentColor" stroke-width="1.8"/><path d="m4 9 10 6 10-6M14 15v11M9 6l10 6v6" stroke="currentColor" stroke-width="1.8"/></svg></span><span>Product<span class="brand-light"> Lab</span><small>제품기획 리서치 워크스페이스</small></span></a>
-    <div class="workspace"><span class="workspace-avatar" data-icon="layers"></span><div><strong>생활용품 리서치</strong><small>쿠팡 · 1차 시장 조사</small></div><span class="workspace-dot"></span></div>
-    <div class="nav-label">WORKSPACE</div>
-    <nav id="nav">
-      <a href="#overview" data-page="overview" class="nav-item active"><span data-icon="dashboard"></span>대시보드</a>
-      <a href="#market" data-page="market" class="nav-item"><span data-icon="chart"></span>시장 분석<span class="nav-count">150</span></a>
-      <a href="#specs" data-page="specs" class="nav-item"><span data-icon="box"></span>신제품 기획<span class="nav-count">12</span></a>
-      <a href="#usp" data-page="usp" class="nav-item"><span data-icon="sparkles"></span>USP 분석<span class="nav-new">NEXT</span></a>
-      <div class="nav-label second-label">RESOURCES</div>
-      <a href="#documents" data-page="documents" class="nav-item"><span data-icon="file"></span>산출물 관리</a>
-      <a href="#data" data-page="data" class="nav-item"><span data-icon="database"></span>데이터 관리</a>
-    </nav>
-    <div class="sidebar-bottom">
-      <div class="help-card"><span class="help-icon" data-icon="book"></span><strong>더 좋은 기획의 시작</strong><p>데이터 수집부터 견적 요청까지,<br>리서치 가이드를 확인하세요.</p><button class="text-button" data-action="guide">이용 가이드 <span data-icon="arrow-right"></span></button></div>
-      <a class="repo-link" href="https://github.com/jslee2011070102-ship-it/new_PD_PS" target="_blank" rel="noopener noreferrer"><span data-icon="github"></span>프로젝트 저장소<span data-icon="external"></span></a>
-      <div class="sidebar-foot"><span class="live-dot"></span>리서치 워크스페이스 <span>v1.0</span></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#176b57" />
+    <meta
+      name="description"
+      content="쿠팡 생활용품 시장 데이터에서 다음 제품의 가능성을 발견하는 제품기획 리서치 대시보드"
+    />
+    <title>Product Lab — 제품기획 리서치</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">본문 바로가기</a>
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+    <aside class="sidebar" id="sidebar" aria-label="주 메뉴">
+      <a class="brand" href="#overview"
+        ><span class="brand-mark"
+          ><svg viewBox="0 0 28 28" fill="none">
+            <path
+              d="m14 3 10 6v11l-10 6L4 20V9l10-6Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+            <path
+              d="m4 9 10 6 10-6M14 15v11M9 6l10 6v6"
+              stroke="currentColor"
+              stroke-width="1.8"
+            /></svg></span
+        ><span
+          >Product<span class="brand-light"> Lab</span
+          ><small>제품기획 리서치 워크스페이스</small></span
+        ></a
+      >
+      <div class="workspace">
+        <span class="workspace-avatar" data-icon="layers"></span>
+        <div>
+          <strong>생활용품 리서치</strong><small>쿠팡 · 1차 시장 조사</small>
+        </div>
+        <span class="workspace-dot"></span>
+      </div>
+      <div class="nav-label">WORKSPACE</div>
+      <nav id="nav">
+        <a href="#overview" data-page="overview" class="nav-item active"
+          ><span data-icon="dashboard"></span>대시보드</a
+        >
+        <a href="#market" data-page="market" class="nav-item"
+          ><span data-icon="chart"></span>시장 분석<span class="nav-count"
+            >150</span
+          ></a
+        >
+        <a href="#specs" data-page="specs" class="nav-item"
+          ><span data-icon="box"></span>신제품 기획<span class="nav-count"
+            >12</span
+          ></a
+        >
+        <a href="#usp" data-page="usp" class="nav-item"
+          ><span data-icon="sparkles"></span>USP 분석<span class="nav-new"
+            >NEXT</span
+          ></a
+        >
+        <div class="nav-label second-label">RESOURCES</div>
+        <a href="#documents" data-page="documents" class="nav-item"
+          ><span data-icon="file"></span>산출물 관리</a
+        >
+        <a href="#data" data-page="data" class="nav-item"
+          ><span data-icon="database"></span>데이터 관리</a
+        >
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="help-card">
+          <span class="help-icon" data-icon="book"></span
+          ><strong>더 좋은 기획의 시작</strong>
+          <p>데이터 수집부터 견적 요청까지,<br />리서치 가이드를 확인하세요.</p>
+          <button class="text-button" data-action="guide">
+            이용 가이드 <span data-icon="arrow-right"></span>
+          </button>
+        </div>
+        <a
+          class="repo-link"
+          href="https://github.com/jslee2011070102-ship-it/new_PD_PS"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><span data-icon="github"></span>프로젝트 저장소<span
+            data-icon="external"
+          ></span
+        ></a>
+        <div class="sidebar-foot">
+          <span class="live-dot"></span>리서치 워크스페이스 <span>v1.0</span>
+        </div>
+      </div>
+    </aside>
+    <div class="shell">
+      <header class="topbar">
+        <div class="breadcrumb">
+          <button
+            class="icon-button mobile-menu"
+            data-action="menu"
+            aria-label="메뉴 열기"
+          >
+            <span data-icon="menu"></span></button
+          ><span data-icon="home"></span><span class="slash">/</span
+          ><span>워크스페이스</span><span class="slash">/</span
+          ><strong id="breadcrumb-page">대시보드</strong>
+        </div>
+        <div class="header-tools">
+          <button class="global-search" data-action="search">
+            <span data-icon="search"></span><span>제품, 브랜드 검색</span
+            ><kbd>⌘ K</kbd>
+          </button>
+          <div class="header-divider"></div>
+          <button
+            class="icon-button notification"
+            data-action="notifications"
+            aria-label="데이터 알림"
+          >
+            <span data-icon="bell"></span><i></i></button
+          ><button
+            class="avatar"
+            data-action="workspace"
+            aria-label="워크스페이스 정보"
+          >
+            PD
+          </button>
+        </div>
+      </header>
+      <main id="main" tabindex="-1">
+        <div class="loading">
+          <div class="spinner"></div>
+          <h2>리서치 데이터를 불러오고 있습니다</h2>
+          <p>150개 제품의 가격과 시장 지표를 확인합니다.</p>
+        </div>
+      </main>
+      <footer class="footer">
+        <span>Product Lab <i>·</i> 데이터로 시작하는 제품기획</span
+        ><span>Source: 쿠팡 수동 캡처 <i>·</i> 조사 기준 2026.09.21</span>
+      </footer>
     </div>
-  </aside>
-  <div class="shell">
-    <header class="topbar">
-      <div class="breadcrumb"><button class="icon-button mobile-menu" data-action="menu" aria-label="메뉴 열기"><span data-icon="menu"></span></button><span data-icon="home"></span><span class="slash">/</span><span>워크스페이스</span><span class="slash">/</span><strong id="breadcrumb-page">대시보드</strong></div>
-      <div class="header-tools"><button class="global-search" data-action="search"><span data-icon="search"></span><span>제품, 브랜드 검색</span><kbd>⌘ K</kbd></button><div class="header-divider"></div><button class="icon-button notification" data-action="notifications" aria-label="데이터 알림"><span data-icon="bell"></span><i></i></button><button class="avatar" data-action="workspace" aria-label="워크스페이스 정보">PD</button></div>
-    </header>
-    <main id="main" tabindex="-1"><div class="loading"><div class="spinner"></div><h2>리서치 데이터를 불러오고 있습니다</h2><p>150개 제품의 가격과 시장 지표를 확인합니다.</p></div></main>
-    <footer class="footer"><span>Product Lab <i>·</i> 데이터로 시작하는 제품기획</span><span>Source: 쿠팡 수동 캡처 <i>·</i> 조사 기준 2026.09.21</span></footer>
-  </div>
-  <dialog id="dialog"><div id="dialog-content"></div></dialog>
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-</body>
+    <dialog id="dialog"><div id="dialog-content"></div></dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
 </html>

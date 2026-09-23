@@ -175,13 +175,13 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/dashboard":
             return self.send(200, snapshot(load_products()))
         if path == "/api/export.xlsx":
-            return self.send(200, make_workbook(load_products()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "쿠팡_시장조사.xlsx")
+            return self.send(200, make_workbook(load_products()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "market_research.xlsx")
         if path == "/api/document":
-            return self.send(200, (ROOT / "신제품_생산견적요청서.docx").read_bytes(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "신제품_생산견적요청서.docx")
+            return self.send(200, (ROOT / "신제품_생산견적요청서.docx").read_bytes(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "product_quote.docx")
         if path == "/api/specs.json":
-            return self.send(200, json.dumps(load_specs(), ensure_ascii=False, indent=2).encode(), "application/json; charset=utf-8", "목표규격_12종.json")
+            return self.send(200, json.dumps(load_specs(), ensure_ascii=False, indent=2).encode(), "application/json; charset=utf-8", "target_specs.json")
         if path == "/api/template.json":
-            return self.send(200, (ROOT / "data/extracted/세탁세제.json").read_bytes(), "application/json; charset=utf-8", "세탁세제_추출예시.json")
+            return self.send(200, (ROOT / "data/extracted/세탁세제.json").read_bytes(), "application/json; charset=utf-8", "extraction_example.json")
         if path == "/health":
             return self.send(200, {"status": "ok"})
         # Explicit allowlist: never expose the repository, .git, or arbitrary paths.
@@ -210,7 +210,7 @@ class Handler(BaseHTTPRequestHandler):
             products = products_from_payload(payload)
             if path == "/api/import":
                 return self.send(200, snapshot(products, True))
-            return self.send(200, make_workbook(products), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "쿠팡_시장조사.xlsx")
+            return self.send(200, make_workbook(products), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "market_research.xlsx")
         except (ValueError, TypeError, OverflowError) as exc:
             self.send(400, {"error": str(exc)})
         except Exception as exc:
