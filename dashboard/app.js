@@ -106,7 +106,7 @@ function barChart(categories) {
   const ordered = [...categories].sort((a,b) => b.revenue - a.revenue);
   const max = Math.max(...ordered.map(c => c.revenue / 1e8), 1);
   const ceiling = Math.ceil(max / 20) * 20;
-  return `<div class="chart" aria-label="카테고리별 추정 월매출 막대 차트"><div class="chart-gridlines">${[4,3,2,1,0].map(i => `<div class="gridline"><span>${number(ceiling * i / 4)}억</span></div>`).join('')}</div><div class="chart-bars">${ordered.map(c => `<button class="bar-group" data-category-go="${esc(c.name)}" aria-label="${esc(c.name)} 추정월매출 ${revenue(c.revenue)}원, 제품 보기" title="${esc(c.name)} · 추정월매출 ${won(c.revenue)} · 매출 산출 ${c.known_revenue}/${c.count}건"><span class="bar-value">${revenue(c.revenue)}</span><span class="bar" style="height:${(c.revenue / 1e8 / ceiling * 145).toFixed(1)}px"></span><span class="bar-label">${esc(c.name)}</span></button>`).join('')}</div></div>`;
+  return `<div class="chart" aria-label="카테고리별 추정 월매출 막대 차트"><div class="chart-gridlines">${[4,3,2,1,0].map(i => `<div class="gridline"><span>${number(ceiling * i / 4)}억</span></div>`).join('')}</div><div class="chart-bars">${ordered.map(c => `<button class="bar-group" data-category-go="${esc(c.name)}" aria-label="${esc(c.name)} 추정월매출 ${revenue(c.revenue)}원, 제품 보기" title="${esc(c.name)} · 추정월매출 ${won(c.revenue)} · 매출 산출 ${c.known_revenue}/${c.count}건"><span class="bar-value" style="bottom:calc(${(c.revenue / 1e8 / ceiling * 100).toFixed(2)}% + 6px)">${revenue(c.revenue)}</span><span class="bar" style="height:${(c.revenue / 1e8 / ceiling * 100).toFixed(2)}%"></span><span class="bar-label">${esc(c.name)}</span></button>`).join('')}</div></div>`;
 }
 function roleChart(roles) {
   const total = Object.values(roles).reduce((a,b) => a + b, 0);
@@ -158,7 +158,7 @@ function dataPage() {
   }).join('')}</tbody></table></div></div><div class="insight-strip">${icon('shield')}<div><strong>원본은 안전하게 보존됩니다.</strong>불러오기는 해당 카테고리의 탭 내 데이터를 교체하며, Git 저장소나 서버의 원본 파일을 수정하지 않습니다.</div></div>`;
 }
 function navigate(page, options = {}) {
-  if (!(page in pages)) page = 'overview';
+  if (!Object.hasOwn(pages, page)) page = 'overview';
   if (options.category) { state.category = options.category; state.query = ''; state.role = ''; state.validation = ''; state.basis = ''; state.pageNumber = 1; }
   if (location.hash !== `#${page}`) location.hash = page;
   else render();
@@ -168,7 +168,7 @@ function navigate(page, options = {}) {
 function render() {
   if (!state.data) return;
   const nextPage = location.hash.slice(1);
-  state.page = nextPage in pages ? nextPage : 'overview';
+  state.page = Object.hasOwn(pages, nextPage) ? nextPage : 'overview';
   document.title = `${pages[state.page]} — Product Lab`;
   $('#breadcrumb-page').textContent = pages[state.page];
   document.querySelectorAll('[data-page]').forEach(a => { a.classList.toggle('active', a.dataset.page === state.page); if (a.dataset.page === state.page) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });

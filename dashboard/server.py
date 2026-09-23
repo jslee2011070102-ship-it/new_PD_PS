@@ -3,18 +3,18 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
-from datetime import date
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from io import BytesIO
 import json
 import math
 from pathlib import Path
 import sys
+import re
 from urllib.parse import quote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "thumbnail_analyzer"))
-from analyze_thumbnails import ProductInfo, row_from_info  # noqa: E402
+from analyze_thumbnails import ProductInfo, row_from_info, parse_capacity, unit_price_basis  # noqa: E402
 from openpyxl import Workbook  # noqa: E402
 from openpyxl.styles import Font, PatternFill  # noqa: E402
 from pydantic import ValidationError  # noqa: E402
@@ -47,8 +47,8 @@ def normalize(category, entries, survey_date=SURVEY_DATE):
             if value is not None and not 0 <= value <= 10**12:
                 raise ValueError(f"{index + 1}번째 항목 · {key}: 0 이상의 유효한 숫자를 입력하세요.")
         for value in info.model_dump().values():
-            if isinstance(value, str) and len(value) > 10000:
-                raise ValueError(f"{index + 1}번째 항목의 텍스트가 너무 깁니다.")
+            if isinstance(value, str) and (len(value) > 10000 or re.search(r"[\x00-\x08\x0b-\x0c\x0e-\x1f]", value)):
+                raise ValueError(f"{index + 1}번째 항목의 텍스트가 너무 길거나 허용되지 않는 제어 문자가 포함되어 있습니다.")
         row = row_from_info(info, filename, {"survey_date": survey_date, "channel": "쿠팡", "category": category})
         if any(isinstance(v, float) and not math.isfinite(v) for v in row.values()):
             raise ValueError(f"{index + 1}번째 항목의 계산 결과가 유효하지 않습니다.")
@@ -63,11 +63,11 @@ def normalize(category, entries, survey_date=SURVEY_DATE):
 
 
 def load_products():
-    return [p for cat in CATEGORIES for p in normalize(cat, json.loads((ROOT / "data/extracted" / f"{cat}.json").read_text()))]
+    return [p for cat in CATEGORIES for p in normalize(cat, json.loads((ROOT / "data/extracted" / f"{cat}.json").read_text(encoding="utf-8")))]
 
 
 def load_specs():
-    return json.loads((ROOT / "문서생성/견적요청서_데이터.json").read_text())
+    return json.loads((ROOT / "문서생성/견적요청서_데이터.json").read_text(encoding="utf-8"))
 
 
 def summarize(products):
@@ -100,9 +100,9 @@ def products_from_payload(payload):
     products = []
     for cat in CATEGORIES:
         if cat in overrides:
-            products.extend(normalize(cat, overrides[cat], date.today().isoformat()))
+            products.extend(normalize(cat, overrides[cat], "업로드 데이터 (조사일 미확인)"))
         else:
-            products.extend(normalize(cat, json.loads((ROOT / "data/extracted" / f"{cat}.json").read_text())))
+            products.extend(normalize(cat, json.loads((ROOT / "data/extracted" / f"{cat}.json").read_text(encoding="utf-8"))))
     return products
 
 
@@ -144,9 +144,12 @@ def simulate(payload):
     if type(price) is not int or not 100 <= price <= 10000000:
         raise ValueError("목표 판매가는 100~10,000,000원 사이의 정수로 입력하세요.")
     spec = load_specs()[index]
+    capacity, unit = parse_capacity(spec["spec"].replace(",", ""))
+    scale, _ = unit_price_basis(unit)
+    target_unit = price / (capacity * spec["qty"]) * scale
     return {"price": price, "cost": round(price / 3.5), "costEach": round(price / 3.5 / spec["qty"]),
-            "unit": round(spec["unit"] * price / spec["price"], 1), "basis": spec["basis"],
-            "benchDiff": round((spec["unit"] * price / spec["price"] / spec["benchUnit"] - 1) * 100, 1)}
+            "unit": round(target_unit, 1), "basis": spec["basis"],
+            "benchDiff": round((target_unit / spec["benchUnit"] - 1) * 100, 1)}
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -210,8 +213,8 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(200, make_workbook(products), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "쿠팡_시장조사.xlsx")
         except (ValueError, TypeError, OverflowError) as exc:
             self.send(400, {"error": str(exc)})
-        except Exception:
-            self.log_error("Unexpected processing error", exc_info=True)
+        except Exception as exc:
+            self.log_error("Unexpected processing error: %s", type(exc).__name__)
             self.send(500, {"error": "처리 중 오류가 발생했습니다. 데이터 형식을 확인하세요."})
 
 

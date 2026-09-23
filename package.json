@@ -1,0 +1,15 @@
+{
+  "name": "product-lab-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local research dashboard backed by existing Python analysis tools",
+  "scripts": {
+    "dev": "python dashboard/server.py --host 0.0.0.0 --port 3000",
+    "start": "python dashboard/server.py",
+    "test": "python -m unittest discover -s tests -v",
+    "test:browser": "node tests/browser.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}
