@@ -65,7 +65,7 @@ const cover = [
     ["작성일", "2026년 9월 23일"],
     ["시장 조사 기준일", "2026년 9월 21일"],
     ["조사 대상", "쿠팡 6개 카테고리 상위 25개 제품 (총 150개)"],
-    ["요청 품목", "11개 (6개 카테고리 × 본품/리필)"],
+    ["요청 품목", "12종 (6개 카테고리 × 본품·리필)"],
     ["발신", ""],
     ["담당자", ""],
     ["연락처", ""],
@@ -98,6 +98,12 @@ const intro = [
   p("", { after: 120 }),
   p([t("기재된 목표 원가는 ", {}), t("넘어서는 안 되는 상한값", { bold: true }), t("입니다. 부자재·포장·인쇄를 포함한 완제품 기준 단가로 회신 부탁드립니다.", {})]),
 
+  h2("목표 판매가 산정 방식"),
+  p("목표 판매가는 다음 두 단계로 정했습니다."),
+  p([t("① ", { bold: true }), t("카테고리별·형태별로 현재 쿠팡에서 판매 중인 제품의 단위당 가격(100ml당 또는 1개당)을 모두 나열하고, 가장 싼 가격대를 찾습니다. 이때 다른 제품과 크게 동떨어진 단독 최저가는 제외합니다. 한 개만 유별나게 싼 값은 시장 가격대라고 볼 수 없기 때문입니다.", {})], { indent: { left: 340 }, after: 60 }),
+  p([t("② ", { bold: true }), t("그 가격대의 최저 제품보다 약 5% 낮게 설정합니다. 소비자가 가격 비교 시 확실히 싸다고 인식하면서도, 생산이 불가능한 수준으로 내려가지 않는 선입니다.", {})], { indent: { left: 340 }, after: 60 }),
+  p("규격 또한 임의로 정한 것이 아니라, 해당 가격대의 제품들이 공통으로 채택하고 있는 용량·수량을 그대로 따랐습니다."),
+
   h2("시장 조사 개요"),
   p("2026년 9월 21일, 쿠팡 6개 카테고리에서 카테고리별 판매 순위 상위 25개 제품(총 150개)의 판매가·용량·구성·순위·리뷰수를 수집했습니다."),
   p("수집한 값은 쿠팡이 상품 페이지에 표시하는 단위당 가격과 대조하여 검증했으며, 150개 중 145개가 일치했습니다(나머지 5개는 화면상 단가 표기가 없어 대조 불가). 계산 오류로 인한 불일치는 0건입니다."),
@@ -105,44 +111,38 @@ const intro = [
 ];
 
 // ── 2. 요청 품목 총괄 ─────────────────────────────────
+const HDR = ["카테고리", "구분", "형태", "규격", "목표 판매가", "목표 생산원가", "낱개 환산", "시장 최저가 대비"];
+const CW = [1140, 620, 700, 1620, 1180, 1280, 1140, 1346];
 const sumRows = [new TableRow({
   tableHeader: true,
-  children: [
-    cell("카테고리", { w: 1180, fill: NAVY, color: "FFFFFF", bold: true, size: 17, align: AlignmentType.CENTER }),
-    cell("구분", { w: 620, fill: NAVY, color: "FFFFFF", bold: true, size: 17, align: AlignmentType.CENTER }),
-    cell("형태", { w: 720, fill: NAVY, color: "FFFFFF", bold: true, size: 17, align: AlignmentType.CENTER }),
-    cell("규격", { w: 1760, fill: NAVY, color: "FFFFFF", bold: true, size: 17, align: AlignmentType.CENTER }),
-    cell("목표 판매가", { w: 1250, fill: NAVY, color: "FFFFFF", bold: true, size: 17, align: AlignmentType.CENTER }),
-    cell("목표 생산원가", { w: 1330, fill: NAVY, color: "FFFFFF", bold: true, size: 17, align: AlignmentType.CENTER }),
-    cell("낱개 환산", { w: 1150, fill: NAVY, color: "FFFFFF", bold: true, size: 17, align: AlignmentType.CENTER }),
-    cell("우선", { w: 1016, fill: NAVY, color: "FFFFFF", bold: true, size: 17, align: AlignmentType.CENTER }),
-  ],
+  children: HDR.map((h, i) => cell(h, { w: CW[i], fill: NAVY, color: "FFFFFF", bold: true, size: 17, align: AlignmentType.CENTER })),
 })];
 D.forEach((d, i) => {
-  const pri = i < 3 ? "상" : (d.market < 5 || d.cases === 0 ? "하" : "중");
+  const first = i === 0 || D[i - 1].cat !== d.cat;   // 카테고리 첫 줄에만 이름 표시
+  const band = first ? undefined : BAND;
   sumRows.push(new TableRow({
     children: [
-      cell(d.cat, { w: 1180, size: 17, fill: i % 2 ? BAND : undefined }),
-      cell(d.role, { w: 620, size: 17, align: AlignmentType.CENTER, fill: i % 2 ? BAND : undefined }),
-      cell(d.form, { w: 720, size: 17, align: AlignmentType.CENTER, fill: i % 2 ? BAND : undefined }),
-      cell(d.spec, { w: 1760, size: 17, fill: i % 2 ? BAND : undefined }),
-      cell(won(d.price), { w: 1250, size: 17, align: AlignmentType.RIGHT, fill: i % 2 ? BAND : undefined }),
-      cell(won(d.cost), { w: 1330, size: 17, bold: true, align: AlignmentType.RIGHT, fill: HILITE }),
-      cell(d.qty > 1 ? won(d.costEach) + " / 개" : "-", { w: 1150, size: 17, align: AlignmentType.RIGHT, fill: i % 2 ? BAND : undefined }),
-      cell(pri, { w: 1016, size: 17, bold: pri === "상", align: AlignmentType.CENTER, fill: i % 2 ? BAND : undefined }),
+      cell(first ? d.cat : "", { w: CW[0], size: 17, bold: first, fill: band }),
+      cell(d.role, { w: CW[1], size: 17, align: AlignmentType.CENTER, fill: band }),
+      cell(d.form, { w: CW[2], size: 17, align: AlignmentType.CENTER, fill: band }),
+      cell(d.spec, { w: CW[3], size: 17, fill: band }),
+      cell(won(d.price), { w: CW[4], size: 17, align: AlignmentType.RIGHT, fill: band }),
+      cell(won(d.cost), { w: CW[5], size: 17, bold: true, align: AlignmentType.RIGHT, fill: HILITE }),
+      cell(d.qty > 1 ? won(d.costEach) + " / 개" : "-", { w: CW[6], size: 17, align: AlignmentType.RIGHT, fill: band }),
+      cell(d.benchDiff.toFixed(1) + "%", { w: CW[7], size: 17, align: AlignmentType.CENTER, fill: band }),
     ],
   }));
 });
 
 const summary = [
   h1("2. 요청 품목 총괄"),
-  p("시장 규모가 큰 순으로 정렬했습니다. 음영 표시된 열이 요청드리는 목표 생산원가입니다."),
+  p("카테고리별로 본품(용기)과 리필로 나누어 각 1종씩, 총 12종입니다. 음영 표시된 열이 요청드리는 목표 생산원가입니다."),
   p("", { after: 100 }),
-  table([1180, 620, 720, 1760, 1250, 1330, 1150, 1016], sumRows),
+  table(CW, sumRows),
   p("", { after: 140 }),
   p([t("• 목표 생산원가", { bold: true, size: 18 }), t("는 부자재·포장·인쇄를 포함한 완제품 1세트 기준입니다.", { size: 18 })], { after: 40 }),
-  p([t("• 낱개 환산", { bold: true, size: 18 }), t("은 묶음 상품의 개당 원가입니다. 예를 들어 4개입 세트라면 병 1개당 원가입니다.", { size: 18 })], { after: 40 }),
-  p([t("• 우선순위", { bold: true, size: 18 }), t("는 시장 규모와 진입 가능성을 함께 고려한 것으로, 상 순위부터 검토 부탁드립니다.", { size: 18 })], { after: 40 }),
+  p([t("• 낱개 환산", { bold: true, size: 18 }), t("은 묶음 상품의 개당 원가입니다. 4개입 세트라면 병 1개당 원가입니다.", { size: 18 })], { after: 40 }),
+  p([t("• 시장 최저가 대비", { bold: true, size: 18 }), t("는 현재 쿠팡에서 같은 형태로 가장 싸게 팔리는 제품과 비교한 단위당 가격 차이입니다. 전 품목을 약 5% 낮게 설정했습니다.", { size: 18 })], { after: 40 }),
   new Paragraph({ children: [new PageBreak()] }),
 ];
 
@@ -173,9 +173,11 @@ D.forEach((d, i) => {
   detail.push(p([t("선정 근거", { bold: true, size: 19, color: NAVY })], { after: 50 }));
   detail.push(p(d.why, { size: 18, indent: { left: 200 } }));
   detail.push(p([
-    t("이 구분의 쿠팡 내 추정 월 시장 규모는 약 ", { size: 18 }),
+    t("이 형태의 쿠팡 내 추정 월 시장 규모는 약 ", { size: 18 }),
     t(`${d.market}억원`, { size: 18, bold: true }),
-    t(`이며, 저가로 상위권에 오른 제품이 ${d.cases}건 확인됐습니다.`, { size: 18 }),
+    t("입니다. 목표 단위당 가격은 현재 최저가 제품(", { size: 18 }),
+    t(`${d.benchBrand} ${d.benchRank}위, ${d.benchUnit.toLocaleString("ko-KR")}원`, { size: 18, bold: true }),
+    t(`) 대비 ${Math.abs(d.benchDiff).toFixed(1)}% 낮은 수준입니다.`, { size: 18 }),
   ], { indent: { left: 200 }, after: 120 }));
 
   detail.push(p([t("비교 대상 (현재 쿠팡 판매 중)", { bold: true, size: 19, color: NAVY })], { after: 50 }));
@@ -242,7 +244,7 @@ const reply = [
   h2("참고 사항"),
   p([t("• 본 문서의 시장 규모는 쿠팡이 표시하는 월 구매자수를 근거로 한 ", { size: 18 }), t("추정 하한값", { bold: true, size: 18 }), t("입니다. 쿠팡이 \"3만명 이상\"과 같이 구간으로만 표시하므로 실제 규모는 이보다 클 수 있습니다. 품목 간 상대 비교 용도로만 참고 부탁드립니다.", { size: 18 })], { indent: { left: 200 }, after: 50 }),
   p([t("• 가격·순위는 2026년 9월 21일 기준이며, 쿠팡 순위와 할인가는 수시로 변동합니다.", { size: 18 })], { indent: { left: 200 }, after: 50 }),
-  p([t("• 섬유탈취제 리필은 시장 규모가 작고(약 0.7억원) 저가 진입 사례가 확인되지 않아 우선순위를 낮게 두었습니다. 참고용으로만 포함했습니다.", { size: 18 })], { indent: { left: 200 } }),
+  p([t("• 섬유탈취제 리필은 시장 규모가 약 0.7억원으로 가장 작고 현재 판매 중인 제품이 3종뿐입니다. 다른 품목보다 우선순위를 낮게 보셔도 됩니다.", { size: 18 })], { indent: { left: 200 } }),
 ];
 
 const doc = new Document({
