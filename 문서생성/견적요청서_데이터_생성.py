@@ -168,6 +168,9 @@ def build():
 
         specs.append(dict(
             cat=plan["cat"], form=plan["form"], label=plan.get("label"),
+            # 규격군 경계를 결과에 남긴다. 상세페이지 분석(analyze_details.py targets)이
+            # 이 값으로 '우리 직접 경쟁자'를 같은 규격군 안에서 고른다.
+            minTotal=plan.get("min_total"), maxTotal=plan.get("max_total"),
             spec=spec_text(target), qty=qty,
             total=target["total"], unitOfMeasure=target["unit"],
             price=price, priceEach=int(round(price / qty)) if qty > 1 else None,

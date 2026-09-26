@@ -192,6 +192,250 @@ def cmd_prompt(args) -> None:
 
 
 # ------------------------------------------------------------
+# 3. targets - 어느 제품의 상세페이지를 볼지 데이터로 고르기
+# ------------------------------------------------------------
+# 전수조사하지 않는 이유: 150개를 다 뽑으면 대부분 쓸 데 없는 데이터가 되고
+# 사람 시간도 많이 듭니다. 썸네일 분석이 "어디를 봐야 하는지"를 이미 알려주므로,
+# 질문에 답하는 데 필요한 제품만 고릅니다.
+#
+# 우리가 답해야 하는 질문은 두 갈래입니다.
+#   (1) 싸게 파는 제품들은 무엇으로 설득하나  -> 우리가 반드시 말해야 하는 것
+#   (2) 비싼데도 잘 팔리는 제품은 왜 값을 받나 -> 우리가 포기하는 것 / 싸게 흉내낼 것
+# 그래서 카테고리마다 '단가 최저군'과 '상위권 고가군'을 함께 고릅니다.
+#
+# 제품명을 사람이 옮겨 적다 빠뜨리는 것을 막기 위해, 지시문에 목록을 전부 채워
+# 내보냅니다(자리표시자를 남기면 그대로 붙여넣게 됩니다).
+
+def load_extracted(folder: Path) -> dict[str, list[dict]]:
+    """썸네일 추출 결과(카테고리별 JSON)를 읽어 카테고리 -> 행 목록으로 돌려줍니다."""
+    if not folder.is_dir():
+        sys.exit(f"추출 결과 폴더를 찾을 수 없습니다: {folder}")
+    out = {}
+    for path in sorted(folder.glob("*.json")):
+        try:
+            rows = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as e:
+            sys.exit(f"{path.name} 을 읽을 수 없습니다: {e}")
+        if isinstance(rows, list) and rows:
+            out[path.stem] = rows
+    if not out:
+        sys.exit(f"{folder} 안에 추출 결과 JSON이 없습니다")
+    return out
+
+
+def with_unit_price(rows: list[dict]) -> list[dict]:
+    """단가·순위를 계산해 붙입니다. 계산은 썸네일 도구의 함수를 그대로 씁니다."""
+    import analyze_thumbnails as at
+
+    out = []
+    for r in rows:
+        cap, unit = at.parse_capacity(r.get("capacity_text") or "")
+        cnt = at.parse_composition_count(r.get("composition_text") or "") or 1
+        price = r.get("price_krw")
+        if not cap or not price:
+            continue
+        scale, basis = at.unit_price_basis(unit)
+        out.append({
+            **r,
+            "_total": cap * cnt,
+            "_unit_price": round(price / (cap * cnt) * scale, 1),
+            "_basis": basis,
+            "_rank": at.parse_category_rank(r.get("category_rank_text") or "") or 999,
+            "_search": at.coupang_search_url(r.get("product_name"), r.get("brand")),
+        })
+    return out
+
+
+def load_specs(path: Path) -> list[dict]:
+    """생산 스펙(견적요청서 데이터)을 읽습니다. 없으면 빈 목록.
+
+    이 파일이 있으면 '우리 직접 경쟁자'를 우리가 실제로 만들려는 형태·규격군
+    안에서 고를 수 있습니다. 없으면 카테고리 전체에서 가장 싼 것을 고릅니다
+    (형태를 벗어난 제품이 섞일 수 있으니, 되도록 스펙 파일을 두는 편이 좋습니다).
+    """
+    if not path or not Path(path).is_file():
+        return []
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        sys.exit(f"{path} 을 읽을 수 없습니다: {e}")
+    return data.get("specs", []) if isinstance(data, dict) else []
+
+
+def in_spec(r: dict, spec: dict) -> bool:
+    """이 제품이 그 생산 스펙과 같은 형태·규격군에 속하는지."""
+    if r.get("product_form") != spec.get("form"):
+        return False
+    total = r["_total"]
+    if spec.get("minTotal") and total < spec["minTotal"]:
+        return False
+    if spec.get("maxTotal") and total > spec["maxTotal"]:
+        return False
+    return True
+
+
+def pick_targets(rows: list[dict], specs: list[dict], cat: str,
+                 cheap: int, premium: int, top_rank: int) -> list[dict]:
+    """직접 경쟁자(우리 스펙과 같은 형태·규격군의 최저가) + 상위권 고가 제품.
+
+    저가군을 카테고리 전체가 아니라 '우리가 만들려는 형태' 안에서 고르는 이유:
+    형태가 다르면 가격 구조가 달라 경쟁 상대가 아니다. 섬유탈취제를 용기로
+    만드는데 파우치 최저가의 소구점을 참고하면 엉뚱한 결론이 나온다.
+    """
+    rows = with_unit_price(rows)
+    picked, seen = [], set()
+
+    def add(r, why):
+        key = (r.get("brand"), r.get("product_name"), r.get("price_krw"))
+        if key in seen:
+            return False
+        seen.add(key)
+        picked.append({**r, "_why": why})
+        return True
+
+    mine = [sp for sp in specs if sp.get("cat") == cat]
+    if mine:
+        for sp in mine:
+            pool = sorted((r for r in rows if in_spec(r, sp)),
+                          key=lambda r: r["_unit_price"])
+            label = sp["form"] + (f"/{sp['label']}" if sp.get("label") else "")
+            n = 0
+            for r in pool:
+                if n >= cheap:
+                    break
+                if add(r, f"경쟁 {label}"):
+                    n += 1
+    else:
+        # 스펙 정보가 없으면 카테고리 전체에서 가장 싼 것으로 대체한다
+        for r in sorted(rows, key=lambda r: r["_unit_price"])[:cheap]:
+            add(r, "경쟁 (형태 미지정)")
+
+    # 상위권 중에서 단가가 비싼 쪽 - '비싼데도 잘 팔리는' 제품
+    top = [r for r in rows if r["_rank"] <= top_rank]
+    n = 0
+    for r in sorted(top, key=lambda r: -r["_unit_price"]):
+        if n >= premium:
+            break
+        if add(r, "고가 상위권"):
+            n += 1
+    return picked
+
+
+def cmd_targets(args) -> None:
+    data = load_extracted(Path(args.extracted))
+    specs = load_specs(Path(args.specs)) if args.specs else []
+    cats = args.category or list(data.keys())
+    unknown = [c for c in cats if c not in data]
+    if unknown:
+        sys.exit(f"추출 결과에 없는 카테고리: {', '.join(unknown)}\n"
+                 f"  사용 가능: {', '.join(data.keys())}")
+
+    selected = []
+    for cat in cats:
+        for r in pick_targets(data[cat], specs, cat,
+                              args.cheap, args.premium, args.top_rank):
+            selected.append((cat, r))
+
+    print("=" * 76)
+    print(f"상세페이지 확인 대상 {len(selected)}개")
+    if specs:
+        print(f"  저가군은 생산 스펙과 같은 형태·규격군 안에서 골랐습니다 "
+              f"(스펙당 {args.cheap}개)")
+    else:
+        print(f"  생산 스펙 파일이 없어 카테고리 전체에서 골랐습니다 "
+              f"(형태가 섞일 수 있음)")
+    print(f"  고가군은 {args.top_rank}위 이내 중 단가가 가장 높은 제품 "
+          f"(카테고리당 {args.premium}개)")
+    print("=" * 76)
+    cur = None
+    for cat, r in selected:
+        if cat != cur:
+            print(f"\n[{cat}]")
+            cur = cat
+        rank = "-" if r["_rank"] == 999 else f"{r['_rank']}위"
+        print(f"  {r['_why']:14} {rank:>5}  {(r.get('brand') or '브랜드 미상'):12} "
+              f"{r['_unit_price']:>8.1f} {r['_basis']:9} {r.get('price_krw'):>7,}원")
+        print(f"      {r.get('product_name')}")
+        if r.get("product_url"):
+            print(f"      {r['product_url']}")
+        elif r.get("_search"):
+            print(f"      검색: {r['_search']}")
+
+    print("\n" + "=" * 76)
+    print("아래부터 브라우저(Claude in Chrome 등)에 그대로 붙여넣으세요")
+    print("=" * 76 + "\n")
+    print(browser_prompt(selected, args.pace))
+
+
+def browser_prompt(selected: list[tuple[str, dict]], pace: int) -> str:
+    lines = [
+        "아래 쿠팡 상품들의 상세페이지를 열어서 판매자가 내세우는 소구점(USP)을 뽑아줘.",
+        "",
+        "[대상 상품]",
+    ]
+    for i, (cat, r) in enumerate(selected, 1):
+        name = r.get("product_name") or "(제품명 미상)"
+        brand = (r.get("brand") or "").strip()
+        # 쿠팡 제품명에 브랜드가 빠져 있는 경우가 많다. 브랜드를 앞에 붙여야
+        # 검색 결과에서 맞는 상품을 골라낼 수 있다.
+        head = name if (not brand or brand in name) else f"{brand} / {name}"
+        lines.append(f"{i}. [{cat}] {head}")
+        # 용량·가격은 같은 이름의 다른 옵션을 열지 않게 하는 확인용 정보다.
+        cap = r.get("capacity_text") or ""
+        comp = r.get("composition_text") or ""
+        size = f"{cap} x {comp}" if comp and comp not in ("1개", "") else cap
+        rank = "" if r["_rank"] == 999 else f" / 카테고리 {r['_rank']}위"
+        lines.append(f"   확인용 - 규격 {size} / 조사 시점 판매가 "
+                     f"{r.get('price_krw'):,}원{rank}")
+        if r.get("product_url"):
+            lines.append(f"   {r['product_url']}")
+        elif r.get("_search"):
+            lines.append(f"   {r['_search']}")
+    lines += [
+        "",
+        "[각 상품마다 먼저 할 일]",
+        "상세페이지를 **맨 아래까지 끝까지 스크롤**해. 쿠팡 상세 이미지는 화면에 보여야",
+        "불러와지기 때문에, 스크롤하지 않으면 내용이 비어 있어서 아무것도 못 읽는다.",
+        "",
+        "[역할]",
+        SYSTEM_PROMPT.strip(),
+        "",
+        "[출력 형식]",
+        "상품 하나당 객체 하나씩, JSON 배열로만 출력해. 설명 문장은 붙이지 마.",
+        "각 객체는 아래 칸을 모두 가져야 해.",
+        "",
+        *field_lines(DetailPageInfo),
+        "",
+        "  usps 배열의 각 항목은 아래 칸을 모두 가져야 해.",
+        "",
+        *field_lines(UspItem, indent="    "),
+        "",
+        '  추가로 각 객체에 "file" 칸을 넣고, 위 목록의 번호와 제품을 알 수 있게 적어줘',
+        '  (예: "03_액츠_캡슐세제"). 나중에 결과를 맞춰보는 데 쓴다.',
+    ]
+    if pace and len(selected) > pace:
+        lines += [
+            "",
+            "[진행 방식]",
+            f"한 번에 다 하지 말고 {pace}개씩 묶어서 진행해. 묶음을 마칠 때마다 그때까지의",
+            "JSON을 먼저 출력하고, 그다음 묶음으로 넘어가. 중간에 끊겨도 앞의 결과는",
+            "남아야 하기 때문이다. 상품과 상품 사이에는 잠깐 쉬어라.",
+        ]
+    lines += [
+        "",
+        "[주의]",
+        "- 값이 정해져 있는 칸은 반드시 그 목록 안에서 골라. 다른 말을 지어내면 안 된다.",
+        "- evidence는 페이지에 적힌 문구 그대로. 요약하지 마라.",
+        "- 확인할 수 없는 칸은 null로 두고, 왜 못 봤는지 notes에 적어라.",
+        "- 검색해서 열었을 때 상품이 여럿 나오면, 위의 '확인용' 규격과 브랜드가 맞는 것을 골라라.",
+        "- 판매가는 조사 시점(2026-09-21) 기준이라 지금은 다를 수 있다. 가격이 다르더라도",
+        "  브랜드와 규격이 맞으면 그 상품이다. 규격이 다른 옵션을 열었으면 notes에 적어라.",
+        "- 목록의 상품을 찾을 수 없으면 비슷한 걸 대신 넣지 말고, 그 번호는 건너뛰고 notes에 적어라.",
+    ]
+    return "\n".join(lines)
+
+
+# ------------------------------------------------------------
 # 3. inventory - 캡처 파일 확인
 # ------------------------------------------------------------
 def cmd_inventory(args) -> None:
@@ -384,6 +628,25 @@ def main():
                               help="브라우저 등 다른 곳에 붙여넣을 추출 지시문 출력")
     p_prompt.add_argument("--count", type=int, default=1, help="한 번에 분석할 제품 수")
     p_prompt.set_defaults(func=cmd_prompt)
+
+    p_tg = sub.add_parser("targets",
+                          help="썸네일 분석 결과에서 상세페이지를 볼 제품을 고르고 지시문 생성")
+    p_tg.add_argument("--extracted", default=str(Path(__file__).parent.parent / "data" / "extracted"),
+                      help="썸네일 추출 결과 JSON 폴더 (기본: ../data/extracted)")
+    p_tg.add_argument("--category", nargs="*", default=None,
+                      help="대상 카테고리 (기본: 전체)")
+    p_tg.add_argument("--specs",
+                      default=str(Path(__file__).parent.parent / "문서생성" / "견적요청서_데이터.json"),
+                      help="생산 스펙 JSON. 있으면 저가군을 그 형태·규격군 안에서 고른다")
+    p_tg.add_argument("--cheap", type=int, default=1,
+                      help="생산 스펙당 직접 경쟁자 개수 (기본 1)")
+    p_tg.add_argument("--premium", type=int, default=1,
+                      help="카테고리당 상위권 고가군 개수 (기본 1)")
+    p_tg.add_argument("--top-rank", type=int, default=10,
+                      help="'상위권'으로 볼 순위 상한 (기본 10위)")
+    p_tg.add_argument("--pace", type=int, default=3,
+                      help="브라우저에서 몇 개씩 묶어 진행할지 (0이면 지시 없음)")
+    p_tg.set_defaults(func=cmd_targets)
 
     p_inv = sub.add_parser("inventory", help="캡처한 상세페이지 파일 확인 및 번호 매기기")
     p_inv.add_argument("--folder", required=True, help="상세페이지 캡처가 들어있는 폴더")
