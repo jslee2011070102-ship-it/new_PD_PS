@@ -223,7 +223,18 @@ def load_extracted(folder: Path) -> dict[str, list[dict]]:
     return out
 
 
-def with_unit_price(rows: list[dict]) -> list[dict]:
+def item_id(cat: str, r: dict) -> str:
+    """전수조사를 이어서 하기 위한 안정된 식별자.
+
+    제품명으로는 안 된다. 같은 카테고리에 제품명이 똑같고 가격만 다른 옵션이
+    실제로 있다(스너글 섬유탈취제, 프릴 주방세제). 추출 원본의 파일명은
+    카테고리별로 01~25로 고유하므로 이것을 쓴다. 원본 캡처까지 거슬러 갈 수도 있다.
+    """
+    stem = str(r.get("file") or "").rsplit(".", 1)[0] or "00"
+    return f"{cat}-{stem}"
+
+
+def with_unit_price(rows: list[dict], cat: str = "") -> list[dict]:
     """단가·순위를 계산해 붙입니다. 계산은 썸네일 도구의 함수를 그대로 씁니다."""
     import analyze_thumbnails as at
 
@@ -237,6 +248,7 @@ def with_unit_price(rows: list[dict]) -> list[dict]:
         scale, basis = at.unit_price_basis(unit)
         out.append({
             **r,
+            "_id": item_id(cat, r),
             "_total": cap * cnt,
             "_unit_price": round(price / (cap * cnt) * scale, 1),
             "_basis": basis,
@@ -282,7 +294,7 @@ def pick_targets(rows: list[dict], specs: list[dict], cat: str,
     형태가 다르면 가격 구조가 달라 경쟁 상대가 아니다. 섬유탈취제를 용기로
     만드는데 파우치 최저가의 소구점을 참고하면 엉뚱한 결론이 나온다.
     """
-    rows = with_unit_price(rows)
+    rows = with_unit_price(rows, cat)
     picked, seen = [], set()
 
     def add(r, why):
@@ -321,6 +333,28 @@ def pick_targets(rows: list[dict], specs: list[dict], cat: str,
     return picked
 
 
+def done_ids(path: str | None) -> tuple[set[str], list[str]]:
+    """이미 수집한 항목의 ID를 누적 USP 엑셀에서 읽습니다.
+
+    진행 상황을 따로 파일에 적지 않는 이유: 상태 파일과 실제 결과가 어긋나면
+    무엇이 맞는지 알 수 없게 된다. 결과물 자체를 상태로 쓰면 어긋날 일이 없다
+    (썸네일 도구가 엑셀에 이어붙이는 것과 같은 방식).
+    """
+    if not path:
+        return set(), []
+    f = Path(path)
+    if not f.is_file():
+        return set(), []
+    try:
+        df = pd.read_excel(f, sheet_name="제품별요약")
+    except Exception as e:
+        sys.exit(f"{f} 에서 제품별요약 시트를 읽을 수 없습니다: {e}")
+    if "원본파일명" not in df.columns:
+        sys.exit(f"{f} 의 제품별요약 시트에 '원본파일명' 칸이 없습니다")
+    ids = [str(v).strip() for v in df["원본파일명"].dropna()]
+    return set(ids), ids
+
+
 def cmd_targets(args) -> None:
     data = load_extracted(Path(args.extracted))
     specs = load_specs(Path(args.specs)) if args.specs else []
@@ -330,41 +364,70 @@ def cmd_targets(args) -> None:
         sys.exit(f"추출 결과에 없는 카테고리: {', '.join(unknown)}\n"
                  f"  사용 가능: {', '.join(data.keys())}")
 
-    selected = []
-    for cat in cats:
-        for r in pick_targets(data[cat], specs, cat,
-                              args.cheap, args.premium, args.top_rank):
-            selected.append((cat, r))
+    if args.all:
+        # 전수조사. USP는 가격·판매량과 무관하게 제품마다 다른 소구점이 있으므로
+        # 어느 제품이 쓸모 있는지 미리 알 수 없다. 그래서 전부 본다.
+        selected = [(cat, r) for cat in cats
+                    for r in sorted(with_unit_price(data[cat], cat),
+                                    key=lambda r: r["_id"])]
+        mode = "전수조사"
+    else:
+        selected = [(cat, r) for cat in cats
+                    for r in pick_targets(data[cat], specs, cat,
+                                          args.cheap, args.premium, args.top_rank)]
+        mode = "표본(테스트용)"
+
+    done, done_list = done_ids(args.done)
+    known = {r["_id"] for _, r in selected}
+    stray = [i for i in sorted(done) if i not in known]
+    remaining = [(cat, r) for cat, r in selected if r["_id"] not in done]
 
     print("=" * 76)
-    print(f"상세페이지 확인 대상 {len(selected)}개")
-    if specs:
-        print(f"  저가군은 생산 스펙과 같은 형태·규격군 안에서 골랐습니다 "
-              f"(스펙당 {args.cheap}개)")
+    print(f"USP 수집 대상 - {mode}")
+    print(f"  전체 {len(selected)}개", end="")
+    if args.done:
+        print(f" / 완료 {len(selected) - len(remaining)}개 / 남음 {len(remaining)}개")
     else:
-        print(f"  생산 스펙 파일이 없어 카테고리 전체에서 골랐습니다 "
-              f"(형태가 섞일 수 있음)")
-    print(f"  고가군은 {args.top_rank}위 이내 중 단가가 가장 높은 제품 "
-          f"(카테고리당 {args.premium}개)")
+        print()
+    if not args.all:
+        print("  저가군은 생산 스펙과 같은 형태·규격군 안에서 골랐습니다"
+              if specs else "  생산 스펙 파일이 없어 카테고리 전체에서 골랐습니다")
+        print("  전수조사로 돌리려면 --all 을 붙이세요")
     print("=" * 76)
+    if stray:
+        print(f"\n참고: 완료 목록에 있으나 대상에 없는 ID {len(stray)}개 - "
+              f"{', '.join(stray[:6])}{' ...' if len(stray) > 6 else ''}")
+        print("  (카테고리를 좁혀서 돌렸거나, 브라우저가 ID를 다르게 적었을 수 있습니다)")
+    if len(done_list) != len(set(done_list)):
+        dups = [i for i in set(done_list) if done_list.count(i) > 1]
+        print(f"\n주의: 완료 목록에 같은 ID가 두 번 이상 있습니다 - {', '.join(sorted(dups)[:6])}")
+        print("  같은 제품을 두 번 수집했을 수 있으니 엑셀을 확인하세요")
+
+    if not remaining:
+        print("\n남은 항목이 없습니다. 수집이 끝났습니다.")
+        return
+
+    batch = remaining if args.batch <= 0 else remaining[:args.batch]
     cur = None
-    for cat, r in selected:
+    for cat, r in batch:
         if cat != cur:
             print(f"\n[{cat}]")
             cur = cat
         rank = "-" if r["_rank"] == 999 else f"{r['_rank']}위"
-        print(f"  {r['_why']:14} {rank:>5}  {(r.get('brand') or '브랜드 미상'):12} "
+        why = f"  {r['_why']:14}" if r.get("_why") else "  "
+        print(f"{why}{r['_id']:14} {rank:>5}  {(r.get('brand') or '브랜드 미상'):12} "
               f"{r['_unit_price']:>8.1f} {r['_basis']:9} {r.get('price_krw'):>7,}원")
         print(f"      {r.get('product_name')}")
-        if r.get("product_url"):
-            print(f"      {r['product_url']}")
-        elif r.get("_search"):
-            print(f"      검색: {r['_search']}")
 
     print("\n" + "=" * 76)
+    if args.batch > 0 and len(remaining) > len(batch):
+        print(f"이번 묶음 {len(batch)}개 (남은 {len(remaining)}개 중). "
+              f"결과를 build 로 넣은 뒤 같은 명령을 다시 실행하면 다음 묶음이 나옵니다")
+    else:
+        print(f"이번 묶음 {len(batch)}개")
     print("아래부터 브라우저(Claude in Chrome 등)에 그대로 붙여넣으세요")
     print("=" * 76 + "\n")
-    print(browser_prompt(selected, args.pace))
+    print(browser_prompt(batch, args.pace))
 
 
 def browser_prompt(selected: list[tuple[str, dict]], pace: int) -> str:
@@ -379,7 +442,7 @@ def browser_prompt(selected: list[tuple[str, dict]], pace: int) -> str:
         # 쿠팡 제품명에 브랜드가 빠져 있는 경우가 많다. 브랜드를 앞에 붙여야
         # 검색 결과에서 맞는 상품을 골라낼 수 있다.
         head = name if (not brand or brand in name) else f"{brand} / {name}"
-        lines.append(f"{i}. [{cat}] {head}")
+        lines.append(f"{i}. [{r['_id']}] {head}")
         # 용량·가격은 같은 이름의 다른 옵션을 열지 않게 하는 확인용 정보다.
         cap = r.get("capacity_text") or ""
         comp = r.get("composition_text") or ""
@@ -410,8 +473,9 @@ def browser_prompt(selected: list[tuple[str, dict]], pace: int) -> str:
         "",
         *field_lines(UspItem, indent="    "),
         "",
-        '  추가로 각 객체에 "file" 칸을 넣고, 위 목록의 번호와 제품을 알 수 있게 적어줘',
-        '  (예: "03_액츠_캡슐세제"). 나중에 결과를 맞춰보는 데 쓴다.',
+        '  추가로 각 객체에 "file" 칸을 넣고, 위 목록 대괄호 안의 ID를 **그대로** 적어줘',
+        '  (예: "세탁세제-09"). 이 ID로 어디까지 수집했는지 추적하니, 임의로 바꾸거나',
+        '  제품명으로 대체하면 안 된다.',
     ]
     if pace and len(selected) > pace:
         lines += [
@@ -574,7 +638,35 @@ def cmd_build(args) -> None:
     if args.thumbnails:
         products = join_thumbnails(products, Path(args.thumbnails), args.category)
 
+    out_path = Path(args.output)
+    if str(out_path.parent) not in ("", "."):
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # 기존 파일이 있으면 이어붙입니다 (누적 데이터베이스처럼 사용).
+    # 150개를 여러 묶음에 걸쳐 나눠 수집하므로 덮어쓰면 앞 묶음이 통째로 날아갑니다.
+    # 진행 상황을 이 엑셀에서 읽어(targets --done) 다음 묶음을 정하기 때문에,
+    # 덮어쓰기는 "일부만 수집된 결과를 전부인 줄 알고 받는" 최악의 실패가 됩니다.
+    if out_path.exists():
+        try:
+            old_products = pd.read_excel(out_path, sheet_name="제품별요약")
+            old_usps = pd.read_excel(out_path, sheet_name="USP전체")
+        except Exception as e:
+            sys.exit(f"기존 파일을 읽을 수 없어 이어붙일 수 없습니다: {out_path}\n  {e}\n"
+                     f"  덮어쓰면 기존 결과가 사라지므로 중단합니다. "
+                     f"다른 --output 경로를 쓰거나 파일을 확인하세요.")
+        # 같은 제품을 두 번 넣은 경우, 나중 것으로 바꿉니다(재수집 = 수정 의도).
+        again = set(products["원본파일명"]) & set(old_products["원본파일명"])
+        if again:
+            print(f"이미 있던 {len(again)}건을 새 결과로 교체: "
+                  f"{', '.join(sorted(again)[:6])}{' ...' if len(again) > 6 else ''}")
+            old_products = old_products[~old_products["원본파일명"].isin(again)]
+            old_usps = old_usps[~old_usps["원본파일명"].isin(again)]
+        products = pd.concat([old_products, products], ignore_index=True)
+        usps = pd.concat([old_usps, usps], ignore_index=True)
+        print(f"기존 파일에 이어붙임: 제품 {len(products)}건 / USP {len(usps)}건")
+
     # 유형별 빈도 - 이 카테고리에서 무엇이 표준 소구점인지 드러납니다.
+    # 누적된 전체를 기준으로 다시 계산합니다.
     by_kind = (usps.groupby("유형")
                .agg(등장수=("소구점", "size"),
                     제품수=("제품명", "nunique"),
@@ -582,10 +674,6 @@ def cmd_build(args) -> None:
                     강조=("강조도", lambda s: (s == "강조").sum()))
                .sort_values("등장수", ascending=False).reset_index()
                if not usps.empty else pd.DataFrame())
-
-    out_path = Path(args.output)
-    if str(out_path.parent) not in ("", "."):
-        out_path.parent.mkdir(parents=True, exist_ok=True)
 
     with pd.ExcelWriter(out_path, engine="openpyxl") as w:
         by_kind.to_excel(w, sheet_name="유형별집계", index=False)
@@ -644,6 +732,12 @@ def main():
                       help="카테고리당 상위권 고가군 개수 (기본 1)")
     p_tg.add_argument("--top-rank", type=int, default=10,
                       help="'상위권'으로 볼 순위 상한 (기본 10위)")
+    p_tg.add_argument("--all", action="store_true",
+                      help="전수조사. 표본 선정 없이 카테고리의 모든 제품을 대상으로 한다")
+    p_tg.add_argument("--batch", type=int, default=0,
+                      help="한 번에 내보낼 개수 (0이면 남은 전부). 전수조사 시 10~15 권장")
+    p_tg.add_argument("--done", default=None,
+                      help="누적 USP 엑셀. 이미 수집한 항목을 빼고 다음 묶음만 내보낸다")
     p_tg.add_argument("--pace", type=int, default=3,
                       help="브라우저에서 몇 개씩 묶어 진행할지 (0이면 지시 없음)")
     p_tg.set_defaults(func=cmd_targets)
