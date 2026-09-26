@@ -2,16 +2,17 @@
   "meta": {
     "markup": 3.5,
     "discount": 0.95,
-    "outlierGap": 1.5,
     "minSample": 4,
     "surveyDate": "2026년 9월 21일",
     "docDate": "2026년 9월 26일",
-    "sampleTotal": 150
+    "sampleTotal": 150,
+    "mixedBasisLabel": "100ml·100g당"
   },
   "specs": [
     {
       "cat": "세탁세제",
       "form": "용기",
+      "label": null,
       "spec": "2.5L x 4개",
       "qty": 4.0,
       "total": 10000.0,
@@ -30,8 +31,10 @@
       "benchDiff": -5.4,
       "market": 70.5,
       "sampleN": 17,
+      "thin": false,
       "sizeNote": null,
-      "excluded": [],
+      "mixedBasis": false,
+      "gapRatio": 1.0,
       "evidence": [
         {
           "rank": 9,
@@ -40,6 +43,7 @@
           "total": 10000.0,
           "price": 6980,
           "unit": 69.8,
+          "basis": "100ml당",
           "review": 2063
         },
         {
@@ -49,6 +53,7 @@
           "total": 10000.0,
           "price": 6990,
           "unit": 69.9,
+          "basis": "100ml당",
           "review": 16456
         },
         {
@@ -58,6 +63,7 @@
           "total": 10000.0,
           "price": 7570,
           "unit": 75.7,
+          "basis": "100ml당",
           "review": 2023
         },
         {
@@ -67,43 +73,58 @@
           "total": 10000.0,
           "price": 7660,
           "unit": 76.6,
+          "basis": "100ml당",
           "review": 16713
+        },
+        {
+          "rank": 2,
+          "brand": "탐사",
+          "spec": "2.5L x 4개",
+          "total": 10000.0,
+          "price": 10990,
+          "unit": 109.9,
+          "basis": "100ml당",
+          "review": 258102
         }
       ]
     },
     {
       "cat": "섬유유연제",
       "form": "용기",
-      "spec": "3.1L x 4개",
+      "label": null,
+      "spec": "2.5L x 4개",
       "qty": 4.0,
-      "total": 12400.0,
+      "total": 10000.0,
       "unitOfMeasure": "ml",
-      "price": 14900,
-      "priceEach": 3725,
-      "cost": 4257,
-      "costEach": 1064,
-      "unit": 120.2,
+      "price": 6500,
+      "priceEach": 1625,
+      "cost": 1857,
+      "costEach": 464,
+      "unit": 65.0,
       "basis": "100ml당",
-      "benchBrand": "샤프란",
-      "benchRank": 21,
-      "benchUnit": 126.4,
-      "benchSpec": "3.1L x 4개",
-      "benchPrice": 15670,
-      "benchDiff": -4.9,
+      "benchBrand": "리퀴드",
+      "benchRank": 9,
+      "benchUnit": 68.9,
+      "benchSpec": "2.5L x 4개",
+      "benchPrice": 6890,
+      "benchDiff": -5.7,
       "market": 61.3,
       "sampleN": 13,
+      "thin": false,
       "sizeNote": null,
-      "excluded": [
+      "mixedBasis": false,
+      "gapRatio": 1.8,
+      "evidence": [
         {
-          "brand": "무명",
+          "rank": 9,
+          "brand": "리퀴드",
           "spec": "2.5L x 4개",
+          "total": 10000.0,
           "price": 6890,
           "unit": 68.9,
-          "rank": 9,
+          "basis": "100ml당",
           "review": 1828
-        }
-      ],
-      "evidence": [
+        },
         {
           "rank": 21,
           "brand": "샤프란",
@@ -111,6 +132,7 @@
           "total": 12400.0,
           "price": 15670,
           "unit": 126.4,
+          "basis": "100ml당",
           "review": 38572
         },
         {
@@ -120,6 +142,7 @@
           "total": 12400.0,
           "price": 16160,
           "unit": 130.3,
+          "basis": "100ml당",
           "review": 311293
         },
         {
@@ -129,6 +152,7 @@
           "total": 4000.0,
           "price": 16000,
           "unit": 400.0,
+          "basis": "100ml당",
           "review": 38928
         },
         {
@@ -138,6 +162,7 @@
           "total": 4000.0,
           "price": 16700,
           "unit": 417.5,
+          "basis": "100ml당",
           "review": 166355
         }
       ]
@@ -145,6 +170,7 @@
     {
       "cat": "캡슐세제",
       "form": "파우치",
+      "label": null,
       "spec": "120개입",
       "qty": 1.0,
       "total": 120.0,
@@ -163,8 +189,10 @@
       "benchDiff": -4.9,
       "market": 56.8,
       "sampleN": 23,
+      "thin": false,
       "sizeNote": null,
-      "excluded": [],
+      "mixedBasis": false,
+      "gapRatio": 1.2,
       "evidence": [
         {
           "rank": 7,
@@ -173,6 +201,7 @@
           "total": 120.0,
           "price": 5890,
           "unit": 49.1,
+          "basis": "1개당",
           "review": 1951
         },
         {
@@ -182,6 +211,7 @@
           "total": 120.0,
           "price": 6900,
           "unit": 57.5,
+          "basis": "1개당",
           "review": 3750
         },
         {
@@ -191,6 +221,7 @@
           "total": 100.0,
           "price": 7800,
           "unit": 78.0,
+          "basis": "1개당",
           "review": 505
         },
         {
@@ -200,13 +231,25 @@
           "total": 100.0,
           "price": 8580,
           "unit": 85.8,
+          "basis": "1개당",
           "review": 9072
+        },
+        {
+          "rank": 6,
+          "brand": "맘스럽",
+          "spec": "100개입",
+          "total": 100.0,
+          "price": 8610,
+          "unit": 86.1,
+          "basis": "1개당",
+          "review": 18427
         }
       ]
     },
     {
       "cat": "섬유탈취제",
       "form": "용기",
+      "label": null,
       "spec": "500ml x 2개",
       "qty": 2.0,
       "total": 1000.0,
@@ -225,8 +268,10 @@
       "benchDiff": -4.6,
       "market": 21.5,
       "sampleN": 22,
+      "thin": false,
       "sizeNote": null,
-      "excluded": [],
+      "mixedBasis": false,
+      "gapRatio": 1.0,
       "evidence": [
         {
           "rank": 19,
@@ -235,6 +280,7 @@
           "total": 1000.0,
           "price": 8910,
           "unit": 891.0,
+          "basis": "100ml당",
           "review": 3701
         },
         {
@@ -244,6 +290,7 @@
           "total": 940.0,
           "price": 8620,
           "unit": 917.0,
+          "basis": "100ml당",
           "review": 4874
         },
         {
@@ -253,6 +300,7 @@
           "total": 940.0,
           "price": 8890,
           "unit": 945.7,
+          "basis": "100ml당",
           "review": 15350
         },
         {
@@ -262,13 +310,25 @@
           "total": 980.0,
           "price": 9590,
           "unit": 978.6,
+          "basis": "100ml당",
           "review": 2961
+        },
+        {
+          "rank": 12,
+          "brand": "스너글",
+          "spec": "470ml x 2개",
+          "total": 940.0,
+          "price": 9240,
+          "unit": 983.0,
+          "basis": "100ml당",
+          "review": 11303
         }
       ]
     },
     {
       "cat": "주방세제",
       "form": "말통",
+      "label": null,
       "spec": "13L",
       "qty": 1.0,
       "total": 13000.0,
@@ -278,17 +338,19 @@
       "cost": 2657,
       "costEach": null,
       "unit": 71.5,
-      "basis": "100ml당",
+      "basis": "100ml·100g당",
       "benchBrand": "탐사",
       "benchRank": 6,
       "benchUnit": 75.2,
       "benchSpec": "13L",
       "benchPrice": 9780,
       "benchDiff": -4.9,
-      "market": 6.4,
-      "sampleN": 6,
+      "market": 9.6,
+      "sampleN": 7,
+      "thin": false,
       "sizeNote": null,
-      "excluded": [],
+      "mixedBasis": true,
+      "gapRatio": 1.1,
       "evidence": [
         {
           "rank": 6,
@@ -297,6 +359,7 @@
           "total": 13000.0,
           "price": 9780,
           "unit": 75.2,
+          "basis": "100ml당",
           "review": 12169
         },
         {
@@ -306,6 +369,7 @@
           "total": 13000.0,
           "price": 10750,
           "unit": 82.7,
+          "basis": "100ml당",
           "review": 15532
         },
         {
@@ -315,6 +379,7 @@
           "total": 8000.0,
           "price": 6920,
           "unit": 86.5,
+          "basis": "100ml당",
           "review": 1169
         },
         {
@@ -324,13 +389,35 @@
           "total": 8000.0,
           "price": 7080,
           "unit": 88.5,
+          "basis": "100ml당",
           "review": 2098
+        },
+        {
+          "rank": 22,
+          "brand": "맘스럽",
+          "spec": "4L x 2개",
+          "total": 8000.0,
+          "price": 7140,
+          "unit": 89.2,
+          "basis": "100ml당",
+          "review": 7074
+        },
+        {
+          "rank": 4,
+          "brand": "트리오",
+          "spec": "14kg",
+          "total": 14000.0,
+          "price": 15890,
+          "unit": 113.5,
+          "basis": "100g당",
+          "review": 110806
         }
       ]
     },
     {
       "cat": "살균소독제",
       "form": "말통",
+      "label": "가정용",
       "spec": "4L",
       "qty": 1.0,
       "total": 4000.0,
@@ -349,8 +436,10 @@
       "benchDiff": -5.5,
       "market": 2.2,
       "sampleN": 4,
-      "sizeNote": "같은 말통 안에 가정용 4L군과 업소용 19~20L군이 섞여 있어 가정용 4L군만 비교 대상으로 삼았다",
-      "excluded": [],
+      "thin": false,
+      "sizeNote": "살균소독제 말통은 가정용 4L군과 업소용 19~20L군으로 갈립니다. 쓰임과 구매자가 다르므로 각각 제안합니다",
+      "mixedBasis": false,
+      "gapRatio": 1.2,
       "evidence": [
         {
           "rank": 2,
@@ -359,6 +448,7 @@
           "total": 4000.0,
           "price": 8990,
           "unit": 224.8,
+          "basis": "100ml당",
           "review": 19495
         },
         {
@@ -368,6 +458,7 @@
           "total": 4000.0,
           "price": 10440,
           "unit": 261.0,
+          "basis": "100ml당",
           "review": 45419
         },
         {
@@ -377,6 +468,7 @@
           "total": 4000.0,
           "price": 17800,
           "unit": 445.0,
+          "basis": "100ml당",
           "review": 6174
         },
         {
@@ -386,7 +478,67 @@
           "total": 4000.0,
           "price": 19800,
           "unit": 495.0,
+          "basis": "100ml당",
           "review": 171
+        }
+      ]
+    },
+    {
+      "cat": "살균소독제",
+      "form": "말통",
+      "label": "업소용",
+      "spec": "20L",
+      "qty": 1.0,
+      "total": 20000.0,
+      "unitOfMeasure": "ml",
+      "price": 18400,
+      "priceEach": null,
+      "cost": 5257,
+      "costEach": null,
+      "unit": 92.0,
+      "basis": "100ml당",
+      "benchBrand": "세이프앤케어",
+      "benchRank": 9,
+      "benchUnit": 96.8,
+      "benchSpec": "20L",
+      "benchPrice": 19350,
+      "benchDiff": -5.0,
+      "market": 2.1,
+      "sampleN": 3,
+      "thin": true,
+      "sizeNote": "업소용 19~20L군입니다. 가정용 4L군과는 별개 시장으로 봅니다",
+      "mixedBasis": false,
+      "gapRatio": 1.8,
+      "evidence": [
+        {
+          "rank": 9,
+          "brand": "세이프앤케어",
+          "spec": "20L",
+          "total": 20000.0,
+          "price": 19350,
+          "unit": 96.8,
+          "basis": "100ml당",
+          "review": 3049
+        },
+        {
+          "rank": 14,
+          "brand": "국대스타",
+          "spec": "20L",
+          "total": 20000.0,
+          "price": 34890,
+          "unit": 174.4,
+          "basis": "100ml당",
+          "review": 1591
+        },
+        {
+          "rank": 12,
+          "brand": "크로바케미칼",
+          "spec": "19L",
+          "total": 19000.0,
+          "price": 51910,
+          "unit": 273.2,
+          "basis": "100ml당",
+          "review": 682
         }
       ]
     }
@@ -412,7 +564,7 @@
       {
         "form": "말통",
         "n": 7,
-        "floor": 174.4,
+        "floor": 96.8,
         "basis": "100ml당",
         "revenue": 4.2,
         "thin": false
@@ -422,7 +574,7 @@
       {
         "form": "용기",
         "n": 13,
-        "floor": 126.4,
+        "floor": 68.9,
         "basis": "100ml당",
         "revenue": 61.3,
         "thin": false
@@ -430,7 +582,7 @@
       {
         "form": "파우치",
         "n": 7,
-        "floor": 307.4,
+        "floor": 138.7,
         "basis": "100ml당",
         "revenue": 19.9,
         "thin": false
@@ -515,10 +667,10 @@
       },
       {
         "form": "말통",
-        "n": 6,
+        "n": 7,
         "floor": 75.2,
-        "basis": "100ml당",
-        "revenue": 6.4,
+        "basis": "100ml·100g당",
+        "revenue": 9.6,
         "thin": false
       }
     ],
@@ -526,7 +678,7 @@
       {
         "form": "용기",
         "n": 2,
-        "floor": 214.2,
+        "floor": 87.3,
         "basis": "1개당",
         "revenue": 3.5,
         "thin": true
@@ -557,19 +709,19 @@
       "floor": 223.9,
       "basis": "100ml당",
       "thin": false,
-      "ratio": 3.2,
       "chosen": "용기",
+      "ratio": 3.2,
       "revenue": 27.3
     },
     {
       "cat": "섬유유연제",
       "form": "파우치",
       "n": 7,
-      "floor": 307.4,
+      "floor": 138.7,
       "basis": "100ml당",
       "thin": false,
-      "ratio": 2.4,
       "chosen": "용기",
+      "ratio": 2.0,
       "revenue": 19.9
     },
     {
@@ -579,8 +731,8 @@
       "floor": 280.4,
       "basis": "100ml당",
       "thin": false,
-      "ratio": 2.2,
       "chosen": "용기",
+      "ratio": 4.1,
       "revenue": 17.7
     },
     {
@@ -590,8 +742,8 @@
       "floor": 248.4,
       "basis": "100ml당",
       "thin": false,
-      "ratio": 3.3,
       "chosen": "말통",
+      "ratio": 3.3,
       "revenue": 11.5
     },
     {
@@ -601,8 +753,8 @@
       "floor": 178.3,
       "basis": "100ml당",
       "thin": false,
-      "ratio": 2.4,
       "chosen": "말통",
+      "ratio": 2.4,
       "revenue": 8.7
     },
     {
@@ -612,19 +764,19 @@
       "floor": 532.2,
       "basis": "100ml당",
       "thin": false,
-      "ratio": 3.1,
       "chosen": "말통",
+      "ratio": 5.5,
       "revenue": 7.0
     },
     {
       "cat": "캡슐세제",
       "form": "용기",
       "n": 2,
-      "floor": 214.2,
+      "floor": 87.3,
       "basis": "1개당",
       "thin": true,
-      "ratio": 4.4,
       "chosen": "파우치",
+      "ratio": 1.8,
       "revenue": 3.5
     },
     {
@@ -634,8 +786,8 @@
       "floor": 906.2,
       "basis": "100ml당",
       "thin": true,
-      "ratio": 1.0,
       "chosen": "용기",
+      "ratio": 1.0,
       "revenue": 0.7
     }
   ]
