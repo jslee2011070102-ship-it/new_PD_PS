@@ -1,514 +1,642 @@
-[
- {
-  "cat": "섬유유연제",
-  "role": "본품",
-  "form": "용기",
-  "spec": "3,100ml x 4개",
-  "price": 14900,
-  "unit": 120.2,
-  "basis": "100ml당",
-  "cost": 4257,
-  "costEach": 1064,
-  "qty": 4,
-  "market": 61.3,
-  "why": "12.4L(3.1L×4)가 저가권 규격. 샤프란 126.4원·피죤 130.3원(3위, 리뷰 31만) 2개가 동일 규격에 몰림",
-  "benchBrand": "샤프란",
-  "benchRank": 21,
-  "benchUnit": 126.4,
-  "benchDiff": -4.9,
-  "evidence": [
-   {
-    "순위": 21,
-    "브랜드": "샤프란",
-    "규격": "12,400ml",
-    "판매가": 15670,
-    "단가": 126.4,
-    "리뷰": 38572
-   },
-   {
-    "순위": 3,
-    "브랜드": "피죤",
-    "규격": "12,400ml",
-    "판매가": 16160,
-    "단가": 130.3,
-    "리뷰": 311293
-   },
-   {
-    "순위": 10,
-    "브랜드": "스너글",
-    "규격": "4,000ml",
-    "판매가": 16000,
-    "단가": 400.0,
-    "리뷰": 38928
-   }
+{
+  "meta": {
+    "markup": 3.5,
+    "discount": 0.95,
+    "outlierGap": 1.5,
+    "minSample": 4,
+    "surveyDate": "2026년 9월 21일",
+    "docDate": "2026년 9월 26일",
+    "sampleTotal": 150
+  },
+  "specs": [
+    {
+      "cat": "세탁세제",
+      "form": "용기",
+      "spec": "2.5L x 4개",
+      "qty": 4.0,
+      "total": 10000.0,
+      "unitOfMeasure": "ml",
+      "price": 6600,
+      "priceEach": 1650,
+      "cost": 1886,
+      "costEach": 472,
+      "unit": 66.0,
+      "basis": "100ml당",
+      "benchBrand": "퍼플리",
+      "benchRank": 9,
+      "benchUnit": 69.8,
+      "benchSpec": "2.5L x 4개",
+      "benchPrice": 6980,
+      "benchDiff": -5.4,
+      "market": 70.5,
+      "sampleN": 17,
+      "sizeNote": null,
+      "excluded": [],
+      "evidence": [
+        {
+          "rank": 9,
+          "brand": "퍼플리",
+          "spec": "2.5L x 4개",
+          "total": 10000.0,
+          "price": 6980,
+          "unit": 69.8,
+          "review": 2063
+        },
+        {
+          "rank": 17,
+          "brand": "봉쥬르끌레어",
+          "spec": "2.5L x 4개",
+          "total": 10000.0,
+          "price": 6990,
+          "unit": 69.9,
+          "review": 16456
+        },
+        {
+          "rank": 7,
+          "brand": "퍼플리",
+          "spec": "2.5L x 4개",
+          "total": 10000.0,
+          "price": 7570,
+          "unit": 75.7,
+          "review": 2023
+        },
+        {
+          "rank": 11,
+          "brand": "리퀴드",
+          "spec": "2.5L x 4개",
+          "total": 10000.0,
+          "price": 7660,
+          "unit": 76.6,
+          "review": 16713
+        }
+      ]
+    },
+    {
+      "cat": "섬유유연제",
+      "form": "용기",
+      "spec": "3.1L x 4개",
+      "qty": 4.0,
+      "total": 12400.0,
+      "unitOfMeasure": "ml",
+      "price": 14900,
+      "priceEach": 3725,
+      "cost": 4257,
+      "costEach": 1064,
+      "unit": 120.2,
+      "basis": "100ml당",
+      "benchBrand": "샤프란",
+      "benchRank": 21,
+      "benchUnit": 126.4,
+      "benchSpec": "3.1L x 4개",
+      "benchPrice": 15670,
+      "benchDiff": -4.9,
+      "market": 61.3,
+      "sampleN": 13,
+      "sizeNote": null,
+      "excluded": [
+        {
+          "brand": "무명",
+          "spec": "2.5L x 4개",
+          "price": 6890,
+          "unit": 68.9,
+          "rank": 9,
+          "review": 1828
+        }
+      ],
+      "evidence": [
+        {
+          "rank": 21,
+          "brand": "샤프란",
+          "spec": "3.1L x 4개",
+          "total": 12400.0,
+          "price": 15670,
+          "unit": 126.4,
+          "review": 38572
+        },
+        {
+          "rank": 3,
+          "brand": "피죤",
+          "spec": "3.1L x 4개",
+          "total": 12400.0,
+          "price": 16160,
+          "unit": 130.3,
+          "review": 311293
+        },
+        {
+          "rank": 10,
+          "brand": "스너글",
+          "spec": "4L",
+          "total": 4000.0,
+          "price": 16000,
+          "unit": 400.0,
+          "review": 38928
+        },
+        {
+          "rank": 2,
+          "brand": "스너글",
+          "spec": "4L",
+          "total": 4000.0,
+          "price": 16700,
+          "unit": 417.5,
+          "review": 166355
+        }
+      ]
+    },
+    {
+      "cat": "캡슐세제",
+      "form": "파우치",
+      "spec": "120개입",
+      "qty": 1.0,
+      "total": 120.0,
+      "unitOfMeasure": "개",
+      "price": 5600,
+      "priceEach": null,
+      "cost": 1600,
+      "costEach": null,
+      "unit": 46.7,
+      "basis": "1개당",
+      "benchBrand": "허니맘",
+      "benchRank": 7,
+      "benchUnit": 49.1,
+      "benchSpec": "120개입",
+      "benchPrice": 5890,
+      "benchDiff": -4.9,
+      "market": 56.8,
+      "sampleN": 23,
+      "sizeNote": null,
+      "excluded": [],
+      "evidence": [
+        {
+          "rank": 7,
+          "brand": "허니맘",
+          "spec": "120개입",
+          "total": 120.0,
+          "price": 5890,
+          "unit": 49.1,
+          "review": 1951
+        },
+        {
+          "rank": 4,
+          "brand": "버블업",
+          "spec": "120개입",
+          "total": 120.0,
+          "price": 6900,
+          "unit": 57.5,
+          "review": 3750
+        },
+        {
+          "rank": 21,
+          "brand": "올클린",
+          "spec": "100개입",
+          "total": 100.0,
+          "price": 7800,
+          "unit": 78.0,
+          "review": 505
+        },
+        {
+          "rank": 15,
+          "brand": "쉬슬러",
+          "spec": "100개입",
+          "total": 100.0,
+          "price": 8580,
+          "unit": 85.8,
+          "review": 9072
+        }
+      ]
+    },
+    {
+      "cat": "섬유탈취제",
+      "form": "용기",
+      "spec": "500ml x 2개",
+      "qty": 2.0,
+      "total": 1000.0,
+      "unitOfMeasure": "ml",
+      "price": 8500,
+      "priceEach": 4250,
+      "cost": 2429,
+      "costEach": 1214,
+      "unit": 850.0,
+      "basis": "100ml당",
+      "benchBrand": "코코도르",
+      "benchRank": 19,
+      "benchUnit": 891.0,
+      "benchSpec": "500ml x 2개",
+      "benchPrice": 8910,
+      "benchDiff": -4.6,
+      "market": 21.5,
+      "sampleN": 22,
+      "sizeNote": null,
+      "excluded": [],
+      "evidence": [
+        {
+          "rank": 19,
+          "brand": "코코도르",
+          "spec": "500ml x 2개",
+          "total": 1000.0,
+          "price": 8910,
+          "unit": 891.0,
+          "review": 3701
+        },
+        {
+          "rank": 11,
+          "brand": "스너글",
+          "spec": "470ml x 2개",
+          "total": 940.0,
+          "price": 8620,
+          "unit": 917.0,
+          "review": 4874
+        },
+        {
+          "rank": 5,
+          "brand": "스너글",
+          "spec": "470ml x 2개",
+          "total": 940.0,
+          "price": 8890,
+          "unit": 945.7,
+          "review": 15350
+        },
+        {
+          "rank": 24,
+          "brand": "아우라",
+          "spec": "490ml x 2개",
+          "total": 980.0,
+          "price": 9590,
+          "unit": 978.6,
+          "review": 2961
+        }
+      ]
+    },
+    {
+      "cat": "주방세제",
+      "form": "말통",
+      "spec": "13L",
+      "qty": 1.0,
+      "total": 13000.0,
+      "unitOfMeasure": "ml",
+      "price": 9300,
+      "priceEach": null,
+      "cost": 2657,
+      "costEach": null,
+      "unit": 71.5,
+      "basis": "100ml당",
+      "benchBrand": "탐사",
+      "benchRank": 6,
+      "benchUnit": 75.2,
+      "benchSpec": "13L",
+      "benchPrice": 9780,
+      "benchDiff": -4.9,
+      "market": 6.4,
+      "sampleN": 6,
+      "sizeNote": null,
+      "excluded": [],
+      "evidence": [
+        {
+          "rank": 6,
+          "brand": "탐사",
+          "spec": "13L",
+          "total": 13000.0,
+          "price": 9780,
+          "unit": 75.2,
+          "review": 12169
+        },
+        {
+          "rank": 11,
+          "brand": "크로바케미칼",
+          "spec": "13L",
+          "total": 13000.0,
+          "price": 10750,
+          "unit": 82.7,
+          "review": 15532
+        },
+        {
+          "rank": 8,
+          "brand": "허니맘",
+          "spec": "4L x 2개",
+          "total": 8000.0,
+          "price": 6920,
+          "unit": 86.5,
+          "review": 1169
+        },
+        {
+          "rank": 13,
+          "brand": "브라이트리퀴드",
+          "spec": "4L x 2개",
+          "total": 8000.0,
+          "price": 7080,
+          "unit": 88.5,
+          "review": 2098
+        }
+      ]
+    },
+    {
+      "cat": "살균소독제",
+      "form": "말통",
+      "spec": "4L",
+      "qty": 1.0,
+      "total": 4000.0,
+      "unitOfMeasure": "ml",
+      "price": 8500,
+      "priceEach": null,
+      "cost": 2429,
+      "costEach": null,
+      "unit": 212.5,
+      "basis": "100ml당",
+      "benchBrand": "탐사",
+      "benchRank": 2,
+      "benchUnit": 224.8,
+      "benchSpec": "4L",
+      "benchPrice": 8990,
+      "benchDiff": -5.5,
+      "market": 2.2,
+      "sampleN": 4,
+      "sizeNote": "같은 말통 안에 가정용 4L군과 업소용 19~20L군이 섞여 있어 가정용 4L군만 비교 대상으로 삼았다",
+      "excluded": [],
+      "evidence": [
+        {
+          "rank": 2,
+          "brand": "탐사",
+          "spec": "4L",
+          "total": 4000.0,
+          "price": 8990,
+          "unit": 224.8,
+          "review": 19495
+        },
+        {
+          "rank": 5,
+          "brand": "아가페케어",
+          "spec": "4L",
+          "total": 4000.0,
+          "price": 10440,
+          "unit": 261.0,
+          "review": 45419
+        },
+        {
+          "rank": 11,
+          "brand": "메디록스",
+          "spec": "4L",
+          "total": 4000.0,
+          "price": 17800,
+          "unit": 445.0,
+          "review": 6174
+        },
+        {
+          "rank": 21,
+          "brand": "하이포메디",
+          "spec": "4L",
+          "total": 4000.0,
+          "price": 19800,
+          "unit": 495.0,
+          "review": 171
+        }
+      ]
+    }
+  ],
+  "compare": {
+    "살균소독제": [
+      {
+        "form": "용기",
+        "n": 18,
+        "floor": 532.2,
+        "basis": "100ml당",
+        "revenue": 7.0,
+        "thin": false
+      },
+      {
+        "form": "파우치",
+        "n": 0,
+        "floor": null,
+        "basis": null,
+        "revenue": 0.0,
+        "thin": true
+      },
+      {
+        "form": "말통",
+        "n": 7,
+        "floor": 174.4,
+        "basis": "100ml당",
+        "revenue": 4.2,
+        "thin": false
+      }
+    ],
+    "섬유유연제": [
+      {
+        "form": "용기",
+        "n": 13,
+        "floor": 126.4,
+        "basis": "100ml당",
+        "revenue": 61.3,
+        "thin": false
+      },
+      {
+        "form": "파우치",
+        "n": 7,
+        "floor": 307.4,
+        "basis": "100ml당",
+        "revenue": 19.9,
+        "thin": false
+      },
+      {
+        "form": "말통",
+        "n": 5,
+        "floor": 280.4,
+        "basis": "100ml당",
+        "revenue": 17.7,
+        "thin": false
+      }
+    ],
+    "섬유탈취제": [
+      {
+        "form": "용기",
+        "n": 22,
+        "floor": 891.0,
+        "basis": "100ml당",
+        "revenue": 21.5,
+        "thin": false
+      },
+      {
+        "form": "파우치",
+        "n": 3,
+        "floor": 906.2,
+        "basis": "100ml당",
+        "revenue": 0.7,
+        "thin": true
+      },
+      {
+        "form": "말통",
+        "n": 0,
+        "floor": null,
+        "basis": null,
+        "revenue": 0.0,
+        "thin": true
+      }
+    ],
+    "세탁세제": [
+      {
+        "form": "용기",
+        "n": 17,
+        "floor": 69.8,
+        "basis": "100ml당",
+        "revenue": 70.5,
+        "thin": false
+      },
+      {
+        "form": "파우치",
+        "n": 8,
+        "floor": 223.9,
+        "basis": "100ml당",
+        "revenue": 27.3,
+        "thin": false
+      },
+      {
+        "form": "말통",
+        "n": 0,
+        "floor": null,
+        "basis": null,
+        "revenue": 0.0,
+        "thin": true
+      }
+    ],
+    "주방세제": [
+      {
+        "form": "용기",
+        "n": 11,
+        "floor": 248.4,
+        "basis": "100ml당",
+        "revenue": 11.5,
+        "thin": false
+      },
+      {
+        "form": "파우치",
+        "n": 7,
+        "floor": 178.3,
+        "basis": "100ml당",
+        "revenue": 8.7,
+        "thin": false
+      },
+      {
+        "form": "말통",
+        "n": 6,
+        "floor": 75.2,
+        "basis": "100ml당",
+        "revenue": 6.4,
+        "thin": false
+      }
+    ],
+    "캡슐세제": [
+      {
+        "form": "용기",
+        "n": 2,
+        "floor": 214.2,
+        "basis": "1개당",
+        "revenue": 3.5,
+        "thin": true
+      },
+      {
+        "form": "파우치",
+        "n": 23,
+        "floor": 49.1,
+        "basis": "1개당",
+        "revenue": 56.8,
+        "thin": false
+      },
+      {
+        "form": "말통",
+        "n": 0,
+        "floor": null,
+        "basis": null,
+        "revenue": 0.0,
+        "thin": true
+      }
+    ]
+  },
+  "later": [
+    {
+      "cat": "세탁세제",
+      "form": "파우치",
+      "n": 8,
+      "floor": 223.9,
+      "basis": "100ml당",
+      "thin": false,
+      "ratio": 3.2,
+      "chosen": "용기",
+      "revenue": 27.3
+    },
+    {
+      "cat": "섬유유연제",
+      "form": "파우치",
+      "n": 7,
+      "floor": 307.4,
+      "basis": "100ml당",
+      "thin": false,
+      "ratio": 2.4,
+      "chosen": "용기",
+      "revenue": 19.9
+    },
+    {
+      "cat": "섬유유연제",
+      "form": "말통",
+      "n": 5,
+      "floor": 280.4,
+      "basis": "100ml당",
+      "thin": false,
+      "ratio": 2.2,
+      "chosen": "용기",
+      "revenue": 17.7
+    },
+    {
+      "cat": "주방세제",
+      "form": "용기",
+      "n": 11,
+      "floor": 248.4,
+      "basis": "100ml당",
+      "thin": false,
+      "ratio": 3.3,
+      "chosen": "말통",
+      "revenue": 11.5
+    },
+    {
+      "cat": "주방세제",
+      "form": "파우치",
+      "n": 7,
+      "floor": 178.3,
+      "basis": "100ml당",
+      "thin": false,
+      "ratio": 2.4,
+      "chosen": "말통",
+      "revenue": 8.7
+    },
+    {
+      "cat": "살균소독제",
+      "form": "용기",
+      "n": 18,
+      "floor": 532.2,
+      "basis": "100ml당",
+      "thin": false,
+      "ratio": 3.1,
+      "chosen": "말통",
+      "revenue": 7.0
+    },
+    {
+      "cat": "캡슐세제",
+      "form": "용기",
+      "n": 2,
+      "floor": 214.2,
+      "basis": "1개당",
+      "thin": true,
+      "ratio": 4.4,
+      "chosen": "파우치",
+      "revenue": 3.5
+    },
+    {
+      "cat": "섬유탈취제",
+      "form": "파우치",
+      "n": 3,
+      "floor": 906.2,
+      "basis": "100ml당",
+      "thin": true,
+      "ratio": 1.0,
+      "chosen": "용기",
+      "revenue": 0.7
+    }
   ]
- },
- {
-  "cat": "섬유유연제",
-  "role": "리필",
-  "form": "말통",
-  "spec": "5,500ml",
-  "price": 14600,
-  "unit": 265.5,
-  "basis": "100ml당",
-  "cost": 4171,
-  "costEach": 4171,
-  "qty": 1,
-  "market": 17.7,
-  "why": "말통 5.5L 펌프형이 리필 저가권. 아우라 2종이 280.4·280.5원으로 사실상 같은 가격대를 형성",
-  "benchBrand": "아우라",
-  "benchRank": 17,
-  "benchUnit": 280.4,
-  "benchDiff": -5.3,
-  "evidence": [
-   {
-    "순위": 17,
-    "브랜드": "아우라",
-    "규격": "5,500ml",
-    "판매가": 15420,
-    "단가": 280.4,
-    "리뷰": 37162
-   },
-   {
-    "순위": 16,
-    "브랜드": "아우라",
-    "규격": "5,500ml",
-    "판매가": 15430,
-    "단가": 280.5,
-    "리뷰": 44122
-   },
-   {
-    "순위": 24,
-    "브랜드": "다우니",
-    "규격": "8,500ml",
-    "판매가": 27980,
-    "단가": 329.2,
-    "리뷰": 13086
-   }
-  ]
- },
- {
-  "cat": "세탁세제",
-  "role": "본품",
-  "form": "용기",
-  "spec": "2,500ml x 4개",
-  "price": 6600,
-  "unit": 66.0,
-  "basis": "100ml당",
-  "cost": 1886,
-  "costEach": 471,
-  "qty": 4,
-  "market": 70.5,
-  "why": "10L(2.5L×4)가 저가권 표준 규격. 퍼플리 69.8원(9위)·봉쥬르끌레어 69.9원(17위, 리뷰 1.6만)·퍼플리 75.7원(7위) 3개가 같은 규격·가격대에 몰려 있어 가격대가 실재함",
-  "benchBrand": "퍼플리",
-  "benchRank": 9,
-  "benchUnit": 69.8,
-  "benchDiff": -5.4,
-  "evidence": [
-   {
-    "순위": 9,
-    "브랜드": "퍼플리",
-    "규격": "10,000ml",
-    "판매가": 6980,
-    "단가": 69.8,
-    "리뷰": 2063
-   },
-   {
-    "순위": 17,
-    "브랜드": "봉쥬르끌레어",
-    "규격": "10,000ml",
-    "판매가": 6990,
-    "단가": 69.9,
-    "리뷰": 16456
-   },
-   {
-    "순위": 7,
-    "브랜드": "퍼플리",
-    "규격": "10,000ml",
-    "판매가": 7570,
-    "단가": 75.7,
-    "리뷰": 2023
-   }
-  ]
- },
- {
-  "cat": "세탁세제",
-  "role": "리필",
-  "form": "파우치",
-  "spec": "2,000ml x 4개",
-  "price": 17000,
-  "unit": 212.5,
-  "basis": "100ml당",
-  "cost": 4857,
-  "costEach": 1214,
-  "qty": 4,
-  "market": 27.3,
-  "why": "말통 리필이 없는 카테고리. 파우치 8L대가 저가권이며 테크 223.9원·리큐 225원 2개가 붙어 있음",
-  "benchBrand": "테크",
-  "benchRank": 20,
-  "benchUnit": 223.9,
-  "benchDiff": -5.1,
-  "evidence": [
-   {
-    "순위": 20,
-    "브랜드": "테크",
-    "규격": "8,000ml",
-    "판매가": 17910,
-    "단가": 223.9,
-    "리뷰": 37889
-   },
-   {
-    "순위": 8,
-    "브랜드": "리큐",
-    "규격": "8,400ml",
-    "판매가": 18900,
-    "단가": 225.0,
-    "리뷰": 114282
-   },
-   {
-    "순위": 24,
-    "브랜드": "리큐",
-    "규격": "8,400ml",
-    "판매가": 18900,
-    "단가": 225.0,
-    "리뷰": 61714
-   }
-  ]
- },
- {
-  "cat": "캡슐세제",
-  "role": "본품",
-  "form": "용기",
-  "spec": "100개",
-  "price": 8300,
-  "unit": 83.0,
-  "basis": "1개당",
-  "cost": 2371,
-  "costEach": 2371,
-  "qty": 1,
-  "market": 3.5,
-  "why": "통에 담긴 형태는 맘스럽 100개입 87.3원(5위)이 저가권. 같은 브랜드가 파우치도 내고 있어 본품·리필 구조가 성립",
-  "benchBrand": "맘스럽",
-  "benchRank": 5,
-  "benchUnit": 87.3,
-  "benchDiff": -4.9,
-  "evidence": [
-   {
-    "순위": 24,
-    "브랜드": "커클랜드",
-    "규격": "140개",
-    "판매가": 29990,
-    "단가": 214.2,
-    "리뷰": 10224
-   }
-  ]
- },
- {
-  "cat": "캡슐세제",
-  "role": "리필",
-  "form": "파우치",
-  "spec": "120개",
-  "price": 5600,
-  "unit": 46.7,
-  "basis": "1개당",
-  "cost": 1600,
-  "costEach": 1600,
-  "qty": 1,
-  "market": 56.8,
-  "why": "파우치 120개입이 저가권 표준. 허니맘 49.1원(7위)·버블업 57.5원(4위) 모두 120개입",
-  "benchBrand": "허니맘",
-  "benchRank": 7,
-  "benchUnit": 49.1,
-  "benchDiff": -5.0,
-  "evidence": [
-   {
-    "순위": 7,
-    "브랜드": "허니맘",
-    "규격": "120개",
-    "판매가": 5890,
-    "단가": 49.1,
-    "리뷰": 1951
-   },
-   {
-    "순위": 4,
-    "브랜드": "버블업",
-    "규격": "120개",
-    "판매가": 6900,
-    "단가": 57.5,
-    "리뷰": 3750
-   },
-   {
-    "순위": 21,
-    "브랜드": "올클린",
-    "규격": "100개",
-    "판매가": 7800,
-    "단가": 78.0,
-    "리뷰": 505
-   }
-  ]
- },
- {
-  "cat": "주방세제",
-  "role": "본품",
-  "form": "용기",
-  "spec": "750ml x 2개",
-  "price": 4400,
-  "unit": 293.3,
-  "basis": "100ml당",
-  "cost": 1257,
-  "costEach": 629,
-  "qty": 2,
-  "market": 11.5,
-  "why": "1.5L대 펌프용기가 표준. 허니맘 311.3원(10위)·탐사 351.9원(1위, 리뷰 14만)이 저가권",
-  "benchBrand": "허니맘",
-  "benchRank": 10,
-  "benchUnit": 311.3,
-  "benchDiff": -5.8,
-  "evidence": [
-   {
-    "순위": 18,
-    "브랜드": "자연퐁",
-    "규격": "6,080ml",
-    "판매가": 15100,
-    "단가": 248.4,
-    "리뷰": 19660
-   },
-   {
-    "순위": 10,
-    "브랜드": "허니맘",
-    "규격": "1,500ml",
-    "판매가": 4670,
-    "단가": 311.3,
-    "리뷰": 282
-   },
-   {
-    "순위": 1,
-    "브랜드": "탐사",
-    "규격": "1,560ml",
-    "판매가": 5490,
-    "단가": 351.9,
-    "리뷰": 141071
-   }
-  ]
- },
- {
-  "cat": "주방세제",
-  "role": "리필",
-  "form": "말통",
-  "spec": "13,000ml",
-  "price": 9300,
-  "unit": 71.5,
-  "basis": "100ml당",
-  "cost": 2657,
-  "costEach": 2657,
-  "qty": 1,
-  "market": 9.6,
-  "why": "13L 말통이 저가권 규격. 탐사 75.2원(6위)·크로바 82.7원(11위) 2개가 동일 13L",
-  "benchBrand": "탐사",
-  "benchRank": 6,
-  "benchUnit": 75.2,
-  "benchDiff": -4.9,
-  "evidence": [
-   {
-    "순위": 6,
-    "브랜드": "탐사",
-    "규격": "13,000ml",
-    "판매가": 9780,
-    "단가": 75.2,
-    "리뷰": 12169
-   },
-   {
-    "순위": 11,
-    "브랜드": "크로바케미칼",
-    "규격": "13,000ml",
-    "판매가": 10750,
-    "단가": 82.7,
-    "리뷰": 15532
-   },
-   {
-    "순위": 8,
-    "브랜드": "허니맘",
-    "규격": "8,000ml",
-    "판매가": 6920,
-    "단가": 86.5,
-    "리뷰": 1169
-   }
-  ]
- },
- {
-  "cat": "섬유탈취제",
-  "role": "본품",
-  "form": "용기",
-  "spec": "500ml x 2개",
-  "price": 8400,
-  "unit": 840.0,
-  "basis": "100ml당",
-  "cost": 2400,
-  "costEach": 1200,
-  "qty": 2,
-  "market": 21.5,
-  "why": "1L 전후가 표준. 코코도르 891원(19위)·스너글 917원(11위)이 저가권 경계이며 이 아래 제품이 없음",
-  "benchBrand": "코코도르",
-  "benchRank": 19,
-  "benchUnit": 891.0,
-  "benchDiff": -5.7,
-  "evidence": [
-   {
-    "순위": 19,
-    "브랜드": "코코도르",
-    "규격": "1,000ml",
-    "판매가": 8910,
-    "단가": 891.0,
-    "리뷰": 3701
-   },
-   {
-    "순위": 11,
-    "브랜드": "스너글",
-    "규격": "940ml",
-    "판매가": 8620,
-    "단가": 917.0,
-    "리뷰": 4874
-   },
-   {
-    "순위": 5,
-    "브랜드": "스너글",
-    "규격": "940ml",
-    "판매가": 8890,
-    "단가": 945.7,
-    "리뷰": 15350
-   }
-  ]
- },
- {
-  "cat": "섬유탈취제",
-  "role": "리필",
-  "form": "파우치",
-  "spec": "320ml x 3개",
-  "price": 8200,
-  "unit": 854.2,
-  "basis": "100ml당",
-  "cost": 2343,
-  "costEach": 781,
-  "qty": 3,
-  "market": 0.7,
-  "why": "리필이 페브리즈 3종뿐이고 시장 0.7억으로 가장 작음. 같은 320ml 규격 제품이 906.2원(16위)으로 저가권 경계",
-  "benchBrand": "페브리즈",
-  "benchRank": 16,
-  "benchUnit": 906.2,
-  "benchDiff": -5.7,
-  "evidence": [
-   {
-    "순위": 16,
-    "브랜드": "페브리즈",
-    "규격": "320ml",
-    "판매가": 2900,
-    "단가": 906.2,
-    "리뷰": 96
-   },
-   {
-    "순위": 15,
-    "브랜드": "페브리즈",
-    "규격": "960ml",
-    "판매가": 11080,
-    "단가": 1154.2,
-    "리뷰": 31051
-   },
-   {
-    "순위": 21,
-    "브랜드": "페브리즈",
-    "규격": "640ml",
-    "판매가": 10260,
-    "단가": 1603.1,
-    "리뷰": 12542
-   }
-  ]
- },
- {
-  "cat": "살균소독제",
-  "role": "본품",
-  "form": "용기",
-  "spec": "500ml x 2개",
-  "price": 7600,
-  "unit": 760.0,
-  "basis": "100ml당",
-  "cost": 2171,
-  "costEach": 1086,
-  "qty": 2,
-  "market": 7.0,
-  "why": "500ml 스프레이 2개입이 표준. 탐사 801원(7위)이 스프레이 형태 저가권",
-  "benchBrand": "탐사",
-  "benchRank": 7,
-  "benchUnit": 801.0,
-  "benchDiff": -5.1,
-  "evidence": [
-   {
-    "순위": 3,
-    "브랜드": "진로발효",
-    "규격": "4,000ml",
-    "판매가": 21290,
-    "단가": 532.2,
-    "리뷰": 36113
-   },
-   {
-    "순위": 18,
-    "브랜드": "쎄니크로",
-    "규격": "1,000ml",
-    "판매가": 5360,
-    "단가": 536.0,
-    "리뷰": 68
-   },
-   {
-    "순위": 20,
-    "브랜드": "크로바케미칼",
-    "규격": "2,000ml",
-    "판매가": 11910,
-    "단가": 595.5,
-    "리뷰": 2671
-   }
-  ]
- },
- {
-  "cat": "살균소독제",
-  "role": "리필",
-  "form": "말통",
-  "spec": "4,000ml",
-  "price": 8500,
-  "unit": 212.5,
-  "basis": "100ml당",
-  "cost": 2429,
-  "costEach": 2429,
-  "qty": 1,
-  "market": 4.2,
-  "why": "4L 말통이 리필 주력. 탐사 224.8원이 매출 1위이며 아가페케어 261원이 뒤를 받침",
-  "benchBrand": "탐사",
-  "benchRank": 2,
-  "benchUnit": 224.8,
-  "benchDiff": -5.5,
-  "evidence": [
-   {
-    "순위": 14,
-    "브랜드": "국대스타",
-    "규격": "20,000ml",
-    "판매가": 34890,
-    "단가": 174.4,
-    "리뷰": 1591
-   },
-   {
-    "순위": 2,
-    "브랜드": "탐사",
-    "규격": "4,000ml",
-    "판매가": 8990,
-    "단가": 224.8,
-    "리뷰": 19495
-   },
-   {
-    "순위": 5,
-    "브랜드": "아가페케어",
-    "규격": "4,000ml",
-    "판매가": 10440,
-    "단가": 261.0,
-    "리뷰": 45419
-   }
-  ]
- }
-]
+}
