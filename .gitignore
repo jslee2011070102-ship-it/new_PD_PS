@@ -17,3 +17,7 @@ __pycache__/
 
 # Node 모듈
 node_modules/
+
+# 로컬 캡처 (브라우저 프로필·수집물은 저장소에 두지 않음)
+local_capture/.browser_profile/
+local_capture/captures/
