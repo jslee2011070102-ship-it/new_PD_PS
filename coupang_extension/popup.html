@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    width: 420px; margin: 0; padding: 14px;
+    font: 13px/1.5 "맑은 고딕", system-ui, sans-serif;
+  }
+  h1 { font-size: 15px; margin: 0 0 4px; }
+  .sub { color: #666; font-size: 12px; margin-bottom: 10px; }
+  label { display: block; font-weight: 600; margin: 10px 0 4px; }
+  textarea {
+    width: 100%; height: 130px; box-sizing: border-box; resize: vertical;
+    font: 12px/1.45 ui-monospace, Consolas, monospace; padding: 6px;
+  }
+  .row { display: flex; gap: 6px; align-items: center; margin-top: 8px; }
+  .row input[type=number] { width: 58px; }
+  button {
+    padding: 7px 12px; font-size: 13px; cursor: pointer; border-radius: 4px;
+    border: 1px solid #bbb; background: #f6f6f6;
+  }
+  button.primary { background: #1f3864; color: #fff; border-color: #1f3864; font-weight: 600; }
+  button:disabled { opacity: .5; cursor: default; }
+  #status {
+    margin-top: 10px; padding: 8px; background: #f2f2f2; border-radius: 4px;
+    font-size: 12px; white-space: pre-wrap; min-height: 34px;
+  }
+  .hint { color: #666; font-size: 11px; margin-top: 4px; }
+  .warn { color: #a33; }
+</style>
+</head>
+<body>
+  <h1>쿠팡 상세페이지 이미지 수집기</h1>
+  <div class="sub">상품 주소를 넣으면 상세 이미지를 모아 저장합니다.</div>
+
+  <label for="urls">상품 주소 (한 줄에 하나)</label>
+  <textarea id="urls" placeholder="세탁세제-01 https://www.coupang.com/vp/products/...
+세탁세제-02 https://www.coupang.com/vp/products/...
+
+또는 주소만 붙여넣어도 됩니다 (번호는 자동으로 붙습니다)"></textarea>
+  <div class="hint">앞에 이름을 붙이면 그 이름으로 폴더가 만들어집니다. 없으면 001, 002…</div>
+
+  <div class="row">
+    <button id="useTab">지금 보는 탭 주소 넣기</button>
+    <button id="clear">비우기</button>
+  </div>
+
+  <div class="row">
+    <span>상품 사이 대기</span>
+    <input type="number" id="gapMin" value="12" min="5"> ~
+    <input type="number" id="gapMax" value="25" min="5"> 초
+  </div>
+  <div class="hint">사람이 보는 속도로 둡니다. 줄이지 마세요.</div>
+
+  <div class="row">
+    <button id="start" class="primary">수집 시작</button>
+    <button id="stop" disabled>중단</button>
+    <button id="export">결과 내보내기</button>
+    <button id="reset">기록 초기화</button>
+  </div>
+
+  <div id="status">대기 중</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

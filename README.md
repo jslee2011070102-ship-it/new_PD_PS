@@ -31,7 +31,7 @@
 | 단계 | 하는 일 | 담당 | 상태 |
 |---|---|---|---|
 | 1 | 카테고리 상위 25개 제품 썸네일 캡처 | 사람(폰/PC) | 수동 |
-| 3.5 | 상세페이지 캡처 | `local_capture/` (사용자 PC) | **도구 완성 / 쿠팡 실환경 미검증** |
+| 3.5 | 상세페이지 이미지 수집 | `coupang_extension/` (크롬 확장) | **도구 완성 / 쿠팡 실환경 미검증** |
 | 2 | 썸네일에서 가격·용량·순위·리뷰수 추출 → 엑셀 | `analyze_thumbnails.py` | **완료** |
 | 3 | 엑셀을 보고 타겟 규격·가격대 판단 | 사람 + Claude | **완료(1회차)** |
 | 4 | 상세페이지에서 USP 추출 | `analyze_details.py` | 도구 완성 / **수집 지시문 발행, 결과 대기** |
@@ -54,7 +54,10 @@ new_PD_PS/
 │   ├── README.md                   사용법
 │   └── CLAUDE.md                   설계 배경 (프로젝트 메모리)
 ├── data/extracted/               1회차 추출 원본 (카테고리별 25건 x 6 = 150건)
-├── local_capture/                쿠팡 상세페이지 로컬 자동 캡처 (사용자 PC에서 실행)
+├── coupang_extension/            크롬 확장 — 상품 URL로 상세 이미지 수집 (권장)
+│   ├── manifest.json / background.js / content.js / popup.*
+│   └── 설치방법.md
+├── local_capture/                Playwright 캡처 (쿠팡이 차단해 사실상 사용 불가)
 │   ├── capture_coupang.py          검색 → 더보기 → 스크롤 → PDF 저장
 │   ├── 실행_윈도우.bat              더블클릭 메뉴 (명령어 입력 불필요)
 │   ├── 사용법_윈도우.md             설치부터 끝까지 (비개발자용)

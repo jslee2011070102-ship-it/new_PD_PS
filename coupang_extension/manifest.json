@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "쿠팡 상세페이지 이미지 수집기",
+  "version": "1.0.0",
+  "description": "상품 URL을 넣으면 상세페이지의 이미지를 모아 저장합니다. 사용자의 브라우저에서 동작합니다.",
+  "permissions": ["tabs", "scripting", "downloads", "storage"],
+  "host_permissions": [
+    "https://*.coupang.com/*",
+    "https://*.coupangcdn.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "쿠팡 상세페이지 이미지 수집기"
+  }
+}
