@@ -70,35 +70,71 @@
     } catch (e) { return null; }
   }
 
-  // 상세 영역으로 보이는 곳. 없으면 페이지 전체에서 큰 이미지를 고른다.
+  // 상세 영역으로 보이는 곳. 여기 안쪽만 보는 것이 원칙이다.
   const DETAIL_SELECTORS = [
     "#productDetail", ".product-detail", ".vendor-item",
     "[class*=productDetail]", "[class*=product-detail]", "[class*=detail-content]",
+    "[class*=subType-IMAGE]", "[id*=productDetail]",
   ];
 
+  // 상세 영역을 못 찾았을 때 페이지 전체를 훑게 되는데, 그러면 상단 상품 사진
+  // (썸네일·갤러리)이 섞여 들어온다. 우리가 보려는 건 상세페이지의 소구점 이미지이지
+  // 제품 사진이 아니므로, 이 영역들은 명시적으로 뺀다.
+  const EXCLUDE_SELECTORS = [
+    "[class*=gallery]", "[class*=thumbnail]", "[class*=thumb]",
+    "[class*=prod-image]", "[class*=product-image]", "[class*=image-list]",
+    "header", "nav", "footer", "[class*=recommend]", "[class*=relate]",
+    "[class*=review]", "[class*=banner]", "[class*=ad-]",
+  ];
+
+  function inExcluded(img) {
+    for (const sel of EXCLUDE_SELECTORS) {
+      if (img.closest(sel)) return sel;
+    }
+    return null;
+  }
+
   function collectImages(log) {
-    let scope = null;
+    let scope = null, scopeName = "";
     for (const sel of DETAIL_SELECTORS) {
       const el = document.querySelector(sel);
-      if (el && el.querySelectorAll("img").length >= 1) { scope = el; log.push(`상세 영역 찾음: ${sel}`); break; }
+      if (el && el.querySelectorAll("img").length >= 1) {
+        scope = el; scopeName = sel;
+        log.push(`상세 영역 찾음: ${sel}`);
+        break;
+      }
     }
-    if (!scope) { scope = document.body; log.push("상세 영역을 못 찾아 페이지 전체에서 수집"); }
+    const fallback = !scope;
+    if (fallback) {
+      scope = document.body; scopeName = "(페이지 전체)";
+      log.push("상세 영역을 못 찾아 페이지 전체에서 수집 — 상단 상품사진 영역은 제외함");
+    }
 
     const seen = new Set();
     const out = [];
+    let skippedGallery = 0, skippedSmall = 0;
     for (const img of scope.querySelectorAll("img")) {
       const u = imgUrl(img);
       if (!u || seen.has(u)) continue;
-      // 아이콘·버튼 같은 작은 그림은 뺀다. 상세 이미지는 폭이 크다.
+      // 상세 영역을 못 찾은 경우에만 갤러리·리뷰·배너 영역을 걸러낸다.
+      // 상세 영역을 찾았다면 그 안은 전부 소구점 이미지로 본다.
+      if (fallback) {
+        const hit = inExcluded(img);
+        if (hit) { skippedGallery++; continue; }
+      }
       const w = img.naturalWidth || parseInt(img.getAttribute("width") || "0", 10) || img.clientWidth;
       const h = img.naturalHeight || parseInt(img.getAttribute("height") || "0", 10) || img.clientHeight;
-      const big = (w === 0 && h === 0) || w >= 300 || h >= 300;  // 아직 안 뜬 것(0)은 남긴다
-      if (!big) continue;
+      // 상세 이미지는 폭이 크다. 아직 안 뜬 것(0)은 남겨 둔다.
+      const big = (w === 0 && h === 0) || w >= 300 || h >= 300;
+      if (!big) { skippedSmall++; continue; }
       if (/\.(svg|gif)(\?|$)/i.test(u)) continue;
       seen.add(u);
       out.push({ url: u, w, h });
     }
-    return out;
+    if (skippedGallery) log.push(`상단 상품사진·리뷰·배너 영역에서 ${skippedGallery}장 제외`);
+    if (skippedSmall) log.push(`작은 아이콘 ${skippedSmall}장 제외`);
+    log.push(`수집 범위: ${scopeName}${fallback ? " [상세영역 못찾음]" : ""}`);
+    return { images: out, scope: scopeName, fallback };
   }
 
   async function nudgeScroll(log) {
@@ -129,12 +165,13 @@
     }
 
     await clickExpand(log);
-    let images = collectImages(log);
-    if (images.length < 2) {
+    let got = collectImages(log);
+    if (got.images.length < 2) {
       await nudgeScroll(log);
-      images = collectImages(log);
+      got = collectImages(log);
     }
-    log.push(`이미지 ${images.length}장 수집`);
+    const images = got.images;
+    log.push(`상세 이미지 ${images.length}장 수집`);
 
     return {
       ok: images.length > 0,
@@ -142,6 +179,8 @@
       title: document.title,
       url: location.href,
       images,
+      scope: got.scope,
+      fallback: got.fallback,
       log,
       bodyHead: bodyText.slice(0, 200),
     };
