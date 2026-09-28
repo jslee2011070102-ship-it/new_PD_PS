@@ -104,12 +104,51 @@ async function visitAndCollect(url, log) {
   try {
     tab = await chrome.tabs.create({ url, active: false });
     await waitForLoad(tab.id);
-    await sleep(rand(1500, 3000));
-    const [res] = await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
+    await sleep(rand(2500, 4000));
+
+    // 모든 프레임에서 실행한다.
+    // 쿠팡은 상세 내용을 별도 iframe 에 넣는 경우가 있는데, 바깥 문서에서만
+    // 찾으면 그 안의 이미지를 통째로 놓친다.
+    const results = await chrome.scripting.executeScript({
+      target: { tabId: tab.id, allFrames: true },
       files: ["content.js"],
     });
-    return (res && res.result) || null;
+
+    // 프레임별 결과를 합친다. 이미지가 가장 많은 프레임을 대표로 삼되,
+    // 다른 프레임에서 나온 이미지도 버리지 않는다.
+    const frames = results.map((r) => r && r.result).filter(Boolean);
+    if (frames.length === 0) return null;
+    if (frames.length > 1) log.push(`프레임 ${frames.length}개에서 수집 시도`);
+
+    const seen = new Set();
+    const merged = [];
+    for (const f of frames) {
+      for (const im of (f.images || [])) {
+        if (seen.has(im.url)) continue;
+        seen.add(im.url);
+        merged.push(im);
+      }
+    }
+    const main = frames.reduce((a, b) =>
+      ((b.images || []).length > (a.images || []).length ? b : a), frames[0]);
+
+    for (const f of frames) {
+      const n = (f.images || []).length;
+      if (frames.length > 1) log.push(`  프레임(${(f.frameUrl || "").slice(0, 70)}): ${n}장`);
+      log.push(...(f.log || []));
+    }
+
+    return {
+      ok: merged.length > 0,
+      reason: merged.length > 0 ? "" : (main.reason || "no_images"),
+      title: main.title || "",
+      images: merged,
+      scope: main.scope,
+      fallback: main.fallback,
+      totalImgs: main.totalImgs,
+      bodyHead: main.bodyHead,
+      log: [],   // 위에서 이미 합쳤다
+    };
   } finally {
     if (tab) await chrome.tabs.remove(tab.id).catch(() => {});
   }
@@ -145,6 +184,10 @@ async function processOne(item, opts) {
     rec.title = r.title || "";
     rec.images = (r.images || []).length;
     rec.imageUrls = (r.images || []).map((x) => x.url);
+    rec.imageSizes = (r.images || []).map((x) => `${x.w}x${x.h}`);
+    rec.scope = r.scope || "";
+    rec.fallback = !!r.fallback;
+    rec.totalImgs = r.totalImgs || 0;
 
     if (r.reason === "blocked" && rec.images === 0) {
       rec.status = "blocked";

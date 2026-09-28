@@ -95,46 +95,60 @@
   }
 
   function collectImages(log) {
-    let scope = null, scopeName = "";
+    // 후보 컨테이너를 '전부' 모은다.
+    //
+    // 처음에는 첫 번째로 걸리는 것 하나만 봤는데, 실제 쿠팡 페이지에서
+    // .vendor-item 이 여러 개였고 맨 앞 것이 브랜드 광고 배너 영역이었다.
+    // 그래서 배너만 가져오고 정작 성분·효능 이미지는 통째로 놓쳤다.
+    // 한 곳만 보면 안 된다.
+    const scopes = [];
+    const names = [];
     for (const sel of DETAIL_SELECTORS) {
-      const el = document.querySelector(sel);
-      if (el && el.querySelectorAll("img").length >= 1) {
-        scope = el; scopeName = sel;
-        log.push(`상세 영역 찾음: ${sel}`);
-        break;
+      for (const el of document.querySelectorAll(sel)) {
+        if (el.querySelectorAll("img").length === 0) continue;
+        // 이미 담은 것의 안쪽이면 중복이므로 건너뛴다
+        if (scopes.some((s) => s.contains(el) || el.contains(s))) continue;
+        scopes.push(el);
+        names.push(sel);
       }
     }
-    const fallback = !scope;
+    const fallback = scopes.length === 0;
     if (fallback) {
-      scope = document.body; scopeName = "(페이지 전체)";
+      scopes.push(document.body);
+      names.push("(페이지 전체)");
       log.push("상세 영역을 못 찾아 페이지 전체에서 수집 — 상단 상품사진 영역은 제외함");
+    } else {
+      log.push(`상세 영역 ${scopes.length}곳: ${[...new Set(names)].join(", ")}`);
     }
 
+    const totalImgs = document.querySelectorAll("img").length;
     const seen = new Set();
     const out = [];
-    let skippedGallery = 0, skippedSmall = 0;
-    for (const img of scope.querySelectorAll("img")) {
-      const u = imgUrl(img);
-      if (!u || seen.has(u)) continue;
-      // 상세 영역을 못 찾은 경우에만 갤러리·리뷰·배너 영역을 걸러낸다.
-      // 상세 영역을 찾았다면 그 안은 전부 소구점 이미지로 본다.
-      if (fallback) {
-        const hit = inExcluded(img);
-        if (hit) { skippedGallery++; continue; }
+    let skippedGallery = 0, skippedSmall = 0, skippedBanner = 0;
+
+    for (const scope of scopes) {
+      for (const img of scope.querySelectorAll("img")) {
+        const u = imgUrl(img);
+        if (!u || seen.has(u)) continue;
+        if (fallback && inExcluded(img)) { skippedGallery++; continue; }
+        // 브랜드관으로 보내는 광고 배너. 상세 내용이 아니다.
+        if (img.closest('a[href*="brandstore"], a[href*="/np/campaigns"], [class*=banner]')) {
+          skippedBanner++; continue;
+        }
+        const w = img.naturalWidth || parseInt(img.getAttribute("width") || "0", 10) || img.clientWidth;
+        const h = img.naturalHeight || parseInt(img.getAttribute("height") || "0", 10) || img.clientHeight;
+        const big = (w === 0 && h === 0) || w >= 300 || h >= 300;
+        if (!big) { skippedSmall++; continue; }
+        if (/\.(svg|gif)(\?|$)/i.test(u)) continue;
+        seen.add(u);
+        out.push({ url: u, w, h });
       }
-      const w = img.naturalWidth || parseInt(img.getAttribute("width") || "0", 10) || img.clientWidth;
-      const h = img.naturalHeight || parseInt(img.getAttribute("height") || "0", 10) || img.clientHeight;
-      // 상세 이미지는 폭이 크다. 아직 안 뜬 것(0)은 남겨 둔다.
-      const big = (w === 0 && h === 0) || w >= 300 || h >= 300;
-      if (!big) { skippedSmall++; continue; }
-      if (/\.(svg|gif)(\?|$)/i.test(u)) continue;
-      seen.add(u);
-      out.push({ url: u, w, h });
     }
+    if (skippedBanner) log.push(`브랜드관 광고 배너 ${skippedBanner}장 제외`);
     if (skippedGallery) log.push(`상단 상품사진·리뷰·배너 영역에서 ${skippedGallery}장 제외`);
     if (skippedSmall) log.push(`작은 아이콘 ${skippedSmall}장 제외`);
-    log.push(`수집 범위: ${scopeName}${fallback ? " [상세영역 못찾음]" : ""}`);
-    return { images: out, scope: scopeName, fallback };
+    log.push(`페이지 전체 img 태그 ${totalImgs}개 중 ${out.length}장 채택`);
+    return { images: out, scope: [...new Set(names)].join(", "), fallback, totalImgs };
   }
 
   async function nudgeScroll(log) {
@@ -181,6 +195,8 @@
       images,
       scope: got.scope,
       fallback: got.fallback,
+      totalImgs: got.totalImgs,
+      frameUrl: location.href,
       log,
       bodyHead: bodyText.slice(0, 200),
     };
