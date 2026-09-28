@@ -15,22 +15,36 @@ echo   쿠팡 상세페이지 수집 도구
 echo ============================================================
 echo.
 
-rem ── 파이썬 찾기 (py 런처 우선, 없으면 python) ──────────────
-set PY=
-py -3 --version >nul 2>&1 && set PY=py -3
+rem ── 파이썬 찾기 (py 런처 우선) ─────────────────────────────
+call :FINDPY
 if "!PY!"=="" (
-  python --version >nul 2>&1 && set PY=python
-)
-if "!PY!"=="" (
-  echo [!] 파이썬이 설치되어 있지 않습니다.
+  echo   파이썬이 없습니다. 자동으로 설치를 시도합니다.
   echo.
-  echo     1. https://www.python.org/downloads/  에서 내려받아 설치하세요.
-  echo     2. 설치 화면 맨 아래 "Add python.exe to PATH" 를 꼭 체크하세요.
-  echo        ^(이걸 빼먹으면 설치해도 여기서 못 찾습니다^)
-  echo     3. 설치가 끝나면 이 파일을 다시 더블클릭하세요.
+  winget --version >nul 2>&1
+  if errorlevel 1 (
+    echo   [!] 자동 설치를 쓸 수 없습니다. 직접 설치해 주세요.
+    echo.
+    echo       1. https://www.python.org/downloads/  에서 내려받기
+    echo       2. 설치 화면 맨 아래 "Add python.exe to PATH" 체크 ^(중요^)
+    echo       3. 설치 후 이 파일을 다시 더블클릭
+    echo.
+    pause & exit /b 1
+  )
+  echo   설치 중입니다. 3~5분 걸립니다. 창을 닫지 마세요...
   echo.
-  pause
-  exit /b 1
+  winget install -e --id Python.Python.3.12 --accept-source-agreements --accept-package-agreements
+  echo.
+  call :FINDPY
+  if "!PY!"=="" (
+    echo ============================================================
+    echo   설치는 끝났지만 이 창에서는 아직 인식되지 않습니다.
+    echo   ^(설치 직후에는 원래 그렇습니다^)
+    echo.
+    echo   이 창을 닫고, 이 파일을 다시 더블클릭해 주세요.
+    echo ============================================================
+    echo.
+    pause & exit /b 0
+  )
 )
 for /f "delims=" %%v in ('!PY! --version 2^>^&1') do set PYVER=%%v
 echo   파이썬: !PYVER!
@@ -164,3 +178,17 @@ if /i not "%OK%"=="y" goto MENU
 echo.
 pause
 goto MENU
+
+rem ── 파이썬 찾기 서브루틴 ────────────────────────────────────
+rem  py 런처를 먼저 본다. 윈도우 스토어의 가짜 python 별칭이 끼어드는 일이 있어
+rem  python 은 버전 문자열이 실제로 나오는지까지 확인한다.
+:FINDPY
+set PY=
+py -3 --version >nul 2>&1 && (set PY=py -3 & exit /b 0)
+for /f "tokens=1" %%a in ('python --version 2^>^&1') do (
+  if /i "%%a"=="Python" (set PY=python & exit /b 0)
+)
+for /f "tokens=1" %%a in ('python3 --version 2^>^&1') do (
+  if /i "%%a"=="Python" (set PY=python3 & exit /b 0)
+)
+exit /b 0

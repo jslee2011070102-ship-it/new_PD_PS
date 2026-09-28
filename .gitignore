@@ -21,3 +21,6 @@ node_modules/
 # 로컬 캡처 (브라우저 프로필·수집물은 저장소에 두지 않음)
 local_capture/.browser_profile/
 local_capture/captures/
+
+# 배포용 묶음 (생성물)
+*.zip
