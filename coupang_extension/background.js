@@ -15,7 +15,26 @@ const DEFAULTS = {
   gapMax: 25,      // 상품 사이 최대 대기(초)
   stopAfterFails: 3,
   folder: "coupang_usp",
+  saveImages: true,  // false 면 주소만 모은다 (훨씬 빠르고 디스크도 안 쓴다)
+  tryMobile: true,   // 실패하면 모바일 주소로 한 번 더
 };
+
+// 상품 주소를 모바일 주소 후보로 바꾼다.
+// 확신할 수 없는 부분이라 후보를 여러 개 만들고, 무엇이 통했는지 기록에 남긴다.
+function mobileCandidates(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname.startsWith("m.")) return [];
+    const out = [];
+    const m = u.pathname.match(/\/vp\/products\/(\d+)/);
+    if (m) {
+      out.push(`https://m.coupang.com/vm/products/${m[1]}${u.search}`);
+      out.push(`https://m.coupang.com/vp/products/${m[1]}${u.search}`);
+    }
+    out.push(`https://m.coupang.com${u.pathname}${u.search}`);
+    return [...new Set(out)];
+  } catch (e) { return []; }
+}
 
 let state = {
   running: false,
@@ -80,43 +99,69 @@ async function waitForLoad(tabId, timeoutMs = 45000) {
   throw new Error("페이지 로딩 시간이 너무 깁니다");
 }
 
-async function processOne(item, opts) {
-  const log = [];
-  const rec = {
-    id: item.id, url: item.url, status: "fail", title: "", images: 0,
-    imageUrls: [], savedFiles: 0, log, at: new Date().toISOString(),
-  };
+async function visitAndCollect(url, log) {
   let tab = null;
   try {
-    tab = await chrome.tabs.create({ url: item.url, active: false });
+    tab = await chrome.tabs.create({ url, active: false });
     await waitForLoad(tab.id);
     await sleep(rand(1500, 3000));
-
     const [res] = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       files: ["content.js"],
     });
-    const r = res && res.result;
-    if (!r) throw new Error("페이지에서 결과를 받지 못했습니다");
+    return (res && res.result) || null;
+  } finally {
+    if (tab) await chrome.tabs.remove(tab.id).catch(() => {});
+  }
+}
 
-    log.push(...(r.log || []));
+async function processOne(item, opts) {
+  const log = [];
+  const rec = {
+    id: item.id, url: item.url, usedUrl: item.url, status: "fail", title: "",
+    images: 0, imageUrls: [], savedFiles: 0, log, at: new Date().toISOString(),
+  };
+  try {
+    let r = await visitAndCollect(item.url, log);
+    if (r) log.push(...(r.log || []));
+
+    // PC 주소가 막히거나 이미지를 못 찾으면 모바일 주소로 한 번 더 시도한다.
+    // 모바일 화면은 구조가 단순해 이미지가 더 잘 잡히는 경우가 있다.
+    if (opts.tryMobile && (!r || r.reason === "blocked" || !r.images || r.images.length === 0)) {
+      for (const mu of mobileCandidates(item.url)) {
+        log.push(`모바일 주소로 재시도: ${mu}`);
+        await sleep(rand(2000, 4000));
+        const r2 = await visitAndCollect(mu, log);
+        if (r2) log.push(...(r2.log || []));
+        if (r2 && r2.images && r2.images.length > 0) {
+          r = r2; rec.usedUrl = mu;
+          log.push("모바일 주소에서 성공");
+          break;
+        }
+      }
+    }
+
+    if (!r) throw new Error("페이지에서 결과를 받지 못했습니다");
     rec.title = r.title || "";
     rec.images = (r.images || []).length;
     rec.imageUrls = (r.images || []).map((x) => x.url);
 
-    if (r.reason === "blocked") {
+    if (r.reason === "blocked" && rec.images === 0) {
       rec.status = "blocked";
       log.push(`화면 앞부분: ${(r.bodyHead || "").slice(0, 150)}`);
-    } else if (!r.images || r.images.length === 0) {
+    } else if (rec.images === 0) {
       rec.status = "no_images";
+    } else if (!opts.saveImages) {
+      // 주소만 모으는 방식. 이미지 서버(coupangcdn)는 따로 막혀 있지 않아
+      // 주소만 있으면 나중에 받아서 볼 수 있다. 훨씬 빠르고 디스크도 안 쓴다.
+      rec.status = "ok";
+      log.push(`주소만 수집 (내려받기 건너뜀): ${rec.images}개`);
     } else {
       rec.savedFiles = await downloadImages(item.id, r.images, opts.folder, log);
       rec.status = rec.savedFiles > 0 ? "ok" : "fail";
     }
   } catch (e) {
     log.push(`오류: ${e.message}`);
-  } finally {
-    if (tab) await chrome.tabs.remove(tab.id).catch(() => {});
   }
   return rec;
 }

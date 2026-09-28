@@ -63,9 +63,12 @@ $("start").addEventListener("click", async () => {
   }
   const gapMin = Math.max(5, parseInt($("gapMin").value, 10) || 12);
   const gapMax = Math.max(gapMin, parseInt($("gapMax").value, 10) || 25);
-  const r = await send({ cmd: "start", items, opts: { gapMin, gapMax } });
+  const saveImages = !$("urlOnly").checked;
+  const tryMobile = $("tryMobile").checked;
+  const r = await send({ cmd: "start", items, opts: { gapMin, gapMax, saveImages, tryMobile } });
   if (!r || !r.ok) { $("status").textContent = r ? r.error : "시작하지 못했습니다."; return; }
-  $("status").textContent = `${r.queued}개를 시작했습니다. 창을 닫아도 계속 진행됩니다.`;
+  $("status").textContent = `${r.queued}개를 시작했습니다. 창을 닫아도 계속 진행됩니다.` +
+    (saveImages ? "" : "\n주소만 모으는 방식이라 이미지는 저장되지 않습니다.");
   refresh();
 });
 
