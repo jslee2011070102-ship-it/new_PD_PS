@@ -334,17 +334,35 @@ def pick_targets(rows: list[dict], specs: list[dict], cat: str,
 
 
 def done_ids(path: str | None) -> tuple[set[str], list[str]]:
-    """이미 수집한 항목의 ID를 누적 USP 엑셀에서 읽습니다.
+    """이미 수집한 항목의 ID를 읽습니다. 누적 엑셀 또는 원본 JSON 폴더.
 
-    진행 상황을 따로 파일에 적지 않는 이유: 상태 파일과 실제 결과가 어긋나면
-    무엇이 맞는지 알 수 없게 된다. 결과물 자체를 상태로 쓰면 어긋날 일이 없다
-    (썸네일 도구가 엑셀에 이어붙이는 것과 같은 방식).
+    진행 상황을 따로 상태 파일에 적지 않는 이유: 상태 파일과 실제 결과가 어긋나면
+    무엇이 맞는지 알 수 없게 된다. 받은 결과 자체를 상태로 쓰면 어긋날 일이 없다.
+
+    폴더를 주면 그 안의 JSON(브라우저에서 받은 원본)을 모두 읽는다. 엑셀은
+    작업 환경이 사라지면 같이 사라지므로, 여러 날에 걸쳐 수집할 때는 원본 JSON을
+    저장소에 남기고 그 폴더를 기준으로 삼는 편이 안전하다.
     """
     if not path:
         return set(), []
     f = Path(path)
-    if not f.is_file():
+    if not f.exists():
         return set(), []
+
+    if f.is_dir():
+        ids = []
+        for j in sorted(f.glob("*.json")):
+            if j.name == "mapping.json":
+                continue
+            try:
+                rows = json.loads(j.read_text(encoding="utf-8"))
+            except json.JSONDecodeError as e:
+                sys.exit(f"{j} 을 읽을 수 없습니다: {e}")
+            if not isinstance(rows, list):
+                sys.exit(f"{j} 은 JSON 배열이 아닙니다")
+            ids += [str(r.get("file", "")).strip() for r in rows if r.get("file")]
+        return set(ids), ids
+
     try:
         df = pd.read_excel(f, sheet_name="제품별요약")
     except Exception as e:
@@ -381,6 +399,15 @@ def cmd_targets(args) -> None:
     known = {r["_id"] for _, r in selected}
     stray = [i for i in sorted(done) if i not in known]
     remaining = [(cat, r) for cat, r in selected if r["_id"] not in done]
+
+    if args.prompt_only:
+        # 사람이 브라우저에 붙여넣을 내용만 내보낸다. 위쪽 진행 요약은 작업용이라
+        # 같이 주면 "어디서부터 복사하지?"가 된다.
+        if not remaining:
+            sys.exit("남은 항목이 없습니다. 수집이 끝났습니다.")
+        batch = remaining if args.batch <= 0 else remaining[:args.batch]
+        print(browser_prompt(batch, args.pace))
+        return
 
     print("=" * 76)
     print(f"USP 수집 대상 - {mode}")
@@ -580,10 +607,25 @@ def image_size_label(path: Path) -> str:
 # ------------------------------------------------------------
 def cmd_build(args) -> None:
     in_path = Path(args.input)
-    if not in_path.is_file():
-        sys.exit(f"추출 결과 파일을 찾을 수 없습니다: {in_path}")
+    if not in_path.exists():
+        sys.exit(f"추출 결과를 찾을 수 없습니다: {in_path}")
 
-    entries = json.loads(in_path.read_text(encoding="utf-8"))
+    # 폴더를 주면 그 안의 JSON을 모두 읽습니다. 저장소에 남긴 원본들만으로
+    # 엑셀을 언제든 다시 만들 수 있게 하려는 것입니다(작업 환경이 사라져도 무방).
+    if in_path.is_dir():
+        files = [j for j in sorted(in_path.glob("*.json")) if j.name != "mapping.json"]
+        if not files:
+            sys.exit(f"폴더 안에 JSON이 없습니다: {in_path}")
+        entries = []
+        for j in files:
+            rows = json.loads(j.read_text(encoding="utf-8"))
+            if not isinstance(rows, list):
+                sys.exit(f"{j} 은 JSON 배열이 아닙니다")
+            entries += rows
+        print(f"입력 {len(files)}개 파일 / {len(entries)}건: "
+              f"{', '.join(j.name for j in files[:4])}{' ...' if len(files) > 4 else ''}")
+    else:
+        entries = json.loads(in_path.read_text(encoding="utf-8"))
     if not isinstance(entries, list) or not entries:
         sys.exit("추출 결과는 비어 있지 않은 JSON 배열이어야 합니다.")
 
@@ -607,8 +649,11 @@ def cmd_build(args) -> None:
             continue
 
         src = mapping.get(key, key)
+        # ID가 '세탁세제-09' 꼴이면 카테고리를 여기서 읽습니다. --category 를 주면
+        # 그쪽이 우선입니다. 여러 카테고리를 한 번에 처리할 수 있게 하려는 것입니다.
+        cat = args.category or (src.rsplit("-", 1)[0] if "-" in src else "")
         product_rows.append({
-            "조사일자": survey_date, "채널": args.channel, "카테고리": args.category,
+            "조사일자": survey_date, "채널": args.channel, "카테고리": cat,
             "원본파일명": src, "브랜드명": info.brand, "제품명": info.product_name,
             "USP개수": len(info.usps),
             "상단배치수": sum(1 for u in info.usps if u.position == "상단"),
@@ -622,7 +667,7 @@ def cmd_build(args) -> None:
         })
         for u in info.usps:
             usp_rows.append({
-                "조사일자": survey_date, "채널": args.channel, "카테고리": args.category,
+                "조사일자": survey_date, "채널": args.channel, "카테고리": cat,
                 "원본파일명": src, "브랜드명": info.brand, "제품명": info.product_name,
                 "유형": u.kind, "소구점": u.claim, "근거문구": u.evidence,
                 "강조도": u.emphasis, "위치": u.position,
@@ -636,7 +681,9 @@ def cmd_build(args) -> None:
 
     # 썸네일 분석 결과(가격·순위)와 붙이면 "비싼 제품은 뭘 내세우나"를 볼 수 있습니다.
     if args.thumbnails:
-        products = join_thumbnails(products, Path(args.thumbnails), args.category)
+        parts = [join_thumbnails(g, Path(args.thumbnails), c)
+                 for c, g in products.groupby("카테고리", sort=False)]
+        products = pd.concat(parts, ignore_index=True) if parts else products
 
     out_path = Path(args.output)
     if str(out_path.parent) not in ("", "."):
@@ -737,7 +784,10 @@ def main():
     p_tg.add_argument("--batch", type=int, default=0,
                       help="한 번에 내보낼 개수 (0이면 남은 전부). 전수조사 시 10~15 권장")
     p_tg.add_argument("--done", default=None,
-                      help="누적 USP 엑셀. 이미 수집한 항목을 빼고 다음 묶음만 내보낸다")
+                      help="이미 수집한 항목을 빼고 다음 묶음만 내보낸다. "
+                           "누적 USP 엑셀 또는 받은 JSON들이 들어있는 폴더")
+    p_tg.add_argument("--prompt-only", action="store_true",
+                      help="붙여넣을 지시문만 출력 (작업용 요약 없이)")
     p_tg.add_argument("--pace", type=int, default=3,
                       help="브라우저에서 몇 개씩 묶어 진행할지 (0이면 지시 없음)")
     p_tg.set_defaults(func=cmd_targets)
@@ -751,7 +801,8 @@ def main():
     p_build.add_argument("--input", required=True, help="USP 추출 결과 JSON 경로")
     p_build.add_argument("--output", default="detail_usp.xlsx", help="출력 엑셀 경로")
     p_build.add_argument("--channel", default="쿠팡", help="채널명")
-    p_build.add_argument("--category", default="", help="카테고리명 (예: 캡슐세제)")
+    p_build.add_argument("--category", default=None,
+                         help="카테고리명. 생략하면 항목 ID(예: 세탁세제-09)에서 읽는다")
     p_build.add_argument("--mapping", default=None,
                          help="번호-원본파일명 대응표 (기본: 입력 파일 옆의 mapping.json)")
     p_build.add_argument("--thumbnails", default=None,
