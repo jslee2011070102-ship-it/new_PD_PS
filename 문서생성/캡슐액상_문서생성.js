@@ -366,5 +366,5 @@ function build(children, out) {
 }
 
 const ROOT = path.join(HERE, "..");
-build(quoteDoc(), path.join(ROOT, "생산견적요청서_캡슐_액상세탁.docx"))
-  .then(() => build(uspDoc(), path.join(ROOT, "USP및임상시험_제안서.docx")));
+build(quoteDoc(), path.join(ROOT, "quote_capsule_liquid.docx"))
+  .then(() => build(uspDoc(), path.join(ROOT, "usp_clinical_proposal.docx")));
