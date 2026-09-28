@@ -43,11 +43,15 @@ def run(*args, capture_to: Path | None = None) -> int:
     cmd = [sys.executable, str(SCRIPT), *args]
     say()
     if capture_to is None:
-        return subprocess.call(cmd)
+        return subprocess.call(cmd, env=dict(os.environ, PYTHONIOENCODING="utf-8",
+                                             PYTHONUTF8="1"))
     # probe 결과는 그대로 전달해야 하므로 화면과 파일에 동시에 남긴다
+    # 자식이 파이프로 출력할 때 한국어 윈도우 기본값은 cp949 다. 여기서 utf-8 로
+    # 읽으면 한글이 깨진다(실제로 깨졌다). 자식에게 utf-8 로 쓰라고 지정한다.
+    env = dict(os.environ, PYTHONIOENCODING="utf-8", PYTHONUTF8="1")
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                          text=True, encoding="utf-8", errors="replace",
-                         bufsize=1)
+                         bufsize=1, env=env)
     lines = []
     assert p.stdout is not None
     for line in p.stdout:
