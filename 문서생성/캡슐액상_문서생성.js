@@ -365,6 +365,64 @@ function uspDoc() {
   return body;
 }
 
+
+// ══════════════════════════════════════════════════════════════════
+// 문서 1-B — 간소판: 품목별 요청사항만 (전달용)
+//
+// 취지 설명, 가격 산정 근거, 시장 비교표, 회신 요청 항목을 모두 뺀
+// 사양서 한 장짜리. 말로 설명하며 건넬 때 쓰는 용도.
+// ══════════════════════════════════════════════════════════════════
+function quoteSlimDoc() {
+  const body = [
+    p([t("생산 요청 사양", { size: 32, bold: true, color: NAVY })], { after: 60 }),
+    p([t("캡슐 세탁세제(3챔버) · 액상 세탁세제", { size: 20, color: GREY })], { after: 40 }),
+    p([t(M.docDate, { size: 18, color: GREY })], { after: 240 }),
+  ];
+
+  I.forEach((it, idx) => {
+    body.push(h1(`${idx + 1}. ${it.name}${it.structure === "3챔버" ? " (3챔버)" : ""}`));
+
+    // 규격·가격·원가
+    body.push(table([1500, 2900, 1500, 3126], [
+      new TableRow({ children: [
+        cell("형태", { w: 1500, fill: BAND, bold: true, size: 18 }),
+        cell(`${it.form} / ${it.structure}`, { w: 2900, size: 18 }),
+        cell("규격", { w: 1500, fill: BAND, bold: true, size: 18 }),
+        cell(it.specs.map((sp) => `${sp.label} ${sp.pack}`).join("  ·  "), { w: 3126, size: 18 })] }),
+      new TableRow({ children: [
+        cell("목표 판매가", { w: 1500, fill: BAND, bold: true, size: 18 }),
+        cell(priceText(it), { w: 2900, size: 18 }),
+        cell("단위당 가격", { w: 1500, fill: BAND, bold: true, size: 18 }),
+        cell(it.specs.map((sp) => `${sp.pack.split(" ")[0]} ${sp.unit_low}~${sp.unit_high}원/${shortBasis(it.basis)}`).join("\n"), { w: 3126, size: 18 })] }),
+      new TableRow({ children: [
+        cell("목표 생산원가", { w: 1500, fill: HILITE, bold: true, size: 18 }),
+        cell([p([t(costText(it), { bold: true, size: 22 })], { after: 0 })], { w: 2900, fill: HILITE }),
+        cell("낱개 환산", { w: 1500, fill: HILITE, bold: true, size: 18 }),
+        cell(it.specs.map((sp) => `${sp.pack.split(" ")[0]} ${sp.each_cost_low}~${sp.each_cost_high}원`).join("\n"), { w: 3126, fill: HILITE, size: 18 })] }),
+    ]));
+    body.push(p([t("목표 생산원가는 부자재·포장·인쇄를 포함한 완제품 기준이며, 넘어서는 안 되는 상한값입니다.", { size: 17, color: GREY })], { before: 60, after: 160 }));
+
+    // 요청 사양
+    body.push(h2("요청 사양"));
+    const RW = [800, 2600, 2400, 3226];
+    const rows = [hdrRow(["구분", "사양", "시장 기준", "필요 시험"], RW)];
+    it.usp_plan.forEach((u) => {
+      const base = u.tier === "기본";
+      rows.push(new TableRow({ children: [
+        cell(u.tier, { w: RW[0], size: 17, align: AlignmentType.CENTER, bold: true, fill: base ? WARN : OK }),
+        cell(u.claim, { w: RW[1], size: 17, bold: true }),
+        cell(u.market, { w: RW[2], size: 16, color: GREY }),
+        cell(u.test === "-" ? "-" : u.test, { w: RW[3], size: 16 }),
+      ] }));
+    });
+    body.push(table(RW, rows));
+    body.push(p([t("'기본'은 현재 시장 제품들이 갖춘 수준을 최대치로 모은 사양입니다. '차별화'는 그 위에 더하는 항목입니다.", { size: 17, color: GREY })], { before: 60 }));
+
+    if (idx < I.length - 1) body.push(br());
+  });
+  return body;
+}
+
 function build(children, out) {
   const doc = new Document({
     styles: { default: { document: { run: { font: "맑은 고딕", size: 20 } } } },
@@ -378,4 +436,5 @@ function build(children, out) {
 
 const ROOT = path.join(HERE, "..");
 build(quoteDoc(), path.join(ROOT, "quote_capsule_liquid.docx"))
-  .then(() => build(uspDoc(), path.join(ROOT, "usp_clinical_proposal.docx")));
+  .then(() => build(uspDoc(), path.join(ROOT, "usp_clinical_proposal.docx")))
+  .then(() => build(quoteSlimDoc(), path.join(ROOT, "spec_request_slim.docx")));
