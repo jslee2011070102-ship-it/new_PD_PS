@@ -172,17 +172,23 @@ function quoteDoc() {
 
     // 요청 사양
     body.push(p([t("요청 사양", { bold: true, size: 19, color: NAVY })], { after: 50 }));
-    const RW = [900, 3200, 4926];
-    const rows = [hdrRow(["구분", "사양", "비고"], RW)];
-    it.usp_plan.filter((u) => u.tier !== "선택").forEach((u) => rows.push(new TableRow({
-      children: [
-        cell(u.tier, { w: RW[0], size: 17, align: AlignmentType.CENTER, bold: u.tier === "필수", fill: u.tier === "필수" ? WARN : BAND }),
-        cell(u.claim, { w: RW[1], size: 17, bold: u.tier === "필수" }),
-        cell(u.test === "-" ? "-" : `시험: ${u.test}`, { w: RW[2], size: 17 }),
-      ],
-    })));
+    body.push(p("인증·시험 항목은 현재 시장에서 확인된 최고 수준을 기준으로 잡았습니다. 숫자가 붙는 항목은 시장 최댓값을 넘도록 설정했습니다.", { size: 18, after: 80 }));
+    const RW = [800, 2600, 2400, 3226];
+    const rows = [hdrRow(["구분", "사양", "시장 기준", "필요 시험"], RW)];
+    it.usp_plan.forEach((u) => {
+      const base = u.tier === "기본";
+      rows.push(new TableRow({
+        children: [
+          cell(u.tier, { w: RW[0], size: 17, align: AlignmentType.CENTER, bold: true,
+                         fill: base ? WARN : OK }),
+          cell(u.claim, { w: RW[1], size: 17, bold: true }),
+          cell(u.market, { w: RW[2], size: 16, color: GREY }),
+          cell(u.test === "-" ? "-" : u.test, { w: RW[3], size: 16 }),
+        ],
+      }));
+    });
     body.push(table(RW, rows));
-    body.push(p([t("'필수'는 시장에서 표준이 된 사양으로, 없으면 비교 대상에서 제외됩니다. '차별화'는 이 제품의 핵심 소구점입니다.", { size: 17, color: GREY })], { after: 120 }));
+    body.push(p([t("'기본'은 현재 시장 제품들이 갖춘 것을 최대치로 모은 사양입니다. 빼면 비교에서 밀립니다. '차별화'는 그 위에 더하는 항목입니다.", { size: 17, color: GREY })], { after: 120 }));
     if (idx < I.length - 1) body.push(br());
   });
 
@@ -218,7 +224,7 @@ function quoteDoc() {
   body.push(p("목표 원가를 맞추기 어려운 경우, 무리한 단가 인하보다 규격 조정을 먼저 검토하고자 합니다. 다만 아래는 시장 조사에서 확인된 제약입니다."));
   body.push(bullet("단위당 가격", " — 쿠팡은 상품 페이지에 1개당(캡슐) 또는 100ml당(액상) 가격을 자동 표시합니다. 소비자가 이 숫자로 직접 비교하므로 총액보다 단위당 가격이 경쟁력을 좌우합니다."));
   body.push(bullet("규격", " — 캡슐 100~120입, 액상 2.5L 4개입은 해당 가격대 상위 제품들이 공통으로 채택한 규격입니다. 크게 벗어나면 비교 자체가 어려워집니다."));
-  body.push(bullet("'필수' 사양", " — 3장의 필수 항목은 경쟁 제품이 모두 갖춘 것으로, 빼서 원가를 맞추는 것은 선택지가 아닙니다."));
+  body.push(bullet("'기본' 사양", " — 3장의 기본 항목은 현재 시장 제품들이 갖춘 것을 최대치로 모은 것입니다. 이걸 빼서 원가를 맞추면 비교표에서 밀리므로, 조정 대상이 아닙니다. 조정이 필요하면 '차별화' 항목부터 검토해 주시기 바랍니다."));
   return body;
 }
 
@@ -239,9 +245,10 @@ function uspDoc() {
     h1("1. 이 문서의 목적"),
     p("경쟁 제품이 상세페이지에서 내세우는 소구점(USP)을 정리하고, 우리 제품이 무엇을 말할지, 그 말을 뒷받침하려면 어떤 시험이 필요한지를 정리한 문서입니다."),
     p("소구점은 말만으로는 성립하지 않습니다. '피부에 순하다'는 문장은 시험 성적서가 있을 때만 상세페이지에 쓸 수 있습니다. 그래서 USP와 시험을 한 문서에서 묶어 다룹니다."),
-    ...callout("조사 방법",
-      "상세페이지를 사람이 직접 열어 확인했습니다. 자동 수집 경로는 아직 검증되지 않아, 우선 급한 2개 품목만 수기로 정리했습니다. " +
-      "따라서 조사 대상은 전체 150개 중 17개 SKU이며, 이후 나머지도 같은 기준으로 확장할 수 있습니다."),
+    ...callout("조사 방법과 범위",
+      "상세페이지를 사람이 직접 열어 확인했습니다(캡슐 4 SKU / 액상 13 SKU). 같은 내용이 반복되는 것은 " +
+      "옮겨 적지 않았으므로, 어느 제품이 무엇을 말하는지까지는 전수가 아닙니다. 다만 어떤 종류의 소구점이 " +
+      "시장에 존재하는지는 이 목록이 덮는 것으로 봅니다. 캡슐 15개 · 액상 33개 소구점이 확인됐습니다."),
 
     h1("2. 시장이 내세우는 것 — 조사 결과"),
   ];
@@ -272,25 +279,29 @@ function uspDoc() {
   body.push(br());
 
   body.push(h1("3. 우리가 말할 것 — USP 구성안"));
-  body.push(p("필수 / 차별화 / 선택 세 등급으로 나눴습니다."));
-  body.push(bullet("필수", " — 경쟁 제품이 모두 갖춘 것. 없으면 비교 대상에서 빠집니다. 차별점이 아니라 입장권입니다."));
-  body.push(bullet("차별화", " — 우리 가격대에 없거나 드문 것. 광고와 상세페이지 상단에 쓸 무기입니다."));
-  body.push(bullet("선택", " — 여력이 있으면 더할 것. 타겟이 좁아질 때 효과가 큽니다."));
+  body.push(p("두 등급으로 나눴습니다."));
+  body.push(bullet("기본", " — 현재 시장 제품들이 갖춘 인증·시험·성분을 **최대치로** 모은 것입니다. " +
+    "'남들만큼'이 아니라 '관찰된 것 중 가장 센 값 이상'이 기준입니다. 효소 종수, 불검출 종수, 농축 배수처럼 " +
+    "숫자가 붙는 항목은 시장 최댓값을 넘도록 잡았습니다."));
+  body.push(bullet("차별화", " — 그 위에 카테고리별로 더하는 항목입니다. 광고와 상세페이지 상단에 쓸 무기입니다."));
   body.push(p("", { after: 100 }));
-  body.push(p([t("'추가' 표시는 시장 조사에서 나오지 않은 항목으로, 이번에 기획에서 제안하는 것입니다.", { size: 18, color: GREY })], { after: 140 }));
-
+  body.push(...callout("시장 최대치를 기준으로 삼은 이유",
+    "인증과 시험은 하나씩 늘려봐야 '남들도 있는 것'이 됩니다. 처음부터 시장에 흩어져 있는 것을 " +
+    "한 제품에 모으고, 숫자가 있는 항목은 최댓값을 넘겨야 비교표에서 밀리지 않습니다. " +
+    "예를 들어 효소는 퍼플리 9종이 최대이고 저가권도 9종을 답니다. 9종으로는 동점이고, 10종부터 우위입니다."));
   I.forEach((it) => {
     body.push(h2(`3-${I.indexOf(it) + 1}. ${it.name}`));
-    const UW = [800, 750, 800, 2400, 4276];
-    const rows = [hdrRow(["구분", "출처", "분류", "소구점", "근거 / 필요 시험"], UW)];
+    const UW = [800, 800, 2300, 2500, 2626];
+    const rows = [hdrRow(["구분", "분류", "소구점", "시장에서 확인된 수준", "우리 기준 / 근거"], UW)];
     it.usp_plan.forEach((u) => {
-      const fill = u.tier === "필수" ? WARN : (u.tier === "차별화" ? OK : undefined);
+      const base = u.tier === "기본";
       rows.push(new TableRow({ children: [
-        cell(u.tier, { w: UW[0], size: 16, align: AlignmentType.CENTER, bold: true, fill }),
-        cell(u.source === "기획" ? "추가" : "시장", { w: UW[1], size: 16, align: AlignmentType.CENTER, color: u.source === "기획" ? "C00000" : GREY }),
-        cell(u.group, { w: UW[2], size: 16, align: AlignmentType.CENTER }),
-        cell(u.claim, { w: UW[3], size: 17, bold: u.tier !== "선택" }),
-        cell([p(u.basis, { size: 16, after: 30 }),
+        cell(u.tier, { w: UW[0], size: 16, align: AlignmentType.CENTER, bold: true,
+                       fill: base ? WARN : OK }),
+        cell(u.group, { w: UW[1], size: 16, align: AlignmentType.CENTER }),
+        cell(u.claim, { w: UW[2], size: 17, bold: true }),
+        cell(u.market, { w: UW[3], size: 16, color: GREY }),
+        cell([p(u.target === "-" ? "" : u.target, { size: 16, after: 30 }),
           ...(u.test !== "-" ? [p([t("시험: " + u.test, { size: 16, bold: true, color: NAVY })], { after: 0 })] : [])], { w: UW[4] }),
       ] }));
     });
@@ -334,7 +345,7 @@ function uspDoc() {
   const prows = [hdrRow(["위치", "무엇을 둘 것인가", "이유"], PW)];
   [["상단", "가격 번역 + 차별화 1개\n(예: 1회 세탁 OO원 / 실내건조 쉰내 억제)",
     "가성비 제품은 가격으로 들어옵니다. 다만 '싸다'만 말하면 더 싼 제품에 집니다. 싼 이유가 아니라 싼데 무엇이 되는지를 먼저 보여줘야 합니다."],
-   ["중단", "필수 사양 묶음\n(효소 종수, 불검출, 피부 자극 시험, 겸용)",
+   ["중단", "기본 사양 묶음\n(효소 10종, 불검출 16종, 국내+독일 더마, 협회 인증, 겸용)",
     "여기서 '빠진 것이 없다'를 확인시킵니다. 경쟁 제품과 나란히 놓았을 때 비어 보이지 않게 하는 구간입니다."],
    ["하단", "시험 성적서 · 인증 · 성분표",
     "구매 직전 마지막 의심을 지우는 자리입니다. 근거 문서는 요약하지 말고 그대로 보여주는 편이 신뢰가 높습니다."]]
