@@ -18,9 +18,16 @@
 
   // 버튼을 클래스 이름이 아니라 적힌 글자로 찾는다.
   // 클래스 이름은 배포할 때마다 바뀌지만 글자는 덜 바뀐다.
+  // 실제 확인된 문구: "상품정보 더보기"
+  // (버튼 안에 <span class="product-detail-seemore-icon-wpui"> 가 함께 들어 있다)
   const EXPAND_TEXTS = [
     "상품정보 더보기", "상세정보 더보기", "상품상세 더보기",
     "더보기", "펼쳐보기", "전체보기", "자세히 보기",
+  ];
+  // 글자보다 확실한 단서. 이 아이콘을 품은 버튼이 곧 '더보기' 버튼이다.
+  const EXPAND_SELECTORS = [
+    ".product-detail-seemore-icon-wpui",
+    "[class*=seemore]", "[class*=see-more]",
   ];
 
   function visible(el) {
@@ -31,6 +38,21 @@
   }
 
   async function clickExpand(log) {
+    // 클래스로 먼저 찾는다. 글자 비교보다 정확하다.
+    for (const sel of EXPAND_SELECTORS) {
+      for (const el of document.querySelectorAll(sel)) {
+        const btn = el.closest("button, a, div[role=button]") || el;
+        if (!visible(btn)) continue;
+        try {
+          btn.scrollIntoView({ block: "center" });
+          await sleep(rand(400, 900));
+          btn.click();
+          log.push(`더보기 클릭(클래스): ${sel}`);
+          await sleep(rand(1500, 2800));
+          return true;
+        } catch (e) { /* 다음 후보 */ }
+      }
+    }
     const cands = Array.from(
       document.querySelectorAll("button, a, div[role=button], span, div")
     ).filter((el) => {
@@ -70,21 +92,21 @@
     } catch (e) { return null; }
   }
 
-  // 상세 영역으로 보이는 곳. 여기 안쪽만 보는 것이 원칙이다.
+  // 상세 영역으로 보이는 곳. 실제 쿠팡 구조에서 확인한 경로:
+  //   .product-detail-content-inside > .vendor-item
+  //     > .type-IMAGE_NO_SPACE > .subType-IMAGE.with-width-780 > img
   const DETAIL_SELECTORS = [
+    ".product-detail-content-inside",
     "#productDetail", ".product-detail", ".vendor-item",
     "[class*=productDetail]", "[class*=product-detail]", "[class*=detail-content]",
-    "[class*=subType-IMAGE]", "[id*=productDetail]",
+    "[class*=subType-IMAGE]", "[class*=type-IMAGE]", "[id*=productDetail]",
   ];
 
-  // 상세 영역을 못 찾았을 때 페이지 전체를 훑게 되는데, 그러면 상단 상품 사진
-  // (썸네일·갤러리)이 섞여 들어온다. 우리가 보려는 건 상세페이지의 소구점 이미지이지
-  // 제품 사진이 아니므로, 이 영역들은 명시적으로 뺀다.
   const EXCLUDE_SELECTORS = [
-    "[class*=gallery]", "[class*=thumbnail]", "[class*=thumb]",
-    "[class*=prod-image]", "[class*=product-image]", "[class*=image-list]",
+    "[class*=gallery]", "[class*=thumbnail-item]", "[class*=image-list]",
+    "[class*=prod-image]", "[class*=product-image]",
     "header", "nav", "footer", "[class*=recommend]", "[class*=relate]",
-    "[class*=review]", "[class*=banner]", "[class*=ad-]",
+    "[class*=review]", "[class*=banner]", "[class*=also-view]",
   ];
 
   function inExcluded(img) {
@@ -94,19 +116,28 @@
     return null;
   }
 
+  function pxAttr(v) {
+    // width="100%" 같은 값은 픽셀 크기가 아니다.
+    // 이걸 parseInt 하면 100 이 되어 '작은 아이콘'으로 오해하고 버리게 된다.
+    // 실제로 그렇게 해서 상세 이미지를 전부 놓쳤다. 숫자+px 만 인정한다.
+    if (!v) return 0;
+    const t = String(v).trim();
+    if (!/^\d+(\.\d+)?(px)?$/i.test(t)) return 0;
+    return Math.round(parseFloat(t)) || 0;
+  }
+
+  function sizeOf(img) {
+    const w = img.naturalWidth || pxAttr(img.getAttribute("width")) || img.clientWidth || 0;
+    const h = img.naturalHeight || pxAttr(img.getAttribute("height")) || img.clientHeight || 0;
+    return [w, h];
+  }
+
   function collectImages(log) {
-    // 후보 컨테이너를 '전부' 모은다.
-    //
-    // 처음에는 첫 번째로 걸리는 것 하나만 봤는데, 실제 쿠팡 페이지에서
-    // .vendor-item 이 여러 개였고 맨 앞 것이 브랜드 광고 배너 영역이었다.
-    // 그래서 배너만 가져오고 정작 성분·효능 이미지는 통째로 놓쳤다.
-    // 한 곳만 보면 안 된다.
-    const scopes = [];
-    const names = [];
+    // 후보 컨테이너를 전부 모은다. 첫 번째 하나만 보면 앞쪽 광고 영역만 긁게 된다.
+    const scopes = [], names = [];
     for (const sel of DETAIL_SELECTORS) {
       for (const el of document.querySelectorAll(sel)) {
         if (el.querySelectorAll("img").length === 0) continue;
-        // 이미 담은 것의 안쪽이면 중복이므로 건너뛴다
         if (scopes.some((s) => s.contains(el) || el.contains(s))) continue;
         scopes.push(el);
         names.push(sel);
@@ -135,11 +166,18 @@
         if (img.closest('a[href*="brandstore"], a[href*="/np/campaigns"], [class*=banner]')) {
           skippedBanner++; continue;
         }
-        const w = img.naturalWidth || parseInt(img.getAttribute("width") || "0", 10) || img.clientWidth;
-        const h = img.naturalHeight || parseInt(img.getAttribute("height") || "0", 10) || img.clientHeight;
-        const big = (w === 0 && h === 0) || w >= 300 || h >= 300;
-        if (!big) { skippedSmall++; continue; }
         if (/\.(svg|gif)(\?|$)/i.test(u)) continue;
+
+        const [w, h] = sizeOf(img);
+        // 상세 영역 안이면 크기로 거르지 않는다.
+        // 지연 로딩 상태에서는 실제 크기를 알 수 없고(naturalWidth 0),
+        // width="100%" 처럼 픽셀이 아닌 값도 흔하다. 상세 영역 안에 있다는 것
+        // 자체가 이미 충분한 근거다. 명백히 작은 것(양쪽 다 100 미만)만 뺀다.
+        const tooSmall = fallback
+          ? !((w === 0 && h === 0) || w >= 300 || h >= 300)
+          : (w > 0 && h > 0 && w < 100 && h < 100);
+        if (tooSmall) { skippedSmall++; continue; }
+
         seen.add(u);
         out.push({ url: u, w, h });
       }
