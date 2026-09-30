@@ -47,12 +47,12 @@ function render() {
     const good = r.status === "ok";
     // 어디서 긁었는지, 몇 장을 걸러냈는지가 판단에 가장 중요한 정보다.
     const keep = (r.log || []).filter((l) =>
-      /영역|제외|채택|더보기|차단|프레임|모바일|오류|딜번호|폴더/.test(l));
+      /영역|제외|채택|더보기|차단|프레임|모바일|오류|딜번호|폴더|적습니다|기다림|도착/.test(l));
     return `<tr class="${good ? "ok" : "bad"}">
       <td>${esc(id)}</td>
       <td>${esc(r.productId || "-")}</td>
       <td>${esc(LABEL[r.status] || r.status)}</td>
-      <td class="num">${r.images || 0}</td>
+      <td class="num">${r.images || 0}${r.lowYield ? " ⚠" : ""}</td>
       <td>${esc(r.folder ? r.folder + "/" : "")}</td>
       <td>${esc(r.scope || "")}${r.fallback ? " <b>[상세영역 못찾음]</b>" : ""}</td>
       <td>${esc((r.title || "").slice(0, 45))}</td>

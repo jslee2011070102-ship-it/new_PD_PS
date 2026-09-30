@@ -45,6 +45,9 @@ const DEFAULTS = {
   folderMode: "id",  // 폴더 이름: id=딜번호 / id_title=딜번호_제품명 / label=내가 붙인 이름
 };
 
+// 이 장수 미만이면 "덜 긁혔을지 모른다"고 보고 재시도하고, 화면에도 표시한다.
+const LOW_YIELD = 4;
+
 // ── 주소에서 딜번호(상품번호)를 뽑는다 ─────────────────────────────
 // 쿠팡 주소는 .../vp/products/8765432?searchId=...&searchRank=0 꼴이다.
 // 앞쪽 숫자가 그 상품을 가리키는 유일한 번호(딜번호)다.
@@ -133,12 +136,18 @@ function safeName(s) {
 // 페이지 제목에서 제품명만 남긴다.
 // 쿠팡 제목은 "제품명 - 쿠팡! " 꼴로 끝나고, 앞에 쓸데없는 말머리가 붙기도 한다.
 function titleToName(title) {
+  // 쿠팡 제목은 "제품명, 규격, 수량 - 카테고리 | 쿠팡" 꼴이다.
+  // 뒤의 " | 쿠팡" 과 " - 카테고리" 는 제품명이 아니므로 떼어낸다.
+  // (떼지 않으면 폴더 이름이 "... 2개 -" 처럼 부호로 끝나 보기 흉했다)
   let t = String(title || "")
     .replace(/\s*[-|]\s*쿠팡!?\s*$/, "")
     .replace(/^\s*쿠팡!?\s*[-|]\s*/, "")
+    .replace(/\s+-\s+[^-]{1,20}$/, "")   // 끝의 " - 샴푸", " - 캡슐/시트세제"
     .trim();
   // 폴더 이름이 너무 길면 윈도우 경로 길이 제한(260자)에 걸린다. 40자로 줄인다.
-  if (t.length > 40) t = t.slice(0, 40).trim();
+  if (t.length > 40) t = t.slice(0, 40);
+  // 자르다 보면 ", " 나 " -" 로 끝난다. 그 부호를 떼야 폴더 이름이 깔끔하다.
+  t = t.replace(/[\s,\-·/|+]+$/, "").trim();
   return safeName(t);
 }
 
@@ -284,18 +293,25 @@ async function processOne(item, opts) {
     let r = await visitAndCollect(item.url, log);
     if (r) log.push(...(r.log || []));
 
-    // PC 주소가 막히거나 이미지를 못 찾으면 모바일 주소로 한 번 더 시도한다.
-    // 모바일 화면은 구조가 단순해 이미지가 더 잘 잡히는 경우가 있다.
-    if (opts.tryMobile && (!r || r.reason === "blocked" || !r.images || r.images.length === 0)) {
+    // PC 주소가 막히거나 이미지가 적게 잡히면 모바일 주소로 한 번 더 시도한다.
+    //
+    // 예전에는 '0장일 때만' 재시도했다. 그래서 19장짜리 상세를 2장만 건지고도
+    // 재시도 없이 '성공'으로 끝냈다. 이제 LOW_YIELD 미만이면 다시 해 본다.
+    // 그리고 재시도 결과가 더 적으면 버린다 — 실제로 모바일 쪽이 더 적게
+    // 잡힌 경우가 있었다(PC 19장 / 모바일 2장). 많은 쪽을 남기는 게 맞다.
+    const have = (x) => (x && x.images ? x.images.length : 0);
+    if (opts.tryMobile && (!r || r.reason === "blocked" || have(r) < LOW_YIELD)) {
       for (const mu of mobileCandidates(item.url)) {
-        log.push(`모바일 주소로 재시도: ${mu}`);
+        log.push(`이미지 ${have(r)}장뿐이라 모바일 주소로 재시도: ${mu}`);
         await sleep(rand(2000, 4000));
         const r2 = await visitAndCollect(mu, log);
         if (r2) log.push(...(r2.log || []));
-        if (r2 && r2.images && r2.images.length > 0) {
+        if (have(r2) > have(r)) {
           r = r2; rec.usedUrl = mu;
-          log.push("모바일 주소에서 성공");
-          break;
+          log.push(`모바일 주소가 더 많음 (${have(r2)}장) — 이쪽을 씁니다`);
+          if (have(r2) >= LOW_YIELD) break;
+        } else if (r2) {
+          log.push(`모바일은 ${have(r2)}장 — 더 적어서 버립니다`);
         }
       }
     }
@@ -308,6 +324,8 @@ async function processOne(item, opts) {
     rec.scope = r.scope || "";
     rec.fallback = !!r.fallback;
     rec.totalImgs = r.totalImgs || 0;
+    rec.lowYield = rec.images > 0 && rec.images < LOW_YIELD;
+    if (rec.lowYield) log.push("※ 장수가 적습니다 — 확인이 필요합니다");
 
     if (r.reason === "blocked" && rec.images === 0) {
       rec.status = "blocked";
@@ -423,6 +441,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         recent: Object.values(state.done).slice(-5).map((r) => {
           const lab = { ok: "성공", blocked: "차단", no_images: "이미지없음", fail: "실패" };
           return `${r.id}: ${lab[r.status] || r.status} · 이미지 ${r.images || 0}장` +
+                 (r.lowYield ? " ⚠ 확인 필요" : "") +
                  (r.folder ? ` · ${r.folder}/` : "") +
                  (r.fallback ? " · 상세영역 못찾음" : "");
         }),

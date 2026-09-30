@@ -13,6 +13,9 @@
  * 끝까지 내릴 필요가 없다. (그래도 못 찾으면 아래에서 한 번 훑는다.)
  */
 (() => {
+  // 이 장수 미만이면 "덜 긁혔을지 모른다"고 보고 한 번 더 확인한다.
+  const LOW_YIELD = 4;
+
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const rand = (a, b) => a + Math.random() * (b - a);
 
@@ -189,6 +192,62 @@
     return { images: out, scope: [...new Set(names)].join(", "), fallback, totalImgs };
   }
 
+  // 상세 내용만 담는 '전용' 컨테이너들. 앞쪽 광고 영역(.vendor-item)과 달리
+  // 이게 떴다는 건 상세가 실제로 도착했다는 뜻이다.
+  const STRONG_SELECTORS = [
+    ".product-detail-content-inside", "#productDetail",
+    "[class*=subType-IMAGE]", "[class*=detail-content]",
+  ];
+
+  function countIn(selectors) {
+    let n = 0;
+    const seen = [];
+    for (const sel of selectors) {
+      for (const el of document.querySelectorAll(sel)) {
+        if (seen.some((s) => s.contains(el) || el.contains(s))) continue;
+        seen.push(el);
+        n += el.querySelectorAll("img").length;
+      }
+    }
+    return n;
+  }
+
+  // 상세 영역은 '더보기'를 눌러도 곧바로 생기지 않는다.
+  // 쿠팡은 그 부분을 나중에 따로 불러와 붙인다. 너무 일찍 읽으면 아직 없는 것을
+  // 세게 되고, 그때 눈에 띄는 건 앞쪽 광고 영역(.vendor-item)뿐이다.
+  // 실제로 그래서 19장짜리 상세를 2장으로 끝낸 적이 있다.
+  //
+  // 그래서 두 가지를 본다.
+  //   - 전용 상세 컨테이너가 떴고 이미지 수가 더 안 늘면 → 바로 간다 (빠른 길)
+  //   - 아직 광고 영역뿐이면 → 최소 시간만큼은 기다린다 (늦게 오는 경우)
+  // 승객이 다 탈 때까지 기다리되, 아무도 안 보여도 정해진 시간은 문을 열어두는 셈이다.
+  async function waitForDetail(log, minMs = 4500, maxMs = 13000) {
+    const t0 = Date.now();
+    let prev = -1, prevStrong = -1;
+    while (Date.now() - t0 < maxMs) {
+      const strong = countIn(STRONG_SELECTORS);
+      const total = countIn(DETAIL_SELECTORS);
+      const settled = total === prev && strong === prevStrong;
+      const secs = ((Date.now() - t0) / 1000).toFixed(1);
+
+      if (strong >= 3 && settled) {
+        log.push(`상세 영역 도착 (전용 컨테이너 이미지 ${strong}개, ${secs}초 기다림)`);
+        return strong;
+      }
+      // 전용 컨테이너가 없으면 아직 이르다고 본다. 최소 시간은 채운다.
+      if (settled && Date.now() - t0 >= minMs) {
+        log.push(strong > 0
+          ? `상세 영역 도착 (이미지 ${strong}개, ${secs}초 기다림)`
+          : `전용 상세 컨테이너가 끝내 안 뜸 (${secs}초 기다림) — 있는 것만 수집합니다`);
+        return strong;
+      }
+      prev = total; prevStrong = strong;
+      await sleep(700);
+    }
+    log.push(`상세 영역을 ${(maxMs / 1000)}초 기다렸으나 안정되지 않음`);
+    return countIn(STRONG_SELECTORS);
+  }
+
   async function nudgeScroll(log) {
     // 주소가 안 잡히면 한 번만 훑어 지연 로딩을 깨운다
     const step = Math.max(600, window.innerHeight * 0.9);
@@ -217,13 +276,25 @@
     }
 
     await clickExpand(log);
+    await waitForDetail(log);
+
     let got = collectImages(log);
-    if (got.images.length < 2) {
+    // 기준을 2장에서 4장으로 올렸다. 예전 기준으로는 19장짜리 상세를 2장만
+    // 건지고도 '성공'으로 끝냈다. 상세페이지가 2~3장뿐인 경우는 드물다.
+    if (got.images.length < LOW_YIELD) {
+      log.push(`${got.images.length}장뿐이라 한 번 더 시도합니다`);
       await nudgeScroll(log);
-      got = collectImages(log);
+      await waitForDetail(log, 6000);
+      const again = collectImages(log);
+      // 다시 센 쪽이 더 적을 수도 있다. 많은 쪽을 남긴다.
+      if (again.images.length > got.images.length) got = again;
+      else log.push(`다시 세어도 늘지 않음 (${again.images.length}장)`);
     }
     const images = got.images;
     log.push(`상세 이미지 ${images.length}장 수집`);
+    if (images.length > 0 && images.length < LOW_YIELD) {
+      log.push(`※ 장수가 적습니다 — 상세가 원래 짧은 것인지 확인이 필요합니다`);
+    }
 
     return {
       ok: images.length > 0,
@@ -234,6 +305,7 @@
       scope: got.scope,
       fallback: got.fallback,
       totalImgs: got.totalImgs,
+      lowYield: images.length > 0 && images.length < LOW_YIELD,
       frameUrl: location.href,
       log,
       bodyHead: bodyText.slice(0, 200),
