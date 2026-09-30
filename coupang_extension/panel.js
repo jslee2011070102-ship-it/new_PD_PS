@@ -175,6 +175,23 @@ for (const b of document.querySelectorAll(".tabs button")) {
 }
 $("jobs").addEventListener("input", jobsInfo);
 
+$("readList").addEventListener("click", async () => {
+  const items = jobsInfo();
+  if (!items.length) { $("status").textContent = "먼저 검색목록.json 내용을 붙여넣어 주세요."; return; }
+  $("status").textContent = "지금 보는 화면을 읽는 중…";
+  const r = await send({ cmd: "readList", items });
+  if (!r || !r.ok) {
+    $("status").textContent = (r && r.error) || "읽지 못했습니다.";
+    if (r && r.log) $("status").textContent += "\n\n" + r.log.join("\n");
+    return;
+  }
+  $("status").textContent =
+    `이 화면에서 상품 ${r.total}개를 읽어\n` +
+    `확실 ${r.found}개 / 애매 ${r.vague}개를 맞췄습니다.\n\n` +
+    `다른 카테고리 순위 페이지로 옮겨서 또 누르시면 됩니다.`;
+  refresh();
+});
+
 $("startSearch").addEventListener("click", async () => {
   const items = jobsInfo();
   if (!items.length) return;

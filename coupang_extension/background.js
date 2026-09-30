@@ -491,6 +491,83 @@ async function searchOne(item, opts) {
   return rec;
 }
 
+/* 지금 보고 있는 목록 페이지(카테고리 랭킹 등)에서 한꺼번에 읽어 맞춘다.
+ *
+ * 왜 이 길로 왔나
+ * ---------------
+ * 쿠팡이 검색 주소(/np/search)를 거부했다. 화면에 이렇게 뜬다.
+ *   "요청하신 페이지의 사용권한이 없습니다."
+ * 상품 페이지(/vp/products)는 멀쩡히 열리는데 검색만 막힌다.
+ *
+ * 그런데 애초에 이 목록은 '카테고리 구매 순위 1~25위'에서 뽑은 것이다.
+ * 그 랭킹 페이지 한 장에 25개가 다 들어 있다.
+ * 검색을 154번 하는 대신, 사장님이 그 페이지를 열고 버튼을 누르면 된다.
+ *
+ * 여기서는 페이지를 우리가 열지 않는다. 사장님이 평소처럼 브라우저로 연 화면을
+ * 그대로 읽을 뿐이다. 주소를 대신 두드리지 않으니 막힐 일도 없다.
+ */
+async function readCurrentList(items) {
+  const log = [];
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab || !/coupang\.com/.test(tab.url || "")) {
+    return { ok: false, error: "지금 보고 있는 탭이 쿠팡 페이지가 아닙니다." };
+  }
+  log.push(`읽은 화면: ${tab.title || ""}`);
+  log.push(`주소: ${tab.url}`);
+
+  const results = await chrome.scripting.executeScript({
+    target: { tabId: tab.id }, files: ["search.js"],
+  });
+  const r = results && results[0] && results[0].result;
+  if (!r) return { ok: false, error: "화면에서 목록을 읽지 못했습니다." };
+  log.push(...(r.log || []));
+
+  const cands = r.candidates || [];
+  if (cands.length === 0) {
+    return { ok: false, error: "이 화면에서 상품을 찾지 못했습니다. 목록이 다 뜬 뒤에 눌러 주세요.",
+             log, bodyHead: (r.bodyHead || "").slice(0, 200) };
+  }
+
+  // 아직 못 찾은 항목만 대상으로, 각 항목마다 이 화면에서 가장 잘 맞는 것을 고른다.
+  // 한 상품이 두 항목에 겹쳐 붙지 않도록, 확정된 딜번호는 빼고 진행한다.
+  const pending = items.filter(
+    (it) => !(state.found[it.id] && state.found[it.id].verdict === "확실"));
+  const used = new Set(
+    Object.values(state.found).filter((f) => f.verdict === "확실" && f.pid).map((f) => f.pid));
+
+  let added = 0, vague = 0;
+  const order = { "확실": 0, "애매": 1, "못찾음": 2 };
+  for (const it of pending) {
+    const scored = cands
+      .filter((c) => !used.has(c.pid))
+      .map((c) => scoreCandidate(it, c))
+      .sort((a, b) => (order[a.verdict] - order[b.verdict]) || (b.nameScore - a.nameScore));
+    const best = scored[0];
+    if (!best || best.verdict === "못찾음") continue;
+
+    const rec = {
+      id: it.id, cat: it.cat, name: it.name, wantPrice: it.price || null,
+      wantSize: it.size || "", verdict: best.verdict,
+      pid: best.pid, url: best.url,
+      matchedName: best.name, matchedPrice: best.price,
+      candidates: scored.slice(0, 5), source: "목록화면",
+      log: [`목록 화면에서 맞춤: ${tab.title || ""}`.slice(0, 120),
+            `${best.verdict} · 이름일치 ${Math.round(best.nameScore * 100)}% · ` +
+            `가격차 ${best.priceGap === null ? "?" : Math.round(best.priceGap * 100) + "%"}`],
+      at: new Date().toISOString(),
+    };
+    // 이미 '애매'로 있던 것을 '애매'로 또 덮어쓰지는 않는다(기록만 늘어난다).
+    const prev = state.found[it.id];
+    if (prev && prev.verdict === "확실") continue;
+    state.found[it.id] = rec;
+    if (best.verdict === "확실") { used.add(best.pid); added++; } else { vague++; }
+  }
+  state.mode = "search";
+  await save();
+  log.push(`이 화면에서 확실 ${added}개 / 애매 ${vague}개를 맞췄습니다`);
+  return { ok: true, found: added, vague, total: cands.length, log };
+}
+
 async function searchLoop(opts) {
   state.running = true;
   state.stopRequested = false;
@@ -595,6 +672,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       await save();
       sendResponse({ ok: true, queued: state.queue.length, skipped: bad });
       runLoop(opts);
+      return;
+    }
+    if (msg.cmd === "readList") {
+      const r = await readCurrentList(msg.items || []);
+      sendResponse(r);
       return;
     }
     if (msg.cmd === "startSearch") {

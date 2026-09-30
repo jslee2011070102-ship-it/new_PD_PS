@@ -79,13 +79,33 @@
     <label for="jobs">검색 목록 (검색목록.json 내용)</label>
     <textarea id="jobs" placeholder='[{"id":"세탁세제-01","name":"피지 모락셀라 냄새제거 세탁세제 코튼향","price":14650,"size":"2.1L"}, ...]'></textarea>
     <div id="jobsInfo" class="hint"></div>
+    <div class="note" style="background:#eef7ee;border-left-color:#2e7d32">
+      <b>가장 빠른 길 — 카테고리 순위 페이지에서 한꺼번에 읽기</b><br>
+      이 목록은 애초에 <b>카테고리 구매 순위 1~25위</b>에서 뽑은 것입니다.
+      그 순위 페이지 한 장에 25개가 다 있습니다.<br><br>
+      ① 쿠팡에서 그 <b>순위 목록을 엽니다</b><br>
+      &nbsp;&nbsp;&nbsp;가장 쉬운 길: 그 카테고리 1위 상품을 열면 화면에
+      <b>"구매 1위 &nbsp;○○ 순위 &gt;"</b> 가 있습니다. 그걸 누르면 바로 순위 목록입니다.<br>
+      &nbsp;&nbsp;&nbsp;<span style="font-size:11px;color:#555">세탁세제→<b>액체세제</b> /
+      캡슐세제→<b>캡슐세제</b> / 섬유유연제→<b>액체섬유유연제</b> /
+      섬유탈취제→<b>섬유탈취제</b> / 주방세제→<b>일반주방세제</b> /
+      살균소독제→<b>살균소독제</b></span><br>
+      ② <b>맨 아래까지 한 번 내려</b> 25위까지 다 뜨게 합니다<br>
+      ③ 아래 버튼을 누릅니다<br><br>
+      <b>카테고리당 한 번, 6번이면 끝납니다.</b>
+    </div>
     <div class="row">
-      <button id="startSearch" class="primary">주소 찾기 시작</button>
+      <button id="readList" class="primary">지금 보는 순위 페이지에서 읽기</button>
+    </div>
+
+    <div class="hint" style="margin-top:14px">
+      아래는 <b>제품명으로 하나씩 검색</b>하는 방법입니다.
+      쿠팡이 검색 주소를 막는 경우가 있어 위쪽 방법을 먼저 쓰시길 권합니다.</div>
+    <div class="row">
+      <button id="startSearch">하나씩 검색해서 찾기</button>
       <button id="stopSearch">중단</button>
       <button id="resetSearch">검색기록 초기화</button>
     </div>
-    <div class="hint">상품 사이 대기는 아래 ②의 설정을 함께 씁니다.
-      154개면 <b>30분~1시간</b> 걸립니다. 켜 두고 다른 일 하셔도 됩니다.</div>
   </div>
 
   <div id="paneCollect" class="pane on">

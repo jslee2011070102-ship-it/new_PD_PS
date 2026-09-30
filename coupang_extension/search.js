@@ -17,7 +17,10 @@
  * 대신 '상품으로 가는 링크(/vp/products/숫자)'를 찾는다. 주소 구조는 안 바뀐다.
  */
 (() => {
-  const MAX = 8;
+  // 검색 결과뿐 아니라 '카테고리 랭킹 페이지'에서도 이 코드를 쓴다.
+  // 랭킹은 25위까지 보므로 8개로는 모자란다. 많이 담아도 손해가 없다 —
+  // 어느 것이 맞는지는 바깥에서 이름·가격으로 따지기 때문이다.
+  const MAX = 60;
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const LINK_SEL = 'a[href*="/vp/products/"], a[href*="/vm/products/"]';
