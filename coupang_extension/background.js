@@ -40,7 +40,7 @@ const DEFAULTS = {
   gapMax: 25,      // 상품 사이 최대 대기(초)
   stopAfterFails: 3,
   folder: "coupang_usp",
-  saveImages: true,  // false 면 주소만 모은다 (훨씬 빠르고 디스크도 안 쓴다)
+  saveImages: true,  // false 면 이미지 파일을 저장하지 않는다 (주소는 어차피 기록에 남는다)
   tryMobile: true,   // 실패하면 모바일 주소로 한 번 더
   folderMode: "id",  // 폴더 이름: id=딜번호 / id_title=딜번호_제품명 / label=내가 붙인 이름
 };
@@ -333,10 +333,10 @@ async function processOne(item, opts) {
     } else if (rec.images === 0) {
       rec.status = "no_images";
     } else if (!opts.saveImages) {
-      // 주소만 모으는 방식. 이미지 서버(coupangcdn)는 따로 막혀 있지 않아
-      // 주소만 있으면 나중에 받아서 볼 수 있다. 훨씬 빠르고 디스크도 안 쓴다.
+      // 이미지 파일은 저장하지 않는다. 주소(imageUrls)는 어차피 기록에 남으므로
+      // 나중에 그 주소로 받을 수 있다. 150개 기준 약 2GB와 7분을 아낀다.
       rec.status = "ok";
-      log.push(`주소만 수집 (내려받기 건너뜀): ${rec.images}개`);
+      log.push(`이미지 주소 ${rec.images}개 기록 (파일 저장은 건너뜀)`);
     } else {
       // 폴더 이름은 제목을 받은 뒤에 정한다. 제품명을 쓰려면 제목이 필요하다.
       rec.productId = productId(rec.usedUrl) || rec.productId;
