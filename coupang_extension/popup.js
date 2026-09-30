@@ -38,6 +38,10 @@ async function refresh() {
   if (s.current) lines.push(`지금: ${s.current}`);
   if (parts.length) lines.push(`결과: ${parts.join(" / ")}`);
   if (s.message) lines.push(s.message);
+  if (s.recent && s.recent.length) {
+    lines.push("");
+    for (const x of s.recent) lines.push(`  ${x}`);
+  }
   $("status").textContent = lines.join("\n");
   $("start").disabled = s.running;
   $("stop").disabled = !s.running;
@@ -78,14 +82,10 @@ $("stop").addEventListener("click", async () => {
 });
 
 $("export").addEventListener("click", async () => {
-  const r = await send({ cmd: "export" });
-  if (!r || !r.ok) return;
-  const blob = new Blob([JSON.stringify(r.results, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  chrome.downloads.download({ url, filename: "coupang_usp/수집기록.json", conflictAction: "overwrite" });
-  const n = Object.keys(r.results).length;
-  $("status").textContent = `수집기록.json 을 내려받았습니다 (${n}건).\n` +
-    `다운로드 폴더의 coupang_usp 안에 있습니다. 이 파일을 Claude 에게 보내주세요.`;
+  // 팝업에서 직접 내려받지 않는다. 팝업이 닫히면 임시 주소가 사라져서 저장이
+  // 조용히 실패한다(실제로 그렇게 실패했다). 닫히지 않는 탭에서 처리한다.
+  await chrome.tabs.create({ url: chrome.runtime.getURL("results.html") });
+  $("status").textContent = "결과 페이지를 새 탭에 열었습니다.\n거기서 저장하거나 복사하시면 됩니다.";
 });
 
 $("reset").addEventListener("click", async () => {

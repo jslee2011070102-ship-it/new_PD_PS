@@ -276,6 +276,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           a[r.status] = (a[r.status] || 0) + 1; return a;
         }, {}),
         message: state.message,
+        // 항목별 결과를 몇 줄이라도 보여준다. 숫자만 보고 성공으로 오해하지
+        // 않도록, 이미지 장수와 어디서 긁었는지를 함께 내보낸다.
+        recent: Object.values(state.done).slice(-5).map((r) => {
+          const lab = { ok: "성공", blocked: "차단", no_images: "이미지없음", fail: "실패" };
+          return `${r.id}: ${lab[r.status] || r.status} · 이미지 ${r.images || 0}장` +
+                 (r.fallback ? " · 상세영역 못찾음" : "");
+        }),
       });
       return;
     }
