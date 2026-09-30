@@ -406,6 +406,24 @@ function scoreCandidate(item, cand) {
   return { ...cand, nameScore: Math.round(nameScore * 100) / 100, priceGap, sizeOk, verdict };
 }
 
+// 검색 화면 한 곳을 열어 후보를 읽어 온다.
+async function searchAt(url, log) {
+  let tab = null;
+  try {
+    tab = await chrome.tabs.create({ url, active: false });
+    await waitForLoad(tab.id);
+    await sleep(rand(2000, 3500));
+    const results = await chrome.scripting.executeScript({
+      target: { tabId: tab.id }, files: ["search.js"],
+    });
+    const r = results && results[0] && results[0].result;
+    if (r) log.push(...(r.log || []));
+    return r || null;
+  } finally {
+    if (tab) await chrome.tabs.remove(tab.id).catch(() => {});
+  }
+}
+
 async function searchOne(item, opts) {
   const log = [];
   const rec = {
@@ -414,25 +432,37 @@ async function searchOne(item, opts) {
     matchedName: "", matchedPrice: null, candidates: [], log,
     at: new Date().toISOString(),
   };
-  let tab = null;
   try {
     const q = encodeURIComponent(item.query || item.name);
-    const searchUrl = `https://www.coupang.com/np/search?q=${q}&channel=user`;
     log.push(`검색: ${item.query || item.name}`);
-    tab = await chrome.tabs.create({ url: searchUrl, active: false });
-    await waitForLoad(tab.id);
-    await sleep(rand(2500, 4200));
 
-    const results = await chrome.scripting.executeScript({
-      target: { tabId: tab.id }, files: ["search.js"],
-    });
-    const r = results && results[0] && results[0].result;
+    // PC 검색을 먼저, 안 되면 모바일 검색으로. 모바일 화면이 단순해 더 잘 읽힐 때가 있다.
+    const urls = [
+      `https://www.coupang.com/np/search?q=${q}&channel=user`,
+      `https://m.coupang.com/nm/search?q=${q}`,
+    ];
+    let r = null;
+    for (let i = 0; i < urls.length; i++) {
+      if (i > 0) {
+        log.push(`후보를 못 읽어 다른 검색 화면으로 재시도`);
+        await sleep(rand(2000, 3500));
+      }
+      r = await searchAt(urls[i], log);
+      if (r && r.reason === "blocked") break;              // 차단이면 더 두드리지 않는다
+      if (r && (r.candidates || []).length > 0) break;
+    }
+
     if (!r) throw new Error("검색 화면에서 결과를 받지 못했습니다");
-    log.push(...(r.log || []));
 
     if (r.reason === "blocked") {
       rec.verdict = "차단";
       log.push(`화면 앞부분: ${(r.bodyHead || "").slice(0, 150)}`);
+      return rec;
+    }
+    if (r.reason === "not_rendered") {
+      // '결과가 없다'와 '못 읽었다'는 전혀 다른 문제다. 섞어 놓으면 엉뚱한 곳을 고친다.
+      rec.verdict = "화면못읽음";
+      rec.bodyHead = (r.bodyHead || "").slice(0, 300);
       return rec;
     }
 
@@ -457,8 +487,6 @@ async function searchOne(item, opts) {
   } catch (e) {
     log.push(`오류: ${e.message}`);
     rec.verdict = "실패";
-  } finally {
-    if (tab) await chrome.tabs.remove(tab.id).catch(() => {});
   }
   return rec;
 }
@@ -481,7 +509,7 @@ async function searchLoop(opts) {
     state.searchQueue.shift();
     state.current = null;
 
-    if (rec.verdict === "차단" || rec.verdict === "실패") state.consecutiveFails++;
+    if (["차단", "실패", "화면못읽음"].includes(rec.verdict)) state.consecutiveFails++;
     else state.consecutiveFails = 0;
     await save();
 
