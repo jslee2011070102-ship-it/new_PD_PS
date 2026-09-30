@@ -187,8 +187,10 @@ $("readList").addEventListener("click", async () => {
   }
   $("status").textContent =
     `이 화면에서 상품 ${r.total}개를 읽어\n` +
-    `확실 ${r.found}개 / 애매 ${r.vague}개를 맞췄습니다.\n\n` +
-    `다른 카테고리 순위 페이지로 옮겨서 또 누르시면 됩니다.`;
+    `확실 ${r.found}개 / 애매 ${r.vague}개를 맞췄습니다.\n` +
+    (r.left > 0
+      ? `아직 못 찾은 것 ${r.left}개.\n\n다른 화면으로 옮겨서 또 누르시면 됩니다. 결과는 쌓입니다.`
+      : `\n다 찾았습니다. '결과 내보내기' 로 저장해 주세요.`);
   refresh();
 });
 

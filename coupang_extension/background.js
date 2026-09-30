@@ -564,8 +564,10 @@ async function readCurrentList(items) {
   }
   state.mode = "search";
   await save();
-  log.push(`이 화면에서 확실 ${added}개 / 애매 ${vague}개를 맞췄습니다`);
-  return { ok: true, found: added, vague, total: cands.length, log };
+  const left = items.filter(
+    (it) => !(state.found[it.id] && state.found[it.id].verdict === "확실")).length;
+  log.push(`이 화면에서 확실 ${added}개 / 애매 ${vague}개를 맞췄습니다 (남은 ${left}개)`);
+  return { ok: true, found: added, vague, left, total: cands.length, log };
 }
 
 async function searchLoop(opts) {
