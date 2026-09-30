@@ -10,6 +10,31 @@
  *  - 실패 사유를 기록에 남긴다. '몇 건 실패'만 알면 고칠 수가 없다.
  */
 
+
+// ── 아이콘을 누르면 사이드 패널이 열리게 한다 ──────────────────────
+// 팝업은 다른 곳을 클릭하거나 탭을 옮기면 무조건 닫힌다(크롬 구조상 그렇다).
+// 수집이 몇십 분 걸리는데 진행 상황을 보려면 매번 다시 열어야 했다.
+// 사이드 패널은 탭을 옮겨도 그대로 있다.
+function enableSidePanel() {
+  if (!chrome.sidePanel) return false;
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => {});
+  return true;
+}
+enableSidePanel();
+chrome.runtime.onInstalled.addListener(enableSidePanel);
+chrome.runtime.onStartup && chrome.runtime.onStartup.addListener(enableSidePanel);
+
+// 사이드 패널을 쓸 수 없는 낮은 버전의 크롬이면, 아이콘 클릭 시 탭으로 연다.
+chrome.action.onClicked.addListener((tab) => {
+  if (chrome.sidePanel) {
+    chrome.sidePanel.open({ windowId: tab.windowId }).catch(() => {
+      chrome.tabs.create({ url: chrome.runtime.getURL("panel.html") });
+    });
+  } else {
+    chrome.tabs.create({ url: chrome.runtime.getURL("panel.html") });
+  }
+});
+
 const DEFAULTS = {
   gapMin: 12,      // 상품 사이 최소 대기(초)
   gapMax: 25,      // 상품 사이 최대 대기(초)

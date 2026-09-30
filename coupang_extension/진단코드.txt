@@ -1,0 +1,83 @@
+쿠팡 상세페이지 진단 코드
+=========================
+
+상세 이미지가 페이지 어디에 들어있는지 알아내기 위한 코드입니다.
+제 쪽에서는 쿠팡에 접속할 수 없어서, 이 결과가 있어야 정확히 고칠 수 있습니다.
+
+
+[ 하는 법 ]
+
+1. 크롬에서 그 상품 상세페이지를 엽니다
+2. '더보기'를 눌러 상세를 펼칩니다
+3. 맨 아래까지 한 번 쭉 내렸다가 위로 올립니다  (이미지를 모두 불러오기 위해)
+4. F12 를 누릅니다
+5. 위쪽 탭에서  Console  을 클릭합니다
+6. 아래 코드를 전부 복사해서 붙여넣고 Enter
+7. 결과가 표로 나옵니다. 그 표를 캡처해서 보내주세요
+   (또는 마지막에 자동으로 클립보드에 복사되니 그대로 채팅에 붙여넣으셔도 됩니다)
+
+※ "Warning: Don't paste code..." 같은 경고가 나오면
+   시키는 대로 allow pasting  이라고 입력하고 Enter 친 뒤 다시 붙여넣으세요
+
+
+──────────── 여기서부터 복사 ────────────
+
+(() => {
+  const groups = {};
+  let total = 0, withUrl = 0;
+  document.querySelectorAll('img').forEach(img => {
+    total++;
+    const u = img.currentSrc || img.getAttribute('src') || img.getAttribute('data-src')
+           || img.getAttribute('data-original') || img.getAttribute('data-lazy') || '';
+    if (!u) return;
+    withUrl++;
+    const w = img.naturalWidth || img.width || 0;
+    const h = img.naturalHeight || img.height || 0;
+    let p = img.parentElement, path = [];
+    for (let k = 0; k < 5 && p && p.tagName !== 'BODY'; k++, p = p.parentElement) {
+      const id = p.id ? '#' + p.id : '';
+      const cl = (typeof p.className === 'string' && p.className)
+                 ? '.' + p.className.trim().split(/\s+/).slice(0, 2).join('.') : '';
+      path.push(p.tagName.toLowerCase() + id + cl);
+    }
+    const key = path.reverse().join(' > ').slice(0, 120);
+    groups[key] = groups[key] || { 개수: 0, 큰것: 0, 최대높이: 0, 예시: '' };
+    groups[key].개수++;
+    if (w >= 300 || h >= 300) groups[key].큰것++;
+    if (h > groups[key].최대높이) { groups[key].최대높이 = h; groups[key].예시 = u.slice(0, 90); }
+  });
+  const rows = Object.entries(groups)
+    .map(([k, v]) => ({ 위치: k, ...v }))
+    .sort((a, b) => b.큰것 - a.큰것 || b.개수 - a.개수);
+  console.log('%c=== 이미지 위치 분포 ===', 'font-size:14px;font-weight:bold');
+  console.log('전체 img 태그:', total, '/ 주소 있는 것:', withUrl);
+  console.table(rows.slice(0, 25));
+  const frames = [...document.querySelectorAll('iframe')].map(f => f.src || '(주소없음)');
+  console.log('iframe:', frames.length ? frames : '없음');
+  const detailSel = ['#productDetail', '.product-detail', '.vendor-item', '[class*=productDetail]',
+                     '[class*=product-detail]', '[class*=detail-content]', '[class*=subType-IMAGE]'];
+  console.log('%c=== 상세 영역 후보별 이미지 수 ===', 'font-size:14px;font-weight:bold');
+  console.table(detailSel.map(s => {
+    const els = document.querySelectorAll(s);
+    return { 선택자: s, 요소수: els.length,
+             이미지합: [...els].reduce((n, e) => n + e.querySelectorAll('img').length, 0) };
+  }));
+  const out = JSON.stringify({ total, withUrl, rows: rows.slice(0, 25), frames,
+    detail: detailSel.map(s => ({ s, n: document.querySelectorAll(s).length,
+      imgs: [...document.querySelectorAll(s)].reduce((n, e) => n + e.querySelectorAll('img').length, 0) })),
+    url: location.href, title: document.title }, null, 1);
+  try { copy(out); console.log('%c클립보드에 복사했습니다. 그대로 붙여넣어 주세요.',
+                               'color:green;font-weight:bold'); } catch (e) {}
+  return '완료';
+})()
+
+──────────── 여기까지 복사 ────────────
+
+
+[ 결과에서 제가 보는 것 ]
+
+- '상세 영역 후보별 이미지 수' 표에서 어느 선택자에 이미지가 많이 잡히는지
+- '이미지 위치 분포'에서 큰 이미지(300px 이상)가 어느 경로에 모여 있는지
+- iframe 이 있는지 (있으면 그 안에 상세가 들어있을 수 있음)
+
+이 셋만 보면 어디를 긁어야 하는지 확정됩니다.

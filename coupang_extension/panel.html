@@ -5,7 +5,9 @@
 <style>
   :root { color-scheme: light dark; }
   body {
-    width: 420px; margin: 0; padding: 14px;
+    /* 사이드 패널은 사용자가 폭을 조절하므로 고정 폭을 두지 않는다.
+       팝업과 달리 탭을 옮겨도 닫히지 않는다. */
+    margin: 0; padding: 14px; min-width: 300px;
     font: 13px/1.5 "맑은 고딕", system-ui, sans-serif;
   }
   h1 { font-size: 15px; margin: 0 0 4px; }
@@ -77,6 +79,6 @@
 
   <div id="status">대기 중</div>
 
-  <script src="popup.js"></script>
+  <script src="panel.js"></script>
 </body>
 </html>
