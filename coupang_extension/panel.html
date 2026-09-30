@@ -31,6 +31,21 @@
   }
   .hint { color: #666; font-size: 11px; margin-top: 4px; }
   .warn { color: #a33; }
+  select { font-size: 12px; padding: 3px; }
+  #preview { margin-top: 8px; font-size: 11px; }
+  #preview table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+  #preview th, #preview td {
+    border: 1px solid #ddd; padding: 3px 5px; text-align: left;
+    word-break: break-all;
+  }
+  #preview th { background: #eef1f6; font-weight: 600; }
+  #preview .pid { font-family: ui-monospace, Consolas, monospace; }
+  #preview .okline { color: #1f3864; font-weight: 600; }
+  #preview .bad {
+    margin-top: 5px; padding: 5px 6px; background: #fdecec;
+    border-left: 3px solid #c33; color: #a33; border-radius: 2px;
+  }
+  #preview .mono { font-family: ui-monospace, Consolas, monospace; color: #666; }
 </style>
 </head>
 <body>
@@ -38,16 +53,32 @@
   <div class="sub">상품 주소를 넣으면 상세 이미지를 모아 저장합니다.</div>
 
   <label for="urls">상품 주소 (한 줄에 하나)</label>
-  <textarea id="urls" placeholder="세탁세제-01 https://www.coupang.com/vp/products/...
-세탁세제-02 https://www.coupang.com/vp/products/...
+  <textarea id="urls" placeholder="주소만 한 줄에 하나씩 붙여넣으면 됩니다.
+https://www.coupang.com/vp/products/1234567?...
 
-또는 주소만 붙여넣어도 됩니다 (번호는 자동으로 붙습니다)"></textarea>
-  <div class="hint">앞에 이름을 붙이면 그 이름으로 폴더가 만들어집니다. 없으면 001, 002…</div>
+이름을 붙이고 싶으면 | 로 나눠 주세요.
+세탁세제-01 | https://www.coupang.com/vp/products/1234567"></textarea>
+  <div class="hint">
+    <b>구분자는 <code>|</code></b> 입니다 (쉼표·탭·공백도 됩니다).
+    <code>이름 | 주소</code> 꼴로 넣으면 그 이름이 항목 이름이 됩니다.
+    이름을 안 넣으면 <b>딜번호</b>가 이름이 됩니다.
+  </div>
+
+  <div id="preview"></div>
 
   <div class="row">
     <button id="useTab">지금 보는 탭 주소 넣기</button>
     <button id="clear">비우기</button>
   </div>
+
+  <label for="folderMode">저장 폴더 이름</label>
+  <select id="folderMode">
+    <option value="id" selected>딜번호 (예: 8765432)</option>
+    <option value="id_title">딜번호 + 제품명 (예: 8765432_리큅 세탁세제 3L)</option>
+    <option value="label">내가 붙인 이름 (예: 세탁세제-01)</option>
+  </select>
+  <div class="hint">같은 상품을 다시 돌리면 <b>같은 폴더에 덮어씁니다</b>.
+    딜번호는 상품마다 하나뿐이어서, 순서가 바뀌어도 폴더가 섞이지 않습니다.</div>
 
   <div class="row">
     <span>상품 사이 대기</span>

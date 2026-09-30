@@ -42,7 +42,41 @@ const DEFAULTS = {
   folder: "coupang_usp",
   saveImages: true,  // false 면 주소만 모은다 (훨씬 빠르고 디스크도 안 쓴다)
   tryMobile: true,   // 실패하면 모바일 주소로 한 번 더
+  folderMode: "id",  // 폴더 이름: id=딜번호 / id_title=딜번호_제품명 / label=내가 붙인 이름
 };
+
+// ── 주소에서 딜번호(상품번호)를 뽑는다 ─────────────────────────────
+// 쿠팡 주소는 .../vp/products/8765432?searchId=...&searchRank=0 꼴이다.
+// 앞쪽 숫자가 그 상품을 가리키는 유일한 번호(딜번호)다.
+// 뒤쪽 꼬리표(searchId, clickEventId, searchRank...)는 "어느 검색에서 눌렀나"를
+// 기록하는 것일 뿐, 상품과는 무관하다.
+function productId(url) {
+  try {
+    const m = new URL(url).pathname.match(/\/v[pm]\/products\/(\d+)/);
+    return m ? m[1] : "";
+  } catch (e) { return ""; }
+}
+
+// 주소에서 검색 추적용 꼬리표를 떼어낸다.
+// 이유가 둘이다.
+//  1) 붙여넣다가 주소 끝이 잘려도(줄바꿈 등) 잘린 부분이 꼬리표면 피해가 없다.
+//  2) 같은 상품을 다른 검색에서 두 번 넣어도 같은 주소로 모여 중복이 사라진다.
+// itemId / vendorItemId 는 남긴다. 이 둘은 "어느 옵션"을 뜻해서 상세 내용이 달라진다.
+function cleanUrl(url) {
+  try {
+    const u = new URL(url);
+    const keep = ["itemId", "vendorItemId"];
+    const sp = new URLSearchParams();
+    for (const k of keep) {
+      const v = u.searchParams.get(k);
+      if (v) sp.set(k, v);
+    }
+    const q = sp.toString();
+    u.search = q ? "?" + q : "";
+    u.hash = "";
+    return u.href;
+  } catch (e) { return url; }
+}
 
 // 상품 주소를 모바일 주소 후보로 바꾼다.
 // 확신할 수 없는 부분이라 후보를 여러 개 만들고, 무엇이 통했는지 기록에 남긴다.
@@ -69,6 +103,7 @@ let state = {
   current: null,
   consecutiveFails: 0,
   message: "",
+  notice: "",       // 시작할 때 제외된 주소 안내 (message 와 달리 지워지지 않는다)
 };
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -84,7 +119,39 @@ async function load() {
 load();
 
 function safeName(s) {
-  return String(s).replace(/[\\/:*?"<>|]/g, "_").slice(0, 60);
+  // 윈도우에서 폴더 이름에 못 쓰는 글자를 바꾼다.
+  // 끝에 붙은 점과 공백도 없애야 한다. 윈도우는 "이름." 같은 폴더를 못 만든다.
+  return String(s)
+    .replace(/[\\/:*?"<>|]/g, "_")
+    .replace(/[\u0000-\u001f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/[. ]+$/, "")
+    .slice(0, 60) || "무제";
+}
+
+// 페이지 제목에서 제품명만 남긴다.
+// 쿠팡 제목은 "제품명 - 쿠팡! " 꼴로 끝나고, 앞에 쓸데없는 말머리가 붙기도 한다.
+function titleToName(title) {
+  let t = String(title || "")
+    .replace(/\s*[-|]\s*쿠팡!?\s*$/, "")
+    .replace(/^\s*쿠팡!?\s*[-|]\s*/, "")
+    .trim();
+  // 폴더 이름이 너무 길면 윈도우 경로 길이 제한(260자)에 걸린다. 40자로 줄인다.
+  if (t.length > 40) t = t.slice(0, 40).trim();
+  return safeName(t);
+}
+
+// 이미지를 담을 폴더 이름을 정한다.
+// 기본은 딜번호다. 짧고, 겹치지 않고, 같은 상품을 다시 돌리면 같은 폴더에
+// 덮어써지므로 "001, 002" 처럼 순서가 밀려 엉뚱한 폴더에 섞이는 일이 없다.
+function folderNameFor(item, rec, mode) {
+  const pid = productId(rec.usedUrl || item.url);
+  const name = titleToName(rec.title);
+  if (mode === "label") return safeName(item.label || item.id);
+  if (mode === "id_title" && pid && name) return safeName(pid + "_" + name);
+  if (mode === "id_title" && name) return name;
+  return pid || safeName(item.label || item.id);
 }
 
 function extOf(url) {
@@ -92,11 +159,37 @@ function extOf(url) {
   return m ? m[1].toLowerCase() : "jpg";
 }
 
-async function downloadImages(id, images, folder, log) {
+// 같은 상품을 다시 돌릴 때, 예전 실행이 남긴 파일을 먼저 지운다.
+//
+// 왜 필요한가: 폴더 이름이 딜번호로 고정되니 다시 돌리면 같은 폴더에 덮어쓴다.
+// 그런데 예전에 9장을 받았고 이번에 2장만 받으면 003~009 는 그대로 남는다.
+// 그러면 폴더만 보고는 이번에 몇 장을 받았는지 알 수 없다.
+// 지우는 범위는 "그 폴더 안의 001.jpg 같은 이름"으로 좁혀 둔다.
+async function clearOldFiles(folder, sub, log) {
+  if (!chrome.downloads.removeFile) return;
+  const want = `${folder}/${sub}/`.toLowerCase();
+  let items = [];
+  try {
+    items = await new Promise((res) => chrome.downloads.search({ limit: 0 }, res)) || [];
+  } catch (e) { return; }
+  let n = 0;
+  for (const it of items) {
+    const f = String(it.filename || "").replace(/\\/g, "/").toLowerCase();
+    if (!f.includes(want)) continue;
+    if (!/\/\d{3}\.(jpe?g|png|webp)$/.test(f)) continue;   // 우리가 만든 이름만
+    await new Promise((res) => chrome.downloads.removeFile(it.id, () => {
+      void chrome.runtime.lastError; res();          // 이미 없는 파일이면 그냥 넘어간다
+    }));
+    n++;
+  }
+  if (n) log.push(`예전 실행이 남긴 파일 ${n}개를 지우고 새로 저장합니다`);
+}
+
+async function downloadImages(sub, images, folder, log) {
   let ok = 0;
   for (let i = 0; i < images.length; i++) {
     const url = images[i].url;
-    const filename = `${folder}/${safeName(id)}/${String(i + 1).padStart(3, "0")}.${extOf(url)}`;
+    const filename = `${folder}/${sub}/${String(i + 1).padStart(3, "0")}.${extOf(url)}`;
     try {
       await new Promise((resolve, reject) => {
         chrome.downloads.download({ url, filename, conflictAction: "overwrite" }, (dlId) => {
@@ -183,8 +276,10 @@ async function processOne(item, opts) {
   const log = [];
   const rec = {
     id: item.id, url: item.url, usedUrl: item.url, status: "fail", title: "",
+    productId: productId(item.url), folder: "",
     images: 0, imageUrls: [], savedFiles: 0, log, at: new Date().toISOString(),
   };
+  log.push(`딜번호: ${rec.productId || "(주소에서 찾지 못함)"}`);
   try {
     let r = await visitAndCollect(item.url, log);
     if (r) log.push(...(r.log || []));
@@ -225,7 +320,12 @@ async function processOne(item, opts) {
       rec.status = "ok";
       log.push(`주소만 수집 (내려받기 건너뜀): ${rec.images}개`);
     } else {
-      rec.savedFiles = await downloadImages(item.id, r.images, opts.folder, log);
+      // 폴더 이름은 제목을 받은 뒤에 정한다. 제품명을 쓰려면 제목이 필요하다.
+      rec.productId = productId(rec.usedUrl) || rec.productId;
+      rec.folder = folderNameFor(item, rec, opts.folderMode);
+      log.push(`저장 폴더: ${opts.folder}/${rec.folder}/`);
+      await clearOldFiles(opts.folder, rec.folder, log);
+      rec.savedFiles = await downloadImages(rec.folder, r.images, opts.folder, log);
       rec.status = rec.savedFiles > 0 ? "ok" : "fail";
     }
   } catch (e) {
@@ -277,11 +377,28 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg.cmd === "start") {
       if (state.running) { sendResponse({ ok: false, error: "이미 진행 중입니다." }); return; }
       const opts = { ...DEFAULTS, ...(msg.opts || {}) };
+      // 주소에서 꼬리표를 떼고, 딜번호가 없는 주소는 아예 받지 않는다.
+      // 예전에는 잘린 주소도 조용히 목록에 들어가 "성공"으로 끝났다.
+      // 엉뚱한 페이지를 긁고도 성공으로 보이는 게 가장 위험하다.
+      const bad = [];
+      const items = [];
+      for (const it of (msg.items || [])) {
+        const url = cleanUrl(it.url);
+        const pid = productId(url);
+        if (!pid) { bad.push(it.id); continue; }
+        items.push({ ...it, url, label: it.label || it.id, productId: pid });
+      }
+      if (items.length === 0) {
+        sendResponse({ ok: false, error: "쓸 수 있는 주소가 없습니다. 딜번호(.../vp/products/숫자)가 있는 주소여야 합니다." });
+        return;
+      }
       // 이미 성공한 항목은 건너뛴다 (이어하기)
-      state.queue = (msg.items || []).filter(
+      state.queue = items.filter(
         (it) => !(state.done[it.id] && state.done[it.id].status === "ok"));
+      // runLoop 이 시작할 때 message 를 비우므로 안내는 따로 담아 둔다.
+      state.notice = bad.length ? `딜번호가 없어 제외한 주소 ${bad.length}개: ${bad.join(", ")}` : "";
       await save();
-      sendResponse({ ok: true, queued: state.queue.length });
+      sendResponse({ ok: true, queued: state.queue.length, skipped: bad });
       runLoop(opts);
       return;
     }
@@ -300,12 +417,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         counts: Object.values(state.done).reduce((a, r) => {
           a[r.status] = (a[r.status] || 0) + 1; return a;
         }, {}),
-        message: state.message,
+        message: [state.notice, state.message].filter(Boolean).join("\n"),
         // 항목별 결과를 몇 줄이라도 보여준다. 숫자만 보고 성공으로 오해하지
         // 않도록, 이미지 장수와 어디서 긁었는지를 함께 내보낸다.
         recent: Object.values(state.done).slice(-5).map((r) => {
           const lab = { ok: "성공", blocked: "차단", no_images: "이미지없음", fail: "실패" };
           return `${r.id}: ${lab[r.status] || r.status} · 이미지 ${r.images || 0}장` +
+                 (r.folder ? ` · ${r.folder}/` : "") +
                  (r.fallback ? " · 상세영역 못찾음" : "");
         }),
       });
@@ -316,7 +434,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return;
     }
     if (msg.cmd === "reset") {
-      state.done = {}; state.queue = []; state.message = "";
+      state.done = {}; state.queue = []; state.message = ""; state.notice = "";
       await save();
       sendResponse({ ok: true });
       return;
