@@ -46,12 +46,49 @@
     border-left: 3px solid #c33; color: #a33; border-radius: 2px;
   }
   #preview .mono { font-family: ui-monospace, Consolas, monospace; color: #666; }
+  .tabs { display: flex; gap: 4px; margin: 0 0 10px; border-bottom: 2px solid #ddd; }
+  .tabs button {
+    border: none; border-bottom: 2px solid transparent; background: none;
+    padding: 7px 10px; font-size: 13px; border-radius: 0; margin-bottom: -2px;
+  }
+  .tabs button.on { border-bottom-color: #1f3864; color: #1f3864; font-weight: 700; }
+  .pane { display: none; }
+  .pane.on { display: block; }
+  .note {
+    background: #f4f7fd; border-left: 3px solid #1f3864; padding: 7px 9px;
+    border-radius: 3px; font-size: 11.5px; margin: 8px 0; color: #333;
+  }
 </style>
 </head>
 <body>
   <h1>쿠팡 상세페이지 이미지 수집기</h1>
   <div class="sub">상품 주소를 넣으면 상세 이미지를 모아 저장합니다.</div>
 
+  <div class="tabs">
+    <button id="tabSearch" data-pane="paneSearch">① 주소 찾기</button>
+    <button id="tabCollect" class="on" data-pane="paneCollect">② 이미지 수집</button>
+  </div>
+
+  <div id="paneSearch" class="pane">
+    <div class="note">
+      <b>제품명으로 쿠팡 주소를 찾습니다.</b><br>
+      <code>검색목록.json</code> 을 열어 전부 복사해 아래에 붙여넣으세요.<br>
+      검색 1등을 그냥 쓰지 않습니다. <b>이름과 가격이 맞는지 따져</b>
+      확실 / 애매 / 못찾음 으로 나눕니다.
+    </div>
+    <label for="jobs">검색 목록 (검색목록.json 내용)</label>
+    <textarea id="jobs" placeholder='[{"id":"세탁세제-01","name":"피지 모락셀라 냄새제거 세탁세제 코튼향","price":14650,"size":"2.1L"}, ...]'></textarea>
+    <div id="jobsInfo" class="hint"></div>
+    <div class="row">
+      <button id="startSearch" class="primary">주소 찾기 시작</button>
+      <button id="stopSearch">중단</button>
+      <button id="resetSearch">검색기록 초기화</button>
+    </div>
+    <div class="hint">상품 사이 대기는 아래 ②의 설정을 함께 씁니다.
+      154개면 <b>30분~1시간</b> 걸립니다. 켜 두고 다른 일 하셔도 됩니다.</div>
+  </div>
+
+  <div id="paneCollect" class="pane on">
   <label for="urls">상품 주소 (한 줄에 하나)</label>
   <textarea id="urls" placeholder="주소만 한 줄에 하나씩 붙여넣으면 됩니다.
 https://www.coupang.com/vp/products/1234567?...
@@ -79,6 +116,8 @@ https://www.coupang.com/vp/products/1234567?...
   </select>
   <div class="hint">같은 상품을 다시 돌리면 <b>같은 폴더에 덮어씁니다</b>.
     딜번호는 상품마다 하나뿐이어서, 순서가 바뀌어도 폴더가 섞이지 않습니다.</div>
+
+  </div>
 
   <div class="row">
     <span>상품 사이 대기</span>

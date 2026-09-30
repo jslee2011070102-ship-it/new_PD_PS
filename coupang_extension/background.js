@@ -107,6 +107,9 @@ let state = {
   consecutiveFails: 0,
   message: "",
   notice: "",       // 시작할 때 제외된 주소 안내 (message 와 달리 지워지지 않는다)
+  mode: "collect",  // collect = 이미지 수집 / search = 주소 찾기
+  searchQueue: [],
+  found: {},        // id -> 검색 결과
 };
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -352,6 +355,152 @@ async function processOne(item, opts) {
   return rec;
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   주소 찾기 (제품명 → 쿠팡 주소)
+   ══════════════════════════════════════════════════════════════════
+   URL 취합이 병목이라 만든 기능이다. 제품명으로 검색해 후보를 읽고,
+   이름과 가격으로 맞는지 따진다.
+
+   여기서 가장 조심한 것: **검색 1등을 그냥 집지 않는다.**
+   같은 이름의 다른 용량일 수도, 광고일 수도 있다. 잘못 집으면 엉뚱한 제품의
+   상세를 긁어 놓고도 맞다고 믿게 된다. 그게 제일 위험하다.
+   그래서 확실 / 애매 / 못찾음 으로 나누고, 후보는 전부 기록에 남긴다.
+   애매한 건 사람이 보거나, 기록을 넘겨 다시 판정하면 된다.
+*/
+
+// 이름을 낱말로 쪼갠다. 기호와 한 글자는 버린다.
+function tokens(s) {
+  return String(s || "").toLowerCase()
+    .replace(/[^가-힣a-z0-9]+/g, " ")
+    .split(/\s+/).filter((t) => t.length >= 2);
+}
+
+function scoreCandidate(item, cand) {
+  const want = tokens(item.name);
+  const got = new Set(tokens(cand.name));
+  let hit = 0;
+  for (const t of new Set(want)) if (got.has(t)) hit++;
+  const nameScore = want.length ? hit / new Set(want).size : 0;
+
+  // 가격은 가장 믿을 만한 증거다. 이름은 비슷해도 용량이 다르면 값이 다르다.
+  // 다만 조사 시점과 오늘 사이에 값이 바뀌었을 수 있어 여유를 둔다.
+  let priceGap = null;
+  const all = (cand.pricesSeen && cand.pricesSeen.length) ? cand.pricesSeen
+            : (cand.price ? [cand.price] : []);
+  if (item.price && all.length) {
+    priceGap = Math.min(...all.map((p) => Math.abs(p - item.price) / item.price));
+  }
+
+  // 용량 표기가 이름에 들어 있으면 확인에 쓴다 ("2.1L", "100개입")
+  let sizeOk = null;
+  if (item.size) {
+    const key = String(item.size).toLowerCase().replace(/\s/g, "");
+    sizeOk = String(cand.name).toLowerCase().replace(/\s/g, "").includes(key);
+  }
+
+  let verdict = "못찾음";
+  if (nameScore >= 0.6 && priceGap !== null && priceGap <= 0.03) verdict = "확실";
+  else if (nameScore >= 0.85 && (priceGap === null || priceGap <= 0.15)) verdict = "확실";
+  else if (nameScore >= 0.5 || (priceGap !== null && priceGap <= 0.05)) verdict = "애매";
+
+  return { ...cand, nameScore: Math.round(nameScore * 100) / 100, priceGap, sizeOk, verdict };
+}
+
+async function searchOne(item, opts) {
+  const log = [];
+  const rec = {
+    id: item.id, cat: item.cat, name: item.name, wantPrice: item.price || null,
+    wantSize: item.size || "", verdict: "못찾음", pid: "", url: "",
+    matchedName: "", matchedPrice: null, candidates: [], log,
+    at: new Date().toISOString(),
+  };
+  let tab = null;
+  try {
+    const q = encodeURIComponent(item.query || item.name);
+    const searchUrl = `https://www.coupang.com/np/search?q=${q}&channel=user`;
+    log.push(`검색: ${item.query || item.name}`);
+    tab = await chrome.tabs.create({ url: searchUrl, active: false });
+    await waitForLoad(tab.id);
+    await sleep(rand(2500, 4200));
+
+    const results = await chrome.scripting.executeScript({
+      target: { tabId: tab.id }, files: ["search.js"],
+    });
+    const r = results && results[0] && results[0].result;
+    if (!r) throw new Error("검색 화면에서 결과를 받지 못했습니다");
+    log.push(...(r.log || []));
+
+    if (r.reason === "blocked") {
+      rec.verdict = "차단";
+      log.push(`화면 앞부분: ${(r.bodyHead || "").slice(0, 150)}`);
+      return rec;
+    }
+
+    const scored = (r.candidates || []).map((c) => scoreCandidate(item, c));
+    rec.candidates = scored.slice(0, 5);
+    const order = { "확실": 0, "애매": 1, "못찾음": 2 };
+    const best = [...scored].sort((a, b) =>
+      (order[a.verdict] - order[b.verdict]) || (b.nameScore - a.nameScore))[0];
+
+    if (best && best.verdict !== "못찾음") {
+      rec.verdict = best.verdict;
+      rec.pid = best.pid;
+      rec.url = best.url;
+      rec.matchedName = best.name;
+      rec.matchedPrice = best.price;
+      log.push(`${best.verdict}: ${best.pid} · ${best.name.slice(0, 40)} · ` +
+               `이름일치 ${Math.round(best.nameScore * 100)}% · ` +
+               `가격차 ${best.priceGap === null ? "?" : Math.round(best.priceGap * 100) + "%"}`);
+    } else {
+      log.push(`후보 ${scored.length}개 모두 기준 미달`);
+    }
+  } catch (e) {
+    log.push(`오류: ${e.message}`);
+    rec.verdict = "실패";
+  } finally {
+    if (tab) await chrome.tabs.remove(tab.id).catch(() => {});
+  }
+  return rec;
+}
+
+async function searchLoop(opts) {
+  state.running = true;
+  state.stopRequested = false;
+  state.consecutiveFails = 0;
+  state.message = "";
+  state.mode = "search";
+  await save();
+
+  while (state.searchQueue.length > 0 && !state.stopRequested) {
+    const item = state.searchQueue[0];
+    state.current = item.id;
+    await save();
+
+    const rec = await searchOne(item, opts);
+    state.found[item.id] = rec;
+    state.searchQueue.shift();
+    state.current = null;
+
+    if (rec.verdict === "차단" || rec.verdict === "실패") state.consecutiveFails++;
+    else state.consecutiveFails = 0;
+    await save();
+
+    if (state.consecutiveFails >= opts.stopAfterFails) {
+      state.message = `연속 ${state.consecutiveFails}회 실패해 중단했습니다.`;
+      break;
+    }
+    if (state.searchQueue.length > 0 && !state.stopRequested) {
+      await sleep(rand(opts.gapMin * 1000, opts.gapMax * 1000));
+    }
+  }
+
+  state.running = false;
+  state.current = null;
+  if (state.stopRequested) state.message = "사용자가 중단했습니다.";
+  else if (!state.message && state.searchQueue.length === 0) state.message = "검색이 모두 끝났습니다.";
+  await save();
+}
+
 async function runLoop(opts) {
   state.running = true;
   state.stopRequested = false;
@@ -420,6 +569,24 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       runLoop(opts);
       return;
     }
+    if (msg.cmd === "startSearch") {
+      if (state.running) { sendResponse({ ok: false, error: "이미 진행 중입니다." }); return; }
+      const opts = { ...DEFAULTS, ...(msg.opts || {}) };
+      const items = (msg.items || []).filter((it) => it && it.id && (it.query || it.name));
+      if (!items.length) {
+        sendResponse({ ok: false, error: "검색할 목록이 비어 있습니다." });
+        return;
+      }
+      // 이미 '확실'로 찾은 것은 다시 하지 않는다 (이어하기).
+      // '애매'는 다시 해 본다 — 검색 결과가 그때그때 달라 다음엔 맞을 수 있다.
+      state.searchQueue = items.filter(
+        (it) => !(state.found[it.id] && state.found[it.id].verdict === "확실"));
+      state.notice = "";
+      await save();
+      sendResponse({ ok: true, queued: state.searchQueue.length, total: items.length });
+      searchLoop(opts);
+      return;
+    }
     if (msg.cmd === "stop") {
       state.stopRequested = true;
       await save();
@@ -427,8 +594,25 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return;
     }
     if (msg.cmd === "status") {
+      if (state.mode === "search") {
+        sendResponse({
+          ok: true, mode: "search",
+          running: state.running,
+          remaining: state.searchQueue.length,
+          current: state.current,
+          counts: Object.values(state.found).reduce((a, r) => {
+            a[r.verdict] = (a[r.verdict] || 0) + 1; return a;
+          }, {}),
+          message: [state.notice, state.message].filter(Boolean).join("\n"),
+          recent: Object.values(state.found).slice(-5).map((r) =>
+            `${r.id}: ${r.verdict}` +
+            (r.pid ? ` · ${r.pid}` : "") +
+            (r.matchedName ? ` · ${r.matchedName.slice(0, 26)}` : "")),
+        });
+        return;
+      }
       sendResponse({
-        ok: true,
+        ok: true, mode: "collect",
         running: state.running,
         remaining: state.queue.length,
         current: state.current,
@@ -449,7 +633,18 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return;
     }
     if (msg.cmd === "export") {
-      sendResponse({ ok: true, results: state.done });
+      sendResponse({ ok: true, results: state.done, found: state.found });
+      return;
+    }
+    if (msg.cmd === "setMode") {
+      if (!state.running) { state.mode = msg.mode === "search" ? "search" : "collect"; await save(); }
+      sendResponse({ ok: true, mode: state.mode });
+      return;
+    }
+    if (msg.cmd === "resetSearch") {
+      state.found = {}; state.searchQueue = []; state.message = ""; state.notice = "";
+      await save();
+      sendResponse({ ok: true });
       return;
     }
     if (msg.cmd === "reset") {

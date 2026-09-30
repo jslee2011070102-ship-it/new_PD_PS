@@ -12,6 +12,7 @@
 
 const $ = (id) => document.getElementById(id);
 let RESULTS = {};
+let FOUND = {};
 
 const LABEL = { ok: "성공", blocked: "차단", no_images: "이미지없음", fail: "실패" };
 
@@ -23,7 +24,37 @@ function esc(s) {
   return String(s == null ? "" : s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
 }
 
+function renderFound() {
+  const ids = Object.keys(FOUND);
+  if (!ids.length) { $("foundWrap").innerHTML = ""; $("foundSummary").textContent = ""; return; }
+  const c = {};
+  for (const r of Object.values(FOUND)) c[r.verdict] = (c[r.verdict] || 0) + 1;
+  $("foundSummary").textContent =
+    `주소 찾기 ${ids.length}건 · ` + Object.entries(c).map(([k, v]) => `${k} ${v}`).join(" / ");
+
+  const rows = ids.map((id) => {
+    const r = FOUND[id];
+    const cls = r.verdict === "확실" ? "ok" : r.verdict === "애매" ? "warn" : "bad";
+    const gap = r.candidates && r.candidates[0] && r.candidates[0].priceGap !== null
+      ? Math.round(r.candidates[0].priceGap * 100) + "%" : "-";
+    return `<tr class="${cls}">
+      <td>${esc(id)}</td>
+      <td><b>${esc(r.verdict)}</b></td>
+      <td>${esc(r.pid || "-")}</td>
+      <td>${esc((r.name || "").slice(0, 34))}</td>
+      <td>${esc((r.matchedName || "").slice(0, 34))}</td>
+      <td class="num">${r.wantPrice ? r.wantPrice.toLocaleString() : "-"}</td>
+      <td class="num">${r.matchedPrice ? r.matchedPrice.toLocaleString() : "-"}</td>
+      <td class="num">${gap}</td>
+    </tr>`;
+  }).join("");
+  $("foundWrap").innerHTML = `<table>
+    <tr><th>항목</th><th>판정</th><th>딜번호</th><th>찾던 제품</th><th>찾은 제품</th>
+        <th>기대가</th><th>실제가</th><th>가격차</th></tr>${rows}</table>`;
+}
+
 function render() {
+  renderFound();
   const ids = Object.keys(RESULTS);
   const counts = {};
   let imgTotal = 0;
@@ -37,8 +68,10 @@ function render() {
     : "아직 수집한 것이 없습니다.";
 
   if (!ids.length) {
-    $("tableWrap").innerHTML = '<div class="empty">수집을 먼저 실행해 주세요.</div>';
-    $("json").value = "";
+    $("tableWrap").innerHTML = Object.keys(FOUND).length
+      ? '<div class="empty">이미지 수집은 아직 하지 않았습니다.</div>'
+      : '<div class="empty">수집을 먼저 실행해 주세요.</div>';
+    $("json").value = Object.keys(FOUND).length ? JSON.stringify(FOUND, null, 2) : "";
     return;
   }
 
@@ -70,6 +103,7 @@ function render() {
 async function load() {
   const r = await send({ cmd: "export" });
   RESULTS = (r && r.ok && r.results) || {};
+  FOUND = (r && r.ok && r.found) || {};
   render();
 }
 
@@ -85,6 +119,17 @@ $("save").addEventListener("click", () => {
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 60000);
   $("summary").textContent += "  —  저장했습니다 (다운로드 폴더)";
+});
+
+$("saveFound").addEventListener("click", () => {
+  if (!Object.keys(FOUND).length) { $("foundSummary").textContent = "찾은 주소가 없습니다."; return; }
+  const blob = new Blob([JSON.stringify(FOUND, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "검색결과.json";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+  $("foundSummary").textContent += "  —  저장했습니다 (다운로드 폴더)";
 });
 
 $("copy").addEventListener("click", async () => {

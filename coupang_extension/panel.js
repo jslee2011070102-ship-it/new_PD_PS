@@ -132,14 +132,84 @@ function send(msg) {
   return new Promise((resolve) => chrome.runtime.sendMessage(msg, resolve));
 }
 
+/* ── ① 주소 찾기 ────────────────────────────────────────────────
+ * 검색목록.json 을 붙여넣으면 제품명으로 쿠팡을 검색해 주소를 찾는다.
+ * 여기서는 목록을 읽어 넘기기만 하고, 맞는지 따지는 일은 background 가 한다.
+ */
+function parseJobs(text) {
+  const t = String(text || "").trim();
+  if (!t) return { items: [], error: "" };
+  let data;
+  try { data = JSON.parse(t); }
+  catch (e) { return { items: [], error: "JSON 을 읽지 못했습니다. 파일 내용을 통째로 붙여넣었는지 확인해 주세요." }; }
+  if (!Array.isArray(data)) return { items: [], error: "목록(대괄호 [ ] 로 시작하는 형태)이어야 합니다." };
+  const items = data.filter((x) => x && x.id && (x.query || x.name));
+  if (items.length === 0) return { items: [], error: "id 와 제품명이 있는 항목이 없습니다." };
+  return { items, error: "" };
+}
+
+function jobsInfo() {
+  const { items, error } = parseJobs($("jobs").value);
+  if (error) { $("jobsInfo").innerHTML = `<span class="warn">${error}</span>`; return items; }
+  if (!items.length) { $("jobsInfo").textContent = ""; return items; }
+  const cats = {};
+  for (const x of items) cats[x.cat || "-"] = (cats[x.cat || "-"] || 0) + 1;
+  const withPrice = items.filter((x) => x.price).length;
+  $("jobsInfo").textContent =
+    `${items.length}개 읽음 (${Object.entries(cats).map(([k, v]) => `${k} ${v}`).join(", ")})` +
+    `\n가격이 있어 대조 가능한 것 ${withPrice}개`;
+  return items;
+}
+
+function showPane(id) {
+  for (const b of document.querySelectorAll(".tabs button")) {
+    b.classList.toggle("on", b.dataset.pane === id);
+  }
+  for (const d of document.querySelectorAll(".pane")) {
+    d.classList.toggle("on", d.id === id);
+  }
+  send({ cmd: "setMode", mode: id === "paneSearch" ? "search" : "collect" }).then(refresh);
+}
+for (const b of document.querySelectorAll(".tabs button")) {
+  b.addEventListener("click", () => showPane(b.dataset.pane));
+}
+$("jobs").addEventListener("input", jobsInfo);
+
+$("startSearch").addEventListener("click", async () => {
+  const items = jobsInfo();
+  if (!items.length) return;
+  const gapMin = Math.max(5, parseInt($("gapMin").value, 10) || 12);
+  const gapMax = Math.max(gapMin, parseInt($("gapMax").value, 10) || 25);
+  const r = await send({ cmd: "startSearch", items, opts: { gapMin, gapMax } });
+  if (!r || !r.ok) { $("status").textContent = r ? r.error : "시작하지 못했습니다."; return; }
+  const skipped = r.total - r.queued;
+  $("status").textContent = `${r.queued}개를 검색합니다.` +
+    (skipped > 0 ? ` (이미 확실하게 찾은 ${skipped}개는 건너뜁니다)` : "") +
+    `\n패널을 닫아도 계속 진행됩니다.`;
+  refresh();
+});
+
+$("stopSearch").addEventListener("click", async () => {
+  await send({ cmd: "stop" });
+  $("status").textContent = "중단 요청을 보냈습니다. 진행 중인 한 건을 마치고 멈춥니다.";
+});
+
+$("resetSearch").addEventListener("click", async () => {
+  if (!confirm("지금까지 찾은 주소 기록을 지웁니다. 계속할까요?")) return;
+  await send({ cmd: "resetSearch" });
+  refresh();
+});
+
 async function refresh() {
   const s = await send({ cmd: "status" });
   if (!s || !s.ok) { $("status").textContent = "상태를 읽지 못했습니다."; return; }
   const c = s.counts || {};
   const label = { ok: "성공", blocked: "차단", no_images: "이미지없음", fail: "실패" };
   const parts = Object.entries(c).map(([k, v]) => `${label[k] || k} ${v}`);
+  const what = s.mode === "search" ? "주소 찾기" : "이미지 수집";
   const lines = [];
-  lines.push(s.running ? `진행 중 — 남은 ${s.remaining}개` : `대기 중 — 남은 ${s.remaining}개`);
+  lines.push(s.running ? `${what} 진행 중 — 남은 ${s.remaining}개`
+                       : `${what} 대기 중 — 남은 ${s.remaining}개`);
   if (s.current) lines.push(`지금: ${s.current}`);
   if (parts.length) lines.push(`결과: ${parts.join(" / ")}`);
   if (s.message) lines.push(s.message);
@@ -150,6 +220,8 @@ async function refresh() {
   $("status").textContent = lines.join("\n");
   $("start").disabled = s.running;
   $("stop").disabled = !s.running;
+  $("startSearch").disabled = s.running;
+  $("stopSearch").disabled = !s.running;
 }
 
 $("useTab").addEventListener("click", async () => {
@@ -216,5 +288,6 @@ $("reset").addEventListener("click", async () => {
 });
 
 preview();
+jobsInfo();
 refresh();
 setInterval(refresh, 2000);
