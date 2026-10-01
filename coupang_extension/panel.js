@@ -141,10 +141,10 @@ function parseJobs(text) {
   if (!t) return { items: [], error: "" };
   let data;
   try { data = JSON.parse(t); }
-  catch (e) { return { items: [], error: "JSON 을 읽지 못했습니다. 파일 내용을 통째로 붙여넣었는지 확인해 주세요." }; }
+  catch (e) { return { items: [], error: "이 파일은 검색목록.json 이 아닌 것 같습니다. 받으신 파일을 그대로 골라 주세요." }; }
   if (!Array.isArray(data)) return { items: [], error: "목록(대괄호 [ ] 로 시작하는 형태)이어야 합니다." };
   const items = data.filter((x) => x && x.id && (x.query || x.name));
-  if (items.length === 0) return { items: [], error: "id 와 제품명이 있는 항목이 없습니다." };
+  if (items.length === 0) return { items: [], error: "읽을 항목이 없습니다. 검색목록.json 이 맞는지 확인해 주세요." };
   return { items, error: "" };
 }
 
@@ -229,6 +229,41 @@ for (const b of document.querySelectorAll(".tabs button")) {
   b.addEventListener("click", () => showPane(b.dataset.pane));
 }
 $("jobs").addEventListener("input", jobsInfo);
+
+/* 파일을 그대로 고르게 한다.
+ *
+ * 전에는 "검색목록.json 내용을 복사해서 붙여넣으세요"였다. 그래서
+ * "파일을 어디에 붙여넣으라는 거냐"는 질문이 나왔다. 당연한 질문이다 —
+ * 파일을 받았는데 메모장으로 열어 전체 선택해 복사하라는 건 번거롭고,
+ * 폴더에 넣는 것으로 오해하기도 쉽다.
+ * 파일을 받았으면 파일로 고르게 하는 게 맞다. 붙여넣기는 남겨 두되 뒤로 뺀다.
+ */
+$("pickFile").addEventListener("click", () => $("jobsFile").click());
+
+$("jobsFile").addEventListener("change", async (e) => {
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  try {
+    const text = await f.text();
+    $("jobs").value = text;
+    const items = jobsInfo();
+    if (items.length) {
+      $("status").textContent =
+        `${f.name} 에서 ${items.length}개를 읽었습니다.\n` +
+        `아래 표의 '복사' 를 눌러 쿠팡 검색창에 붙여넣으세요.`;
+    }
+  } catch (err) {
+    $("jobsInfo").innerHTML = `<span class="warn">파일을 읽지 못했습니다: ${esc(err.message)}</span>`;
+  }
+  e.target.value = "";   // 같은 파일을 다시 골라도 동작하도록
+});
+
+$("toggleBox").addEventListener("click", () => {
+  const w = $("boxWrap");
+  const on = w.style.display === "none";
+  w.style.display = on ? "" : "none";
+  $("toggleBox").textContent = on ? "입력칸 숨기기" : "직접 붙여넣기";
+});
 
 $("readList").addEventListener("click", async () => {
   const items = jobsInfo();

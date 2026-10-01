@@ -86,8 +86,19 @@
       검색 1등을 그냥 쓰지 않습니다. <b>이름과 가격이 맞는지 따져</b>
       확실 / 애매 / 못찾음 으로 나눕니다.
     </div>
-    <label for="jobs">검색 목록 (검색목록.json 내용)</label>
-    <textarea id="jobs" placeholder='[{"id":"세탁세제-01","name":"피지 모락셀라 냄새제거 세탁세제 코튼향","price":14650,"size":"2.1L"}, ...]'></textarea>
+    <label>검색 목록 불러오기</label>
+    <div class="row" style="margin-top:0">
+      <button id="pickFile" class="primary">📂 검색목록.json 파일 선택</button>
+      <button id="toggleBox" style="font-size:12px">직접 붙여넣기</button>
+    </div>
+    <input type="file" id="jobsFile" accept=".json,application/json" style="display:none">
+    <div class="hint">받으신 <code>검색목록.json</code> 파일을 그대로 고르시면 됩니다.
+      <b>폴더 어디에 넣을 필요 없습니다.</b> 다운로드 폴더에 있는 그대로 고르세요.</div>
+
+    <div id="boxWrap" style="display:none">
+      <label for="jobs">또는 내용을 직접 붙여넣기</label>
+      <textarea id="jobs" placeholder='[{"id":"세탁세제-01","name":"...","price":14650}, ...]'></textarea>
+    </div>
     <div id="jobsInfo" class="hint"></div>
     <div class="note" style="background:#eef7ee;border-left-color:#2e7d32">
       <b>쿠팡 검색창에 아래 말을 치시면 됩니다.</b> 제품명이 아니라
