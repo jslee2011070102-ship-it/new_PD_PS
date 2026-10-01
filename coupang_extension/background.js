@@ -716,6 +716,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             a[r.verdict] = (a[r.verdict] || 0) + 1; return a;
           }, {}),
           message: [state.notice, state.message].filter(Boolean).join("\n"),
+          doneIds: Object.values(state.found)
+            .filter((r) => r.verdict === "확실").map((r) => r.id),
           recent: Object.values(state.found).slice(-5).map((r) =>
             `${r.id}: ${r.verdict}` +
             (r.pid ? ` · ${r.pid}` : "") +

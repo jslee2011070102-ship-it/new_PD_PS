@@ -48,6 +48,10 @@ def build(xlsx_path, out_path):
             continue
 
         rank = r[col["순위"]]
+        # 순위_원문 = "액체세제 구매 1위" -> "액체세제"
+        # 이게 쿠팡에서 그 제품이 속한 목록 이름이다. 검색창에 칠 말로 그대로 쓴다.
+        raw_rank = str(r[col["순위_원문"]] or "")
+        list_name = re.sub(r"\s*구매\s*\d+\s*위\s*$", "", raw_rank).strip()
         name = (r[col["제품명"]] or "").strip()
         brand = (r[col["브랜드명"]] or "").strip()
         size = (r[col["용량_원문"]] or "").strip()
@@ -65,6 +69,8 @@ def build(xlsx_path, out_path):
             "price": int(price) if price else None,
             "size": size,
             "count": cnt,
+            # 이 제품이 쿠팡의 어느 목록에서 나왔는지. 확장이 "이걸 검색하세요"로 띄운다.
+            "listName": list_name or cat,
         })
 
     Path(out_path).write_text(

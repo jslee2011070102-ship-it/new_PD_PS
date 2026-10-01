@@ -148,17 +148,72 @@ function parseJobs(text) {
   return { items, error: "" };
 }
 
+let DONE_IDS = new Set();   // 이미 '확실'로 찾은 항목
+
 function jobsInfo() {
   const { items, error } = parseJobs($("jobs").value);
-  if (error) { $("jobsInfo").innerHTML = `<span class="warn">${error}</span>`; return items; }
-  if (!items.length) { $("jobsInfo").textContent = ""; return items; }
-  const cats = {};
-  for (const x of items) cats[x.cat || "-"] = (cats[x.cat || "-"] || 0) + 1;
+  if (error) { $("jobsInfo").innerHTML = `<span class="warn">${error}</span>`; $("todo").innerHTML = ""; return items; }
+  if (!items.length) { $("jobsInfo").textContent = ""; $("todo").innerHTML = ""; return items; }
   const withPrice = items.filter((x) => x.price).length;
   $("jobsInfo").textContent =
-    `${items.length}개 읽음 (${Object.entries(cats).map(([k, v]) => `${k} ${v}`).join(", ")})` +
-    `\n가격이 있어 대조 가능한 것 ${withPrice}개`;
+    `${items.length}개 읽음 · 가격이 있어 대조 가능한 것 ${withPrice}개`;
+  renderTodo(items);
   return items;
+}
+
+/* 무엇을 검색해야 하는지 그대로 보여 준다.
+ *
+ * 이게 왜 필요한가: 전에는 "제품이 보이는 화면을 여세요"라고만 했다.
+ * 사용자는 JSON 덩어리를 붙여넣은 상태라 무엇을 쳐야 하는지 알 길이 없었다.
+ * ("화면에 뭘 검색하라는건지 모르겠음")
+ * 할 일을 아는 쪽이 할 일을 말해 줘야 한다. 목록에 그 답이 이미 들어 있다.
+ */
+function renderTodo(items) {
+  const g = {};
+  for (const it of items) {
+    const term = it.listName || it.cat || "-";
+    (g[term] = g[term] || { left: [], done: 0 });
+    if (DONE_IDS.has(it.id)) g[term].done++;
+    else g[term].left.push(it.name || it.id);
+  }
+  const terms = Object.entries(g).sort((a, b) => b[1].left.length - a[1].left.length);
+  const rows = terms.map(([term, v], i) => {
+    if (v.left.length === 0) {
+      return `<tr><td class="done">✔</td><td class="term">${esc(term)}</td>
+        <td class="done" colspan="2">${v.done}개 다 찾음</td></tr>`;
+    }
+    return `<tr>
+      <td>${i + 1}</td>
+      <td class="term">${esc(term)}</td>
+      <td>남은 ${v.left.length}개${v.done ? ` (찾음 ${v.done})` : ""}</td>
+      <td><button class="copyTerm" data-term="${esc(term)}">복사</button>
+          <button class="showNames" data-term="${esc(term)}">제품보기</button></td>
+    </tr><tr class="namesRow" data-term="${esc(term)}" style="display:none">
+      <td colspan="4"><div class="names">${v.left.map(esc).join("<br>")}</div></td>
+    </tr>`;
+  }).join("");
+
+  const leftTotal = items.filter((x) => !DONE_IDS.has(x.id)).length;
+  $("todo").innerHTML =
+    `<div style="margin:4px 0 2px"><b>아직 못 찾은 것 ${leftTotal}개</b></div>
+     <table><tr><th></th><th>검색창에 칠 말</th><th>상태</th><th></th></tr>${rows}</table>`;
+
+  for (const b of document.querySelectorAll(".copyTerm")) {
+    b.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(b.dataset.term); b.textContent = "복사됨"; }
+      catch (e) { b.textContent = "복사실패"; }
+      setTimeout(() => { b.textContent = "복사"; }, 1500);
+    });
+  }
+  for (const b of document.querySelectorAll(".showNames")) {
+    b.addEventListener("click", () => {
+      const row = document.querySelector(`.namesRow[data-term="${b.dataset.term}"]`);
+      if (!row) return;
+      const on = row.style.display === "none";
+      row.style.display = on ? "" : "none";
+      b.textContent = on ? "접기" : "제품보기";
+    });
+  }
 }
 
 function showPane(id) {
@@ -241,6 +296,10 @@ async function refresh() {
   $("stop").disabled = !s.running;
   $("startSearch").disabled = s.running;
   $("stopSearch").disabled = !s.running;
+  if (s.doneIds) {
+    const next = new Set(s.doneIds);
+    if (next.size !== DONE_IDS.size) { DONE_IDS = next; jobsInfo(); }
+  }
 }
 
 $("useTab").addEventListener("click", async () => {
