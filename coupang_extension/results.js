@@ -35,8 +35,9 @@ function renderFound() {
   const rows = ids.map((id) => {
     const r = FOUND[id];
     const cls = r.verdict === "확실" ? "ok" : r.verdict === "애매" ? "warn" : "bad";
-    const gap = r.candidates && r.candidates[0] && r.candidates[0].priceGap !== null
-      ? Math.round(r.candidates[0].priceGap * 100) + "%" : "-";
+    const c0 = (r.candidates && r.candidates[0]) || {};
+    const gap = c0.priceGap !== null && c0.priceGap !== undefined
+      ? Math.round(c0.priceGap * 100) + "%" : "-";
     return `<tr class="${cls}">
       <td>${esc(id)}</td>
       <td><b>${esc(r.verdict)}</b></td>
@@ -46,11 +47,12 @@ function renderFound() {
       <td class="num">${r.wantPrice ? r.wantPrice.toLocaleString() : "-"}</td>
       <td class="num">${r.matchedPrice ? r.matchedPrice.toLocaleString() : "-"}</td>
       <td class="num">${gap}</td>
+      <td>${esc(c0.why || "")}</td>
     </tr>`;
   }).join("");
   $("foundWrap").innerHTML = `<table>
     <tr><th>항목</th><th>판정</th><th>딜번호</th><th>찾던 제품</th><th>찾은 제품</th>
-        <th>기대가</th><th>실제가</th><th>가격차</th></tr>${rows}</table>`;
+        <th>기대가</th><th>실제가</th><th>가격차</th><th>판정 사유</th></tr>${rows}</table>`;
 }
 
 function render() {

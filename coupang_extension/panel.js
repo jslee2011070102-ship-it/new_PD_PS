@@ -149,6 +149,7 @@ function parseJobs(text) {
 }
 
 let DONE_IDS = new Set();   // 이미 '확실'로 찾은 항목
+let VAGUE_IDS = new Set();  // '애매' — 찾긴 했는데 확정하지 않은 항목
 
 function jobsInfo() {
   const { items, error } = parseJobs($("jobs").value);
@@ -172,9 +173,12 @@ function renderTodo(items) {
   const g = {};
   for (const it of items) {
     const term = it.listName || it.cat || "-";
-    (g[term] = g[term] || { left: [], done: 0 });
+    (g[term] = g[term] || { left: [], done: 0, vague: 0 });
     if (DONE_IDS.has(it.id)) g[term].done++;
-    else g[term].left.push(it.name || it.id);
+    else {
+      if (VAGUE_IDS.has(it.id)) g[term].vague++;
+      g[term].left.push((VAGUE_IDS.has(it.id) ? "△ " : "") + (it.name || it.id));
+    }
   }
   const terms = Object.entries(g).sort((a, b) => b[1].left.length - a[1].left.length);
   const rows = terms.map(([term, v], i) => {
@@ -185,7 +189,8 @@ function renderTodo(items) {
     return `<tr>
       <td>${i + 1}</td>
       <td class="term">${esc(term)}</td>
-      <td>남은 ${v.left.length}개${v.done ? ` (찾음 ${v.done})` : ""}</td>
+      <td>남은 ${v.left.length}개${v.done ? ` (찾음 ${v.done})` : ""}${
+        v.vague ? `<br><span style="color:#b8860b">△ 애매 ${v.vague}</span>` : ""}</td>
       <td><button class="copyTerm" data-term="${esc(term)}">복사</button>
           <button class="showNames" data-term="${esc(term)}">제품보기</button></td>
     </tr><tr class="namesRow" data-term="${esc(term)}" style="display:none">
@@ -194,8 +199,12 @@ function renderTodo(items) {
   }).join("");
 
   const leftTotal = items.filter((x) => !DONE_IDS.has(x.id)).length;
+  const vagueTotal = items.filter((x) => !DONE_IDS.has(x.id) && VAGUE_IDS.has(x.id)).length;
   $("todo").innerHTML =
-    `<div style="margin:4px 0 2px"><b>아직 못 찾은 것 ${leftTotal}개</b></div>
+    `<div style="margin:4px 0 2px"><b>아직 못 찾은 것 ${leftTotal}개</b>` +
+    (vagueTotal ? ` <span style="color:#b8860b">(그 중 △ 애매 ${vagueTotal}개 — 후보는
+       찾았으나 용량·구성이 어긋나 확정하지 않음. '결과 내보내기'에서 볼 수 있습니다)</span>` : "") +
+    `</div>
      <table><tr><th></th><th>검색창에 칠 말</th><th>상태</th><th></th></tr>${rows}</table>`;
 
   for (const b of document.querySelectorAll(".copyTerm")) {
@@ -353,8 +362,10 @@ async function refresh() {
   $("startSearch").disabled = s.running;
   $("stopSearch").disabled = !s.running;
   if (s.doneIds) {
-    const next = new Set(s.doneIds);
-    if (next.size !== DONE_IDS.size) { DONE_IDS = next; jobsInfo(); }
+    const d = new Set(s.doneIds), v = new Set(s.vagueIds || []);
+    if (d.size !== DONE_IDS.size || v.size !== VAGUE_IDS.size) {
+      DONE_IDS = d; VAGUE_IDS = v; jobsInfo();
+    }
   }
 }
 

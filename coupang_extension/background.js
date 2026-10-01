@@ -375,6 +375,19 @@ function tokens(s) {
     .split(/\s+/).filter((t) => t.length >= 2);
 }
 
+// 제목 안에 "2.1L", "1개" 같은 규격 표기가 들어 있는지 본다.
+//
+// 단순 includes 로는 안 된다. "3L" 을 찾으면 "13L" 에도 걸리고,
+// "1개" 를 찾으면 "21개" 에도 걸린다. 앞뒤가 숫자가 아닌지까지 봐야 한다.
+function hasSpec(title, raw) {
+  if (!raw) return null;                       // 알 수 없음 (없는 것과 다르다)
+  const key = String(raw).toLowerCase().replace(/\s+/g, "");
+  if (!key) return null;
+  const t = String(title || "").toLowerCase().replace(/\s+/g, "");
+  const esc = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[^0-9.])${esc}([^0-9]|$)`).test(t);
+}
+
 function scoreCandidate(item, cand) {
   const want = tokens(item.name);
   const got = new Set(tokens(cand.name));
@@ -382,8 +395,9 @@ function scoreCandidate(item, cand) {
   for (const t of new Set(want)) if (got.has(t)) hit++;
   const nameScore = want.length ? hit / new Set(want).size : 0;
 
-  // 가격은 가장 믿을 만한 증거다. 이름은 비슷해도 용량이 다르면 값이 다르다.
-  // 다만 조사 시점과 오늘 사이에 값이 바뀌었을 수 있어 여유를 둔다.
+  // 가격은 '변하는' 값이다. 쿠팡은 할인이 수시로 바뀐다.
+  // 그래서 가격은 **보조 증거**로만 쓴다. 예전에는 이걸 통과 조건으로 걸어서,
+  // 이름이 100% 맞아도 값이 15% 넘게 움직이면 '확실'이 되지 못했다.
   let priceGap = null;
   const all = (cand.pricesSeen && cand.pricesSeen.length) ? cand.pricesSeen
             : (cand.price ? [cand.price] : []);
@@ -391,20 +405,50 @@ function scoreCandidate(item, cand) {
     priceGap = Math.min(...all.map((p) => Math.abs(p - item.price) / item.price));
   }
 
-  // 용량 표기가 이름에 들어 있으면 확인에 쓴다 ("2.1L", "100개입")
-  let sizeOk = null;
-  if (item.size) {
-    const key = String(item.size).toLowerCase().replace(/\s/g, "");
-    sizeOk = String(cand.name).toLowerCase().replace(/\s/g, "").includes(key);
-  }
+  // 규격(용량·구성)은 '안 변하는' 값이고, 쿠팡 제목에 그대로 찍힌다.
+  //   "피지 ... 코튼향, 2.1L, 1개"
+  // 같은 이름의 다른 상품을 가르는 건 결국 이것이다. 가격이 아니라 이것으로 가른다.
+  const sizeOk = hasSpec(cand.name, item.size);
+  const countOk = hasSpec(cand.name, item.count);
 
   let verdict = "못찾음";
-  if (nameScore >= 0.6 && priceGap !== null && priceGap <= 0.03) verdict = "확실";
-  else if (nameScore >= 0.85 && (priceGap === null || priceGap <= 0.15)) verdict = "확실";
-  else if (nameScore >= 0.5 || (priceGap !== null && priceGap <= 0.05)) verdict = "애매";
+  let why = "";
+  if (sizeOk === false) {
+    // 용량이 다르면 다른 상품이다. 이름이 아무리 같아도 확정하지 않는다.
+    // (실제로 "2.1L 1개" 와 "4.2L 2개" 가 이름이 100% 같았다)
+    verdict = nameScore >= 0.5 ? "애매" : "못찾음";
+    why = `용량이 다름 (찾는 것 ${item.size})`;
+  } else if (nameScore >= 0.85 && sizeOk === true && countOk !== false) {
+    // 기준을 0.6 이 아니라 0.85 로 둔 이유:
+    // "피지 모락셀라 냄새제거 **세탁세제** 코튼향" 과
+    // "피지 모락셀라 냄새제거 **섬유유연제** 코튼향" 은 낱말 5개 중 4개가 같아
+    // 0.8 이 나온다. 용량·구성까지 같을 수 있다(둘 다 2.1L 1개).
+    // 한 낱말 차이가 곧 다른 제품인 경우가 있으므로 여기서 걸러야 한다.
+    verdict = "확실";
+    why = `이름 ${Math.round(nameScore * 100)}% + 용량·구성 일치`;
+  } else if (nameScore >= 0.6 && sizeOk === true && countOk === false) {
+    verdict = "애매";
+    why = `용량은 맞으나 구성이 다름 (찾는 것 ${item.count})`;
+  } else if (nameScore >= 0.6 && priceGap !== null && priceGap <= 0.05) {
+    verdict = "확실";
+    why = `이름 ${Math.round(nameScore * 100)}% + 가격 일치`;
+  } else if (nameScore >= 0.9 && sizeOk === null && countOk === null) {
+    // 제목에 규격이 안 찍힌 경우. 이름만으로 판단할 수밖에 없다.
+    verdict = "확실";
+    why = `이름 ${Math.round(nameScore * 100)}% (제목에 규격 표기 없음)`;
+  } else if (nameScore >= 0.5 || (priceGap !== null && priceGap <= 0.05) || sizeOk === true) {
+    verdict = "애매";
+    why = `이름 ${Math.round(nameScore * 100)}%` +
+          (sizeOk === true ? " · 용량 일치" : "") +
+          (priceGap !== null ? ` · 가격차 ${Math.round(priceGap * 100)}%` : "");
+  } else {
+    why = `이름 ${Math.round(nameScore * 100)}% — 기준 미달`;
+  }
 
-  return { ...cand, nameScore: Math.round(nameScore * 100) / 100, priceGap, sizeOk, verdict };
+  return { ...cand, nameScore: Math.round(nameScore * 100) / 100,
+           priceGap, sizeOk, countOk, verdict, why };
 }
+
 
 // 검색 화면 한 곳을 열어 후보를 읽어 온다.
 async function searchAt(url, log) {
@@ -718,6 +762,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           message: [state.notice, state.message].filter(Boolean).join("\n"),
           doneIds: Object.values(state.found)
             .filter((r) => r.verdict === "확실").map((r) => r.id),
+          vagueIds: Object.values(state.found)
+            .filter((r) => r.verdict === "애매").map((r) => r.id),
           recent: Object.values(state.found).slice(-5).map((r) =>
             `${r.id}: ${r.verdict}` +
             (r.pid ? ` · ${r.pid}` : "") +
