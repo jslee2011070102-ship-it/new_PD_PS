@@ -86,14 +86,13 @@
       검색 1등을 그냥 쓰지 않습니다. <b>이름과 가격이 맞는지 따져</b>
       확실 / 애매 / 못찾음 으로 나눕니다.
     </div>
-    <label>검색 목록 불러오기</label>
-    <div class="row" style="margin-top:0">
-      <button id="pickFile" class="primary">📂 검색목록.json 파일 선택</button>
+    <div id="bundleInfo" class="hint" style="padding:6px 8px;background:#eef7ee;border-radius:3px">
+      목록을 불러오는 중…</div>
+    <div class="row" style="margin-top:6px">
+      <button id="pickFile" style="font-size:12px">다른 목록 파일 고르기</button>
       <button id="toggleBox" style="font-size:12px">직접 붙여넣기</button>
     </div>
     <input type="file" id="jobsFile" accept=".json,application/json" style="display:none">
-    <div class="hint">받으신 <code>검색목록.json</code> 파일을 그대로 고르시면 됩니다.
-      <b>폴더 어디에 넣을 필요 없습니다.</b> 다운로드 폴더에 있는 그대로 고르세요.</div>
 
     <div id="boxWrap" style="display:none">
       <label for="jobs">또는 내용을 직접 붙여넣기</label>

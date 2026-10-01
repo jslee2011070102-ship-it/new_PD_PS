@@ -240,6 +240,27 @@ $("jobs").addEventListener("input", jobsInfo);
  */
 $("pickFile").addEventListener("click", () => $("jobsFile").click());
 
+/* 확장 안에 목록을 함께 넣어 두고, 패널을 열면 알아서 읽는다.
+ *
+ * 왜: 목록 파일을 따로 보내 놓고 "그 파일을 고르세요"라고 했더니
+ * "이 파일이 폴더에는 없는데?" 가 됐다. 당연하다 — 확장 폴더에 있는 파일이
+ * 아니라 채팅으로 받은 파일이었으니까.
+ * 찾아야 할 파일이 하나라도 있으면 그게 걸림돌이 된다. 아예 같이 넣는다.
+ * (파일 이름은 영문으로 둔다. 한글 파일명이 경로에서 깨진 적이 있다.)
+ */
+async function loadBundled() {
+  try {
+    const res = await fetch(chrome.runtime.getURL("search_list.json"));
+    if (!res.ok) return false;
+    const text = await res.text();
+    const { items } = parseJobs(text);
+    if (!items.length) return false;
+    $("jobs").value = text;
+    jobsInfo();
+    return items.length;
+  } catch (e) { return false; }
+}
+
 $("jobsFile").addEventListener("change", async (e) => {
   const f = e.target.files && e.target.files[0];
   if (!f) return;
@@ -401,6 +422,18 @@ $("reset").addEventListener("click", async () => {
 });
 
 preview();
-jobsInfo();
 refresh();
+
+// 패널을 열면 확장에 들어 있는 목록을 바로 읽는다. 사용자가 할 일이 없다.
+(async () => {
+  const n = await loadBundled();
+  if (n) {
+    $("bundleInfo").innerHTML =
+      `확장에 들어 있는 목록 <b>${n}개</b>를 바로 읽었습니다. 따로 파일을 찾으실 필요 없습니다.`;
+  } else {
+    $("bundleInfo").innerHTML =
+      `<span class="warn">확장에 들어 있는 목록을 읽지 못했습니다. 아래에서 파일을 고르세요.</span>`;
+    jobsInfo();
+  }
+})();
 setInterval(refresh, 2000);
