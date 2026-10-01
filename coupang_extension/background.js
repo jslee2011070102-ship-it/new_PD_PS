@@ -472,7 +472,7 @@ async function searchOne(item, opts) {
   const log = [];
   const rec = {
     id: item.id, cat: item.cat, name: item.name, wantPrice: item.price || null,
-    wantSize: item.size || "", verdict: "못찾음", pid: "", url: "",
+    wantSize: item.size || "", wantCount: item.count || "", verdict: "못찾음", pid: "", url: "",
     matchedName: "", matchedPrice: null, candidates: [], log,
     at: new Date().toISOString(),
   };
@@ -559,11 +559,21 @@ async function readCurrentList(items) {
   log.push(`읽은 화면: ${tab.title || ""}`);
   log.push(`주소: ${tab.url}`);
 
-  const results = await chrome.scripting.executeScript({
-    target: { tabId: tab.id }, files: ["search.js"],
-  });
-  const r = results && results[0] && results[0].result;
-  if (!r) return { ok: false, error: "화면에서 목록을 읽지 못했습니다." };
+  // executeScript 는 여러 이유로 터질 수 있다(권한 없는 주소, 크롬 내부 페이지,
+  // 아직 로딩 중인 탭). 감싸지 않으면 응답이 아예 안 가서 화면에 아무 말도
+  // 안 뜬다. 사용자는 눌렀는데 아무 일도 안 일어난 것으로 보인다.
+  let r = null;
+  try {
+    const results = await chrome.scripting.executeScript({
+      target: { tabId: tab.id }, files: ["search.js"],
+    });
+    r = results && results[0] && results[0].result;
+  } catch (e) {
+    return { ok: false, log,
+             error: `이 화면을 읽을 수 없습니다: ${e.message}\n` +
+                    `주소가 https://www.coupang.com 으로 시작하는 화면에서 눌러 주세요.` };
+  }
+  if (!r) return { ok: false, error: "화면에서 목록을 읽지 못했습니다.", log };
   log.push(...(r.log || []));
 
   const cands = r.candidates || [];
@@ -591,7 +601,7 @@ async function readCurrentList(items) {
 
     const rec = {
       id: it.id, cat: it.cat, name: it.name, wantPrice: it.price || null,
-      wantSize: it.size || "", verdict: best.verdict,
+      wantSize: it.size || "", wantCount: it.count || "", verdict: best.verdict,
       pid: best.pid, url: best.url,
       matchedName: best.name, matchedPrice: best.price,
       candidates: scored.slice(0, 5), source: "목록화면",
@@ -692,6 +702,7 @@ async function runLoop(opts) {
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   (async () => {
+   try {
     if (msg.cmd === "start") {
       if (state.running) { sendResponse({ ok: false, error: "이미 진행 중입니다." }); return; }
       const opts = { ...DEFAULTS, ...(msg.opts || {}) };
@@ -718,6 +729,40 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       await save();
       sendResponse({ ok: true, queued: state.queue.length, skipped: bad });
       runLoop(opts);
+      return;
+    }
+    // 사람이 눈으로 보고 "이게 맞다"고 확정하는 길.
+    //
+    // 왜 필요한가: 도구는 용량·구성이 어긋나면 확정하지 않는다(그래야 한다).
+    // 그런데 쿠팡에서 같은 제품의 다른 묶음(3.05L 2개 / 4개)은 흔히
+    // **같은 딜번호에 옵션만 다른** 경우가 많고, 그러면 상세페이지는 같다.
+    // 상세페이지 USP 를 모으는 게 목적이라면 그 주소로 충분할 수 있다.
+    // 그 판단은 도구가 아니라 사람이 해야 한다. 그래서 버튼을 준다.
+    if (msg.cmd === "confirmMatch") {
+      const rec = state.found[msg.id];
+      if (!rec) { sendResponse({ ok: false, error: "그 항목을 찾을 수 없습니다." }); return; }
+      const c = (rec.candidates || []).find((x) => x.pid === msg.pid);
+      if (!c) { sendResponse({ ok: false, error: "그 후보를 찾을 수 없습니다." }); return; }
+      rec.verdict = "확실";
+      rec.pid = c.pid;
+      rec.url = c.url;
+      rec.matchedName = c.name;
+      rec.matchedPrice = c.price;
+      rec.confirmedByUser = true;
+      rec.log = [...(rec.log || []), `사람이 확인해 확정함: ${c.pid} · ${(c.name || "").slice(0, 50)}`];
+      await save();
+      sendResponse({ ok: true });
+      return;
+    }
+    if (msg.cmd === "rejectMatch") {
+      const rec = state.found[msg.id];
+      if (!rec) { sendResponse({ ok: false, error: "그 항목을 찾을 수 없습니다." }); return; }
+      rec.verdict = "못찾음";
+      rec.pid = ""; rec.url = ""; rec.matchedName = ""; rec.matchedPrice = null;
+      rec.rejectedByUser = true;
+      rec.log = [...(rec.log || []), "사람이 '아님'으로 표시함"];
+      await save();
+      sendResponse({ ok: true });
       return;
     }
     if (msg.cmd === "readList") {
@@ -814,6 +859,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return;
     }
     sendResponse({ ok: false, error: "알 수 없는 명령" });
+   } catch (e) {
+     // 여기서 막지 않으면 응답이 영영 안 간다. 화면은 아무 말 없이 멈춘 것처럼 보인다.
+     console.error("명령 처리 중 오류", msg && msg.cmd, e);
+     sendResponse({ ok: false, error: `오류가 났습니다: ${e.message}` });
+   }
   })();
   return true;   // 비동기 응답
 });

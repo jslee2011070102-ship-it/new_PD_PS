@@ -314,6 +314,12 @@ $("readList").addEventListener("click", async () => {
   refresh();
 });
 
+$("openReview").addEventListener("click", async () => {
+  await chrome.tabs.create({ url: chrome.runtime.getURL("results.html") });
+  $("status").textContent =
+    "확인 화면을 새 탭에 열었습니다.\n맞는 후보가 있으면 '이게 맞음'을 눌러 확정해 주세요.";
+});
+
 $("startSearch").addEventListener("click", async () => {
   const items = jobsInfo();
   if (!items.length) return;

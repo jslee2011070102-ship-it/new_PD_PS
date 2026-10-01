@@ -24,6 +24,65 @@ function esc(s) {
   return String(s == null ? "" : s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
 }
 
+function renderReview() {
+  // 후보를 전부 보여주면 눈이 피곤하다. 이름이 반도 안 맞는 건 볼 가치가 없다.
+  // 사람이 판단할 만한 것만 남기고, 그럴듯한 순서로 세운다.
+  const plausible = (r) => (r.candidates || [])
+    .filter((c) => (c.nameScore || 0) >= 0.5)
+    .sort((a, b) => (b.nameScore || 0) - (a.nameScore || 0));
+
+  const need = Object.entries(FOUND)
+    .filter(([, r]) => r.verdict !== "확실" && plausible(r).length)
+    .sort((a, b) => (plausible(b[1])[0].nameScore || 0) - (plausible(a[1])[0].nameScore || 0));
+  if (!need.length) {
+    const stuck = Object.values(FOUND).filter((r) => r.verdict !== "확실").length;
+    $("reviewWrap").innerHTML = stuck
+      ? `<div class="empty">볼 만한 후보가 있는 항목이 없습니다.<br>
+         아직 못 찾은 ${stuck}건은 화면에 그 제품이 없었다는 뜻입니다 —
+         다른 화면에서 다시 읽어 보세요.</div>`
+      : '<div class="empty">확인할 항목이 없습니다.</div>';
+    $("reviewNote").style.display = "none";
+    return;
+  }
+  $("reviewNote").style.display = "";
+  $("reviewWrap").innerHTML = need.map(([id, r]) => {
+    const cands = plausible(r).slice(0, 4).map((c) => `
+      <tr>
+        <td>${esc(c.pid)}</td>
+        <td>${esc((c.name || "").slice(0, 60))}</td>
+        <td class="num">${c.price ? c.price.toLocaleString() : "-"}</td>
+        <td>${esc(c.why || "")}</td>
+        <td><button class="pick" data-id="${esc(id)}" data-pid="${esc(c.pid)}">이게 맞음</button></td>
+      </tr>`).join("");
+    return `<div class="rev">
+      <div class="want"><b>${esc(id)}</b> — 찾는 것:
+        ${esc(r.name || "")} <b>/ ${esc(r.wantSize || "?")} / ${esc(r.wantCount || "?")}
+        / ${r.wantPrice ? r.wantPrice.toLocaleString() + "원" : "?"}</b></div>
+      <table>
+        <tr><th>딜번호</th><th>화면에서 찾은 것</th><th>가격</th><th>왜 보류했나</th><th></th></tr>
+        ${cands}
+      </table>
+      <div style="margin:4px 0 0"><button class="nope" data-id="${esc(id)}">전부 아님 — 직접 찾겠음</button></div>
+    </div>`;
+  }).join("");
+
+  for (const b of document.querySelectorAll(".pick")) {
+    b.addEventListener("click", async () => {
+      b.disabled = true; b.textContent = "확정 중…";
+      const r = await send({ cmd: "confirmMatch", id: b.dataset.id, pid: b.dataset.pid });
+      if (r && r.ok) await load();
+      else { b.disabled = false; b.textContent = "이게 맞음"; alert((r && r.error) || "실패"); }
+    });
+  }
+  for (const b of document.querySelectorAll(".nope")) {
+    b.addEventListener("click", async () => {
+      b.disabled = true;
+      const r = await send({ cmd: "rejectMatch", id: b.dataset.id });
+      if (r && r.ok) await load(); else b.disabled = false;
+    });
+  }
+}
+
 function renderFound() {
   const ids = Object.keys(FOUND);
   if (!ids.length) { $("foundWrap").innerHTML = ""; $("foundSummary").textContent = ""; return; }
@@ -56,6 +115,7 @@ function renderFound() {
 }
 
 function render() {
+  renderReview();
   renderFound();
   const ids = Object.keys(RESULTS);
   const counts = {};
