@@ -868,11 +868,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         });
         return;
       }
+      // 남은 시간은 **실제로 걸린 속도**로 계산한다.
+      // 설정값(12~25초)으로 어림하면 실제 페이지 로딩·대기 시간이 빠져 과소평가된다.
+      // 이미 끝낸 것들의 시각 간격이 가장 정직한 근거다.
+      const ts = Object.values(state.done)
+        .map((r) => Date.parse(r.at || "")).filter((n) => !isNaN(n)).sort((a, b) => a - b);
+      let secPerItem = null;
+      if (ts.length >= 2) {
+        secPerItem = (ts[ts.length - 1] - ts[0]) / (ts.length - 1) / 1000;
+      }
       sendResponse({
         ok: true, mode: "collect",
         running: state.running,
         remaining: state.queue.length,
         current: state.current,
+        secPerItem,
+        doneCount: ts.length,
         counts: Object.values(state.done).reduce((a, r) => {
           a[r.status] = (a[r.status] || 0) + 1; return a;
         }, {}),

@@ -359,8 +359,22 @@ async function refresh() {
   const parts = Object.entries(c).map(([k, v]) => `${label[k] || k} ${v}`);
   const what = s.mode === "search" ? "주소 찾기" : "이미지 수집";
   const lines = [];
-  lines.push(s.running ? `${what} 진행 중 — 남은 ${s.remaining}개`
+
+  // 남은 시간을 함께 보여 준다. '남은 112개'만으로는 10분인지 한 시간인지 알 수 없다.
+  // 설정값이 아니라 **실제로 걸린 속도**로 계산한 값이다.
+  let eta = "";
+  if (s.secPerItem && s.remaining > 0) {
+    const sec = Math.round(s.secPerItem * s.remaining);
+    const h = Math.floor(sec / 3600), m = Math.round((sec % 3600) / 60);
+    eta = h > 0 ? ` · 남은 시간 약 ${h}시간 ${m}분` : ` · 남은 시간 약 ${Math.max(1, m)}분`;
+    const done = new Date(Date.now() + sec * 1000);
+    eta += ` (${String(done.getHours()).padStart(2, "0")}:${String(done.getMinutes()).padStart(2, "0")} 쯤 끝남)`;
+  }
+  lines.push(s.running ? `${what} 진행 중 — 남은 ${s.remaining}개${eta}`
                        : `${what} 대기 중 — 남은 ${s.remaining}개`);
+  if (s.running && s.secPerItem && s.doneCount >= 2) {
+    lines.push(`한 개당 평균 ${s.secPerItem.toFixed(0)}초 · 지금까지 ${s.doneCount}개 완료`);
+  }
   if (s.current) lines.push(`지금: ${s.current}`);
   if (parts.length) lines.push(`결과: ${parts.join(" / ")}`);
   if (s.message) lines.push(s.message);
