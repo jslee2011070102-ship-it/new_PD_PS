@@ -304,8 +304,10 @@ async function processOne(item, opts) {
     // 재시도 없이 '성공'으로 끝냈다. 이제 LOW_YIELD 미만이면 다시 해 본다.
     // 그리고 재시도 결과가 더 적으면 버린다 — 실제로 모바일 쪽이 더 적게
     // 잡힌 경우가 있었다(PC 19장 / 모바일 2장). 많은 쪽을 남기는 게 맞다.
+    // 재시도 기준도 장수가 아니다. 2장짜리가 5만 픽셀인 경우가 있다.
+    // 아무것도 못 건졌을 때만 다시 한다.
     const have = (x) => (x && x.images ? x.images.length : 0);
-    if (opts.tryMobile && (!r || r.reason === "blocked" || have(r) < LOW_YIELD)) {
+    if (opts.tryMobile && (!r || r.reason === "blocked" || have(r) === 0)) {
       for (const mu of mobileCandidates(item.url)) {
         log.push(`이미지 ${have(r)}장뿐이라 모바일 주소로 재시도: ${mu}`);
         await sleep(rand(2000, 4000));
@@ -329,8 +331,10 @@ async function processOne(item, opts) {
     rec.scope = r.scope || "";
     rec.fallback = !!r.fallback;
     rec.totalImgs = r.totalImgs || 0;
-    rec.lowYield = rec.images > 0 && rec.images < LOW_YIELD;
-    if (rec.lowYield) log.push("※ 장수가 적습니다 — 확인이 필요합니다");
+    // 장수가 아니라 총 높이로 판단한다 (content.js 와 같은 이유).
+    rec.totalHeight = r.totalHeight || 0;
+    rec.lowYield = !!r.lowYield;
+    if (rec.lowYield) log.push(`※ 상세가 짧습니다 (총 ${rec.totalHeight}px) — 확인이 필요합니다`);
 
     if (r.reason === "blocked" && rec.images === 0) {
       rec.status = "blocked";

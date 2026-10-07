@@ -291,9 +291,21 @@
       else log.push(`다시 세어도 늘지 않음 (${again.images.length}장)`);
     }
     const images = got.images;
-    log.push(`상세 이미지 ${images.length}장 수집`);
-    if (images.length > 0 && images.length < LOW_YIELD) {
-      log.push(`※ 장수가 적습니다 — 상세가 원래 짧은 것인지 확인이 필요합니다`);
+    // 장수로 많고 적음을 재면 안 된다.
+    //
+    // 한국 상세페이지는 **전체를 긴 이미지 한두 장**으로 만드는 경우가 흔하다.
+    // 실제로 '2장'이 50,695px 짜리였던 제품이 있다. 장수만 보고 '적다'고 하면
+    // 멀쩡한 수집물의 절반에 경고가 붙는다(실측: 148건 중 68건에 잘못 붙었다).
+    // 재야 할 것은 **총 높이**다.
+    const known = images.filter((x) => x.h > 0);
+    const totalH = known.reduce((n, x) => n + x.h, 0);
+    log.push(`상세 이미지 ${images.length}장 수집` +
+             (known.length ? ` (크기를 아는 ${known.length}장 합계 ${totalH.toLocaleString()}px)` : ""));
+    // 높이를 하나도 모르면(지연 로딩 상태) 판단하지 않는다. 모르면 모른다고 둔다.
+    const tooShort = images.length === 0 ||
+      (known.length === images.length && totalH < 3000);
+    if (tooShort && images.length > 0) {
+      log.push(`※ 상세가 짧습니다 (총 ${totalH.toLocaleString()}px) — 확인이 필요합니다`);
     }
 
     return {
@@ -305,7 +317,9 @@
       scope: got.scope,
       fallback: got.fallback,
       totalImgs: got.totalImgs,
-      lowYield: images.length > 0 && images.length < LOW_YIELD,
+      lowYield: tooShort && images.length > 0,
+      totalHeight: totalH,
+      knownCount: known.length,
       frameUrl: location.href,
       log,
       bodyHead: bodyText.slice(0, 200),
