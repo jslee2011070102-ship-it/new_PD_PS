@@ -108,6 +108,8 @@ let state = {
   message: "",
   notice: "",       // 시작할 때 제외된 주소 안내 (message 와 달리 지워지지 않는다)
   mode: "collect",  // collect = 이미지 수집 / search = 주소 찾기
+  exportedCount: 0, // 마지막으로 파일로 내보낸 시점의 '확실' 건수
+  exportedAt: "",
   searchQueue: [],
   found: {},        // id -> 검색 결과
 };
@@ -809,6 +811,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             .filter((r) => r.verdict === "확실").map((r) => r.id),
           vagueIds: Object.values(state.found)
             .filter((r) => r.verdict === "애매").map((r) => r.id),
+          exportedCount: state.exportedCount || 0,
+          exportedAt: state.exportedAt || "",
           recent: Object.values(state.found).slice(-5).map((r) =>
             `${r.id}: ${r.verdict}` +
             (r.pid ? ` · ${r.pid}` : "") +
@@ -837,6 +841,19 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       });
       return;
     }
+    // 파일로 내보낸 사실을 기록한다.
+    //
+    // 왜: 찾은 결과는 크롬 안에만 있다. 컴퓨터를 옮기면 따라오지 않는다.
+    // 실제로 131건을 찾아 두고 내보내지 않은 채 다른 컴퓨터로 옮겨 전부 날렸다.
+    // 그래서 '아직 안 내보냈다'를 눈에 보이게 한다.
+    if (msg.cmd === "markExported") {
+      state.exportedCount = Object.values(state.found)
+        .filter((r) => r.verdict === "확실").length;
+      state.exportedAt = new Date().toISOString();
+      await save();
+      sendResponse({ ok: true, exportedCount: state.exportedCount });
+      return;
+    }
     if (msg.cmd === "export") {
       sendResponse({ ok: true, results: state.done, found: state.found });
       return;
@@ -848,6 +865,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     }
     if (msg.cmd === "resetSearch") {
       state.found = {}; state.searchQueue = []; state.message = ""; state.notice = "";
+      state.exportedCount = 0; state.exportedAt = "";
       await save();
       sendResponse({ ok: true });
       return;

@@ -31,6 +31,12 @@
   }
   .hint { color: #666; font-size: 11px; margin-top: 4px; }
   .warn { color: #a33; }
+  #saveWarn {
+    margin-top: 10px; padding: 9px 10px; border-radius: 4px;
+    background: #fdecec; border-left: 4px solid #c33; font-size: 12px; line-height: 1.5;
+  }
+  #saveWarn b { color: #a33; }
+  #saveWarn button { margin-top: 6px; }
   select { font-size: 12px; padding: 3px; }
   #preview { margin-top: 8px; font-size: 11px; }
   #preview table { width: 100%; border-collapse: collapse; margin-top: 4px; }
@@ -187,6 +193,7 @@ https://www.coupang.com/vp/products/1234567?...
     <button id="reset">기록 초기화</button>
   </div>
 
+  <div id="saveWarn" style="display:none"></div>
   <div id="status">대기 중</div>
 
   <script src="panel.js"></script>

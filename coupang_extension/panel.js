@@ -367,6 +367,28 @@ async function refresh() {
   $("stop").disabled = !s.running;
   $("startSearch").disabled = s.running;
   $("stopSearch").disabled = !s.running;
+  // 찾은 것이 있는데 아직 파일로 안 뺐으면 눈에 띄게 알린다.
+  // 이 결과는 크롬 안에만 있어서 컴퓨터를 옮기면 따라오지 않는다.
+  const found = (s.doneIds || []).length;
+  const saved = s.exportedCount || 0;
+  if (found > saved) {
+    $("saveWarn").style.display = "";
+    $("saveWarn").innerHTML =
+      `<b>⚠ 찾은 ${found}건이 아직 파일로 저장되지 않았습니다.</b><br>` +
+      `이 결과는 <b>이 크롬 안에만</b> 있습니다. 다른 컴퓨터로 옮겨지지 않고,
+       확장을 지우면 사라집니다.` +
+      (saved ? `<br>(마지막 저장: ${saved}건)` : "") +
+      `<br><button id="saveNow" class="primary">지금 파일로 저장하기</button>`;
+    const b = document.getElementById("saveNow");
+    if (b) b.addEventListener("click", async () => {
+      await chrome.tabs.create({ url: chrome.runtime.getURL("results.html") });
+      $("status").textContent =
+        "결과 페이지를 열었습니다.\n'검색결과.json 저장' 을 누르시면 다운로드 폴더에 저장됩니다.";
+    });
+  } else {
+    $("saveWarn").style.display = "none";
+  }
+
   if (s.doneIds) {
     const d = new Set(s.doneIds), v = new Set(s.vagueIds || []);
     if (d.size !== DONE_IDS.size || v.size !== VAGUE_IDS.size) {

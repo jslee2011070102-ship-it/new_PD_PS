@@ -191,6 +191,7 @@ $("saveFound").addEventListener("click", () => {
   a.href = url; a.download = "검색결과.json";
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 60000);
+  send({ cmd: "markExported" });   // 패널의 '아직 안 내보냈다' 경고를 끈다
   $("foundSummary").textContent += "  —  저장했습니다 (다운로드 폴더)";
 });
 
