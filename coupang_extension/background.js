@@ -756,6 +756,33 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       sendResponse({ ok: true });
       return;
     }
+    // 후보가 전부 아닐 때, 사람이 직접 찾은 주소를 넣는 길.
+    //
+    // 전에는 '전부 아님' 버튼만 있고 **넣을 곳이 없었다.** 직접 찾겠다고 해놓고
+    // 찾은 것을 둘 데를 안 만든 셈이다. 쿠팡에서 그 제품을 열어 주소창을
+    // 복사해 붙여넣으면 끝나야 한다.
+    if (msg.cmd === "setUrlManually") {
+      const rec = state.found[msg.id];
+      if (!rec) { sendResponse({ ok: false, error: "그 항목을 찾을 수 없습니다." }); return; }
+      const raw = String(msg.url || "").trim();
+      const pid = productId(raw);
+      if (!pid) {
+        sendResponse({ ok: false,
+          error: "쿠팡 상품 주소가 아닙니다. .../vp/products/숫자 가 들어 있어야 합니다." });
+        return;
+      }
+      rec.verdict = "확실";
+      rec.pid = pid;
+      rec.url = cleanUrl(raw);
+      rec.matchedName = "(사람이 직접 넣은 주소)";
+      rec.matchedPrice = null;
+      rec.confirmedByUser = true;
+      rec.manualUrl = true;
+      rec.log = [...(rec.log || []), `사람이 주소를 직접 넣음: ${pid}`];
+      await save();
+      sendResponse({ ok: true, pid });
+      return;
+    }
     if (msg.cmd === "rejectMatch") {
       const rec = state.found[msg.id];
       if (!rec) { sendResponse({ ok: false, error: "그 항목을 찾을 수 없습니다." }); return; }

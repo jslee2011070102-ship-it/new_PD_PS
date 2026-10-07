@@ -28,7 +28,20 @@
   .rev .want { margin-bottom: 6px; font-size: 13px; }
   .rev table { margin-bottom: 0; }
   .rev button { padding: 5px 10px; font-size: 12px; }
-  .rev .nope { background: none; border: 1px solid #ccc; color: #777; font-size: 11px; }
+  /* 전에는 회색으로 칠해 둬서 '비활성화된 버튼'으로 보였다. 누를 수 있는 것은
+     누를 수 있게 보여야 한다. */
+  .rev .nope { font-size: 12px; }
+  .rev .manual {
+    margin-top: 10px; padding: 9px 10px; background: #f4f7fd;
+    border-radius: 4px; font-size: 12px;
+  }
+  .rev .manualrow { display: flex; gap: 6px; margin-top: 6px; }
+  .rev .manualrow input {
+    flex: 1; padding: 6px 8px; font: 12px ui-monospace, Consolas, monospace;
+    border: 1px solid #bbb; border-radius: 4px; min-width: 0;
+  }
+  .rev .msave { background: #1f3864; color: #fff; border-color: #1f3864; font-weight: 600; }
+  .rev .merr { color: #a33; font-size: 12px; margin-top: 5px; min-height: 1em; }
 </style>
 </head>
 <body>

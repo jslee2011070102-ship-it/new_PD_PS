@@ -65,7 +65,16 @@ function renderReview() {
         <tr><th>딜번호</th><th>화면에서 찾은 것</th><th>가격</th><th>왜 보류했나</th><th></th></tr>
         ${cands}
       </table>
-      <div style="margin:4px 0 0"><button class="nope" data-id="${esc(id)}">전부 아님 — 직접 찾겠음</button></div>
+      <div class="manual">
+        <b>후보가 전부 아니면</b> — 쿠팡에서 그 제품을 찾아 <b>주소창을 복사</b>해 여기 붙여넣으세요.
+        <div class="manualrow">
+          <input type="text" class="murl" data-id="${esc(id)}"
+                 placeholder="https://www.coupang.com/vp/products/...">
+          <button class="msave" data-id="${esc(id)}">주소로 확정</button>
+          <button class="nope" data-id="${esc(id)}">나중에</button>
+        </div>
+        <div class="merr" data-id="${esc(id)}"></div>
+      </div>
     </div>`;
   }).join("");
 
@@ -76,6 +85,24 @@ function renderReview() {
       if (r && r.ok) await load();
       else { b.disabled = false; b.textContent = "이게 맞음"; alert((r && r.error) || "실패"); }
     });
+  }
+  const saveManual = async (id) => {
+    const input = document.querySelector(`.murl[data-id="${CSS.escape(id)}"]`);
+    const err = document.querySelector(`.merr[data-id="${CSS.escape(id)}"]`);
+    if (!input) return;
+    const url = input.value.trim();
+    if (!url) { err.textContent = "주소를 붙여넣어 주세요."; return; }
+    err.textContent = "확인 중…";
+    const r = await send({ cmd: "setUrlManually", id, url });
+    if (r && r.ok) await load();
+    else err.textContent = (r && r.error) || "실패했습니다.";
+  };
+  for (const b of document.querySelectorAll(".msave")) {
+    b.addEventListener("click", () => saveManual(b.dataset.id));
+  }
+  for (const i of document.querySelectorAll(".murl")) {
+    // 붙여넣고 엔터만 쳐도 되게 한다. 버튼까지 가는 손이 아깝다.
+    i.addEventListener("keydown", (e) => { if (e.key === "Enter") saveManual(i.dataset.id); });
   }
   for (const b of document.querySelectorAll(".nope")) {
     b.addEventListener("click", async () => {
