@@ -482,9 +482,10 @@ async function loadCollect() {
     if (!res.ok) return;
     COLLECT = await res.json();
     const core = COLLECT.filter((x) => x.core).length;
+    const merged = COLLECT.reduce((n, x) => n + ((x.alsoFor || []).length), 0);
     $("collectInfo").innerHTML =
-      `확장에 <b>주소 ${COLLECT.length}개</b>가 들어 있습니다 (핵심 ${core} / 확장 ${COLLECT.length - core}).
-       아래 버튼으로 넣으시면 됩니다.`;
+      `확장에 <b>상세페이지 ${COLLECT.length}개</b>가 들어 있습니다 (핵심 ${core} / 확장 ${COLLECT.length - core}).` +
+      (merged ? `<br>같은 상품이 두 번 올라온 ${merged}건은 <b>한 번만</b> 수집합니다.` : "");
   } catch (e) {
     $("collectInfo").innerHTML =
       `<span class="warn">주소 목록을 읽지 못했습니다. 아래에 직접 붙여넣어 주세요.</span>`;
@@ -502,6 +503,7 @@ function fillUrls(list) {
   $("status").textContent =
     `${items.length}개를 넣었습니다.\n` +
     `폴더 이름은 '${items[0] ? items[0].id : "카테고리-순위"}' 처럼 붙습니다 (엑셀 항목 번호와 같음).\n` +
+    `예상 ${Math.round(list.length * 18.5 / 60)}분. 켜 두고 다른 일 하셔도 됩니다.\n` +
     `아래 미리보기에서 확인하고 '수집 시작' 을 누르세요.`;
 }
 
