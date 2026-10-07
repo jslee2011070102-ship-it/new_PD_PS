@@ -180,7 +180,13 @@ function renderTodo(items) {
       g[term].left.push((VAGUE_IDS.has(it.id) ? "△ " : "") + (it.name || it.id));
     }
   }
-  const terms = Object.entries(g).sort((a, b) => b[1].left.length - a[1].left.length);
+  // 순서를 고정한다. 목록에 나온 차례 그대로다(= 엑셀 카테고리 순서).
+  //
+  // 예전에는 '남은 개수가 많은 순'으로 세웠다. 그런데 찾을 때마다 개수가 변하니
+  // 줄이 계속 자리를 바꿨다. 방금 보던 줄이 다음에 다른 자리에 있으면
+  // 눈으로 따라가기가 어렵다. 진행 상황은 숫자로 읽으면 되고, 자리는 고정이어야 한다.
+  // (자바스크립트 객체는 문자열 키의 넣은 순서를 지키므로 정렬하지 않으면 그대로다)
+  const terms = Object.entries(g);
   const rows = terms.map(([term, v], i) => {
     if (v.left.length === 0) {
       return `<tr><td class="done">✔</td><td class="term">${esc(term)}</td>

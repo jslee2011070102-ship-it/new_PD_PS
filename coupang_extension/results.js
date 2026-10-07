@@ -31,9 +31,12 @@ function renderReview() {
     .filter((c) => (c.nameScore || 0) >= 0.5)
     .sort((a, b) => (b.nameScore || 0) - (a.nameScore || 0));
 
+  // 여기도 순서를 고정한다. 항목 이름순(= 카테고리-순위)이라 위에서부터
+  // 차례로 훑으면 된다. 점수순으로 세우면 하나 확정할 때마다 줄이 움직여서
+  // 어디까지 봤는지 놓치게 된다.
   const need = Object.entries(FOUND)
     .filter(([, r]) => r.verdict !== "확실" && plausible(r).length)
-    .sort((a, b) => (plausible(b[1])[0].nameScore || 0) - (plausible(a[1])[0].nameScore || 0));
+    .sort((a, b) => String(a[0]).localeCompare(String(b[0]), "ko"));
   if (!need.length) {
     const stuck = Object.values(FOUND).filter((r) => r.verdict !== "확실").length;
     $("reviewWrap").innerHTML = stuck

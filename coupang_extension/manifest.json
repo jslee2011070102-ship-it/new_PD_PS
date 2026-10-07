@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "쿠팡 상세페이지 이미지 수집기",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "description": "제품명으로 쿠팡 주소를 찾고, 상세페이지 이미지를 모아 저장합니다. 사용자의 브라우저에서 동작합니다.",
   "permissions": [
     "tabs",
