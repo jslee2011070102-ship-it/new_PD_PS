@@ -469,8 +469,48 @@ $("reset").addEventListener("click", async () => {
 preview();
 refresh();
 
+/* ② 이미지 수집용 주소 목록도 확장에 넣어 둔다.
+ *
+ * ① 에서 목록 파일을 찾게 만들었다가 "이 파일이 폴더에는 없는데?" 를 겪었다.
+ * 같은 실수를 반복하지 않는다. 275개 주소를 손으로 붙여넣게 하면 안 된다.
+ */
+let COLLECT = [];
+
+async function loadCollect() {
+  try {
+    const res = await fetch(chrome.runtime.getURL("collect_list.json"));
+    if (!res.ok) return;
+    COLLECT = await res.json();
+    const core = COLLECT.filter((x) => x.core).length;
+    $("collectInfo").innerHTML =
+      `확장에 <b>주소 ${COLLECT.length}개</b>가 들어 있습니다 (핵심 ${core} / 확장 ${COLLECT.length - core}).
+       아래 버튼으로 넣으시면 됩니다.`;
+  } catch (e) {
+    $("collectInfo").innerHTML =
+      `<span class="warn">주소 목록을 읽지 못했습니다. 아래에 직접 붙여넣어 주세요.</span>`;
+  }
+}
+
+function fillUrls(list) {
+  if (!list.length) { $("status").textContent = "넣을 주소가 없습니다."; return; }
+  $("urls").value = list.map((x) => `${x.id} | ${x.url}`).join("\n");
+  // 폴더 이름을 '내가 붙인 이름'(= 세탁세제-01)으로 맞춘다.
+  // 딜번호로 두면 나중에 엑셀과 맞춰 보려면 번호를 일일이 대조해야 한다.
+  // 항목 번호가 곧 엑셀의 행이므로 그대로 쓰는 게 맞다.
+  $("folderMode").value = "label";
+  const items = preview();
+  $("status").textContent =
+    `${items.length}개를 넣었습니다.\n` +
+    `폴더 이름은 '${items[0] ? items[0].id : "카테고리-순위"}' 처럼 붙습니다 (엑셀 항목 번호와 같음).\n` +
+    `아래 미리보기에서 확인하고 '수집 시작' 을 누르세요.`;
+}
+
+$("loadCore").addEventListener("click", () => fillUrls(COLLECT.filter((x) => x.core)));
+$("loadAll").addEventListener("click", () => fillUrls(COLLECT));
+
 // 패널을 열면 확장에 들어 있는 목록을 바로 읽는다. 사용자가 할 일이 없다.
 (async () => {
+  loadCollect();
   const n = await loadBundled();
   if (n) {
     $("bundleInfo").innerHTML =
