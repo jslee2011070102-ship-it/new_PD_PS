@@ -165,6 +165,20 @@ function render() {
     ? `${ids.length}건 · ${parts.join(" / ")} · 이미지 합계 ${imgTotal}장`
     : "아직 수집한 것이 없습니다.";
 
+  // 어느 버튼을 눌러야 하는지 눈으로 알 수 있게 한다.
+  // 전에는 버튼이 둘 다 똑같이 생겨서 위쪽(검색결과)을 눌러 보내신 적이 있다.
+  const nFound = Object.keys(FOUND).length;
+  $("collectSummary").textContent = ids.length
+    ? `${ids.length}건 · 이미지 합계 ${imgTotal}장`
+    : "아직 이미지 수집을 하지 않았습니다.";
+  $("foundSummary").textContent = nFound
+    ? ($("foundSummary").textContent || `${nFound}건`)
+    : "아직 주소 찾기를 하지 않았습니다.";
+  $("save").textContent = `수집기록.json 저장${ids.length ? ` (${ids.length}건)` : ""}`;
+  $("saveFound").textContent = `검색결과.json 저장${nFound ? ` (${nFound}건)` : ""}`;
+  $("save").className = ids.length ? "ready" : "noData";
+  $("saveFound").className = nFound && !ids.length ? "ready" : (nFound ? "" : "noData");
+
   if (!ids.length) {
     $("tableWrap").innerHTML = Object.keys(FOUND).length
       ? '<div class="empty">이미지 수집은 아직 하지 않았습니다.</div>'
