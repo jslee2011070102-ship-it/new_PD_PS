@@ -769,8 +769,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // 찾은 것을 둘 데를 안 만든 셈이다. 쿠팡에서 그 제품을 열어 주소창을
     // 복사해 붙여넣으면 끝나야 한다.
     if (msg.cmd === "setUrlManually") {
-      const rec = state.found[msg.id];
-      if (!rec) { sendResponse({ ok: false, error: "그 항목을 찾을 수 없습니다." }); return; }
+      // 기록이 아예 없는 항목도 있다. 한 번도 후보에 안 걸린 것들이다.
+      // v1.12.0 에서 그런 항목을 **화면에는** 띄우게 고쳤는데 **저장하는 쪽은**
+      // 그대로 둬서 "그 항목을 찾을 수 없습니다"가 났다. 반쪽만 고친 것이다.
+      // 없으면 여기서 만든다. 화면에 띄웠으면 끝까지 처리할 수 있어야 한다.
+      let rec = state.found[msg.id];
+      if (!rec) {
+        const it = msg.item || {};
+        rec = {
+          id: msg.id, cat: it.cat || "", name: it.name || "",
+          wantPrice: it.price || null, wantSize: it.size || "", wantCount: it.count || "",
+          verdict: "못찾음", pid: "", url: "", matchedName: "", matchedPrice: null,
+          candidates: [], log: ["후보에 한 번도 걸리지 않은 항목"],
+          at: new Date().toISOString(),
+        };
+        state.found[msg.id] = rec;
+      }
       const raw = String(msg.url || "").trim();
       const pid = productId(raw);
       if (!pid) {

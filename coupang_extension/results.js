@@ -105,7 +105,9 @@ function renderReview() {
     const url = input.value.trim();
     if (!url) { err.textContent = "주소를 붙여넣어 주세요."; return; }
     err.textContent = "확인 중…";
-    const r = await send({ cmd: "setUrlManually", id, url });
+    // 기록이 없는 항목이면 background 가 새로 만들 수 있도록 정보를 함께 보낸다.
+    const job = JOBS.find((j) => j.id === id) || {};
+    const r = await send({ cmd: "setUrlManually", id, url, item: job });
     if (r && r.ok) await load();
     else err.textContent = (r && r.error) || "실패했습니다.";
   };
