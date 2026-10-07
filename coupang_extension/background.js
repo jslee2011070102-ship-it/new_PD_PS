@@ -438,7 +438,14 @@ function scoreCandidate(item, cand) {
     // 제목에 규격이 안 찍힌 경우. 이름만으로 판단할 수밖에 없다.
     verdict = "확실";
     why = `이름 ${Math.round(nameScore * 100)}% (제목에 규격 표기 없음)`;
-  } else if (nameScore >= 0.5 || (priceGap !== null && priceGap <= 0.05) || sizeOk === true) {
+  } else if (nameScore >= 0.4 &&
+             (sizeOk === true || (priceGap !== null && priceGap <= 0.05) || nameScore >= 0.5)) {
+    // '애매' 는 **이름이 어느 정도는 맞을 때**만 준다.
+    //
+    // 예전에는 `sizeOk === true` 하나만으로도 애매가 됐다. 그래서 이름이 0% 맞는
+    // 엉뚱한 제품이 '용량이 1L 로 같다'는 이유만으로 애매로 올라왔다.
+    // 실제로 19건이 그렇게 쌓였고, 사람이 볼 가치가 없는 후보들이었다.
+    // 근거 없는 '애매'는 '못찾음'보다 나쁘다. 할 일이 있는 것처럼 보이기 때문이다.
     verdict = "애매";
     why = `이름 ${Math.round(nameScore * 100)}%` +
           (sizeOk === true ? " · 용량 일치" : "") +

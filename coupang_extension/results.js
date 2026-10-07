@@ -13,6 +13,7 @@
 const $ = (id) => document.getElementById(id);
 let RESULTS = {};
 let FOUND = {};
+let JOBS = [];   // 확장에 들어 있는 전체 목록 (아직 손도 못 댄 항목까지 보려면 필요)
 
 const LABEL = { ok: "성공", blocked: "차단", no_images: "이미지없음", fail: "실패" };
 
@@ -25,58 +26,69 @@ function esc(s) {
 }
 
 function renderReview() {
-  // 후보를 전부 보여주면 눈이 피곤하다. 이름이 반도 안 맞는 건 볼 가치가 없다.
-  // 사람이 판단할 만한 것만 남기고, 그럴듯한 순서로 세운다.
+  // 확정되지 않은 **모든** 항목을 보여준다.
+  //
+  // 예전에는 '쓸 만한 후보(이름 50% 이상)가 있는 것'만 보여줬다. 그래서
+  // 후보가 시원찮은 19건은 **화면에 뜨지도 않으면서 '애매'로 집계만** 됐다.
+  // 사용자는 "다 집어넣었는데 왜 애매가 남아 있냐"고 물을 수밖에 없었다.
+  // 끝내지 못한 일은 전부 보여야 하고, 전부 끝낼 수단이 있어야 한다.
   const plausible = (r) => (r.candidates || [])
     .filter((c) => (c.nameScore || 0) >= 0.5)
     .sort((a, b) => (b.nameScore || 0) - (a.nameScore || 0));
 
-  // 여기도 순서를 고정한다. 항목 이름순(= 카테고리-순위)이라 위에서부터
-  // 차례로 훑으면 된다. 점수순으로 세우면 하나 확정할 때마다 줄이 움직여서
-  // 어디까지 봤는지 놓치게 된다.
-  const need = Object.entries(FOUND)
-    .filter(([, r]) => r.verdict !== "확실" && plausible(r).length)
+  // 목록 전체를 기준으로 삼는다. 기록이 아예 없는 항목(한 번도 안 걸린 것)도 포함.
+  const base = JOBS.length
+    ? JOBS.map((j) => [j.id, FOUND[j.id] || {
+        id: j.id, name: j.name, wantSize: j.size, wantCount: j.count,
+        wantPrice: j.price, verdict: "못찾음", candidates: [] }])
+    : Object.entries(FOUND);
+
+  const need = base
+    .filter(([, r]) => r.verdict !== "확실")
     .sort((a, b) => String(a[0]).localeCompare(String(b[0]), "ko"));
+
   if (!need.length) {
-    const stuck = Object.values(FOUND).filter((r) => r.verdict !== "확실").length;
-    $("reviewWrap").innerHTML = stuck
-      ? `<div class="empty">볼 만한 후보가 있는 항목이 없습니다.<br>
-         아직 못 찾은 ${stuck}건은 화면에 그 제품이 없었다는 뜻입니다 —
-         다른 화면에서 다시 읽어 보세요.</div>`
-      : '<div class="empty">확인할 항목이 없습니다.</div>';
+    $("reviewWrap").innerHTML = '<div class="empty">모두 확정됐습니다. 남은 항목이 없습니다.</div>';
     $("reviewNote").style.display = "none";
     return;
   }
   $("reviewNote").style.display = "";
-  $("reviewWrap").innerHTML = need.map(([id, r]) => {
-    const cands = plausible(r).slice(0, 4).map((c) => `
-      <tr>
-        <td>${esc(c.pid)}</td>
-        <td>${esc((c.name || "").slice(0, 60))}</td>
-        <td class="num">${c.price ? c.price.toLocaleString() : "-"}</td>
-        <td>${esc(c.why || "")}</td>
-        <td><button class="pick" data-id="${esc(id)}" data-pid="${esc(c.pid)}">이게 맞음</button></td>
-      </tr>`).join("");
-    return `<div class="rev">
-      <div class="want"><b>${esc(id)}</b> — 찾는 것:
-        ${esc(r.name || "")} <b>/ ${esc(r.wantSize || "?")} / ${esc(r.wantCount || "?")}
-        / ${r.wantPrice ? r.wantPrice.toLocaleString() + "원" : "?"}</b></div>
-      <table>
-        <tr><th>딜번호</th><th>화면에서 찾은 것</th><th>가격</th><th>왜 보류했나</th><th></th></tr>
-        ${cands}
-      </table>
-      <div class="manual">
-        <b>후보가 전부 아니면</b> — 쿠팡에서 그 제품을 찾아 <b>주소창을 복사</b>해 여기 붙여넣으세요.
-        <div class="manualrow">
-          <input type="text" class="murl" data-id="${esc(id)}"
-                 placeholder="https://www.coupang.com/vp/products/...">
-          <button class="msave" data-id="${esc(id)}">주소로 확정</button>
-          <button class="nope" data-id="${esc(id)}">나중에</button>
+
+  $("reviewWrap").innerHTML =
+    `<div style="margin-bottom:10px"><b>아직 확정되지 않은 ${need.length}건</b> —
+      맞는 후보를 누르거나, 주소를 직접 넣어 끝내시면 됩니다.</div>` +
+    need.map(([id, r]) => {
+      const ok = plausible(r);
+      const body = ok.length
+        ? `<table>
+             <tr><th>딜번호</th><th>화면에서 찾은 것</th><th>가격</th><th>왜 보류했나</th><th></th></tr>
+             ${ok.slice(0, 4).map((c) => `
+               <tr>
+                 <td>${esc(c.pid)}</td>
+                 <td>${esc((c.name || "").slice(0, 60))}</td>
+                 <td class="num">${c.price ? c.price.toLocaleString() : "-"}</td>
+                 <td>${esc(c.why || "")}</td>
+                 <td><button class="pick" data-id="${esc(id)}" data-pid="${esc(c.pid)}">이게 맞음</button></td>
+               </tr>`).join("")}
+           </table>`
+        : `<div class="nocand">볼 만한 후보가 없습니다 —
+             화면에 이 제품이 없었다는 뜻입니다. 주소를 직접 넣어 주세요.</div>`;
+      return `<div class="rev">
+        <div class="want"><b>${esc(id)}</b> — 찾는 것:
+          ${esc(r.name || "")} <b>/ ${esc(r.wantSize || "?")} / ${esc(r.wantCount || "?")}
+          / ${r.wantPrice ? r.wantPrice.toLocaleString() + "원" : "?"}</b></div>
+        ${body}
+        <div class="manual">
+          <b>쿠팡에서 그 제품을 찾아 주소창을 복사</b>해 여기 붙여넣으세요 (엔터로도 됩니다).
+          <div class="manualrow">
+            <input type="text" class="murl" data-id="${esc(id)}"
+                   placeholder="https://www.coupang.com/vp/products/...">
+            <button class="msave" data-id="${esc(id)}">주소로 확정</button>
+          </div>
+          <div class="merr" data-id="${esc(id)}"></div>
         </div>
-        <div class="merr" data-id="${esc(id)}"></div>
-      </div>
-    </div>`;
-  }).join("");
+      </div>`;
+    }).join("");
 
   for (const b of document.querySelectorAll(".pick")) {
     b.addEventListener("click", async () => {
@@ -101,15 +113,7 @@ function renderReview() {
     b.addEventListener("click", () => saveManual(b.dataset.id));
   }
   for (const i of document.querySelectorAll(".murl")) {
-    // 붙여넣고 엔터만 쳐도 되게 한다. 버튼까지 가는 손이 아깝다.
     i.addEventListener("keydown", (e) => { if (e.key === "Enter") saveManual(i.dataset.id); });
-  }
-  for (const b of document.querySelectorAll(".nope")) {
-    b.addEventListener("click", async () => {
-      b.disabled = true;
-      const r = await send({ cmd: "rejectMatch", id: b.dataset.id });
-      if (r && r.ok) await load(); else b.disabled = false;
-    });
   }
 }
 
@@ -193,6 +197,13 @@ function render() {
 }
 
 async function load() {
+  if (!JOBS.length) {
+    // 확장에 들어 있는 전체 목록. 기록이 없는 항목도 확인 화면에 띄우려면 필요하다.
+    try {
+      const res = await fetch(chrome.runtime.getURL("search_list.json"));
+      if (res.ok) JOBS = await res.json();
+    } catch (e) { JOBS = []; }
+  }
   const r = await send({ cmd: "export" });
   RESULTS = (r && r.ok && r.results) || {};
   FOUND = (r && r.ok && r.found) || {};
