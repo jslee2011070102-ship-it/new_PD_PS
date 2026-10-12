@@ -456,7 +456,17 @@ async function refresh() {
     lines.push("");
     for (const x of s.recent) lines.push(`  ${x}`);
   }
-  $("status").textContent = lines.join("\n");
+  // 늘 보이는 것은 첫 줄(진행 상태 + 남은 시간)뿐.
+  // 항목별 기록은 접은 칸으로 내린다 — 평소에 볼 일이 없고, 길어지면
+  // 정작 봐야 할 경고 배너를 밀어낸다.
+  $("status").textContent = lines[0] || "대기 중";
+  const detail = lines.slice(1).filter((x) => x !== "");
+  if (detail.length) {
+    $("logWrap").style.display = "";
+    $("statusLog").textContent = detail.join("\n");
+  } else {
+    $("logWrap").style.display = "none";
+  }
   $("start").disabled = s.running;
   $("stop").disabled = !s.running;
   $("startSearch").disabled = s.running;

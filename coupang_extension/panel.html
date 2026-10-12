@@ -36,6 +36,22 @@
     padding:8px 10px; margin:10px 0; font-size:12px; line-height:1.6;
   }
   #dupWarn b { color:#a35200; }
+  details.more { margin:12px 0; border-top:1px solid var(--line, #d8dade); padding-top:8px; }
+  details.more > summary {
+    cursor:pointer; font-size:12px; color:#555; font-weight:600;
+    list-style:none; padding:4px 0; user-select:none;
+  }
+  details.more > summary::-webkit-details-marker { display:none; }
+  details.more > summary::before { content:"▸ "; color:#999; }
+  details.more[open] > summary::before { content:"▾ "; }
+  details.more .mb { margin:10px 0 14px; padding-left:10px; border-left:2px solid #e3e5e8; }
+  details.more .mb > b { font-size:12.5px; display:block; margin-bottom:4px; }
+  .danger { color:#a33; }
+  button.danger { border-color:#d9a; }
+  #status { font-size:12.5px; margin-top:10px; padding:7px 9px;
+                background:#f4f5f7; border-radius:3px; white-space:pre-wrap; }
+  #statusLog { font-size:11.5px; color:#555; white-space:pre-wrap;
+               font-family:ui-monospace, Consolas, monospace; padding:4px 2px; }
   #saveWarn {
     margin-top: 10px; padding: 9px 10px; border-radius: 4px;
     background: #fdecec; border-left: 4px solid #c33; font-size: 12px; line-height: 1.5;
@@ -97,24 +113,8 @@
   </div>
 
   <div id="paneSearch" class="pane">
-    <div class="note">
-      <b>제품명으로 쿠팡 주소를 찾습니다.</b><br>
-      <code>검색목록.json</code> 을 열어 전부 복사해 아래에 붙여넣으세요.<br>
-      검색 1등을 그냥 쓰지 않습니다. <b>이름과 가격이 맞는지 따져</b>
-      확실 / 애매 / 못찾음 으로 나눕니다.
-    </div>
     <div id="bundleInfo" class="hint" style="padding:6px 8px;background:#eef7ee;border-radius:3px">
       목록을 불러오는 중…</div>
-    <div class="row" style="margin-top:6px">
-      <button id="pickFile" style="font-size:12px">다른 목록 파일 고르기</button>
-      <button id="toggleBox" style="font-size:12px">직접 붙여넣기</button>
-    </div>
-    <input type="file" id="jobsFile" accept=".json,application/json" style="display:none">
-
-    <div id="boxWrap" style="display:none">
-      <label for="jobs">또는 내용을 직접 붙여넣기</label>
-      <textarea id="jobs" placeholder='[{"id":"세탁세제-01","name":"...","price":14650}, ...]'></textarea>
-    </div>
     <div id="jobsInfo" class="hint"></div>
     <div class="note" style="background:#eef7ee;border-left-color:#2e7d32">
       <b>쿠팡 검색창에 아래 말을 치시면 됩니다.</b> 제품명이 아니라
@@ -129,107 +129,145 @@
       <button id="openReview">△ 애매한 것 확인하기</button>
     </div>
 
-    <div class="hint" style="margin-top:14px">
-      아래는 확장이 <b>직접 검색 주소를 여는</b> 방법입니다.
-      <b>쿠팡이 이걸 거부하는 것이 확인됐습니다</b>("사용권한이 없습니다").
-      화면이 바뀌면 다시 될 수도 있어 남겨 둡니다.</div>
-    <div class="row">
-      <button id="startSearch">하나씩 검색해서 찾기</button>
-      <button id="stopSearch">중단</button>
-      <button id="resetSearch">검색기록 초기화</button>
-    </div>
+    <!-- 평소에 안 쓰는 것은 접어 둔다. 늘 보이는 것과 가끔 쓰는 것을
+         같은 자리에 늘어놓으면, 늘 보이는 것이 묻힌다. -->
+    <details class="more">
+      <summary>가끔 쓰는 것</summary>
 
-    <!-- 찾은 기록은 크롬 안에만 산다. 확장을 지우면 같이 지워진다.
-         실제로 두 번 잃었다 — 집↔회사 컴퓨터를 옮길 때 131건,
-         폴더 이름을 바꾸느라 지우고 다시 깔 때 25건.
-         내보낸 파일이 있으면 되돌릴 수 있어야 한다. 되돌릴 길이 없는 게 문제였다. -->
-    <div class="row" style="margin-top:10px">
-      <button id="pickFound">주소찾기 결과 불러오기</button>
-      <input type="file" id="foundFile" accept=".json,application/json" style="display:none">
-    </div>
-    <div class="hint">전에 내보낸 <code>1_주소찾기_…건.json</code> 이 있으면 여기서 되돌립니다.
-      컴퓨터를 옮기거나 확장을 다시 깔았을 때 쓰세요. 이미 찾은 것은 덮어쓰지 않습니다.</div>
+      <div class="mb">
+        <b>기록 되돌리기</b>
+        <div class="hint">찾은 기록은 <b>이 크롬 안에만</b> 있습니다. 컴퓨터를 옮기거나
+          확장을 다시 깔면 사라집니다. 전에 저장한 <code>1_주소찾기_…건.json</code> 으로 되돌립니다.
+          이미 찾은 것은 덮어쓰지 않습니다.</div>
+        <div class="row">
+          <button id="pickFound">주소찾기 결과 불러오기</button>
+          <input type="file" id="foundFile" accept=".json,application/json" style="display:none">
+        </div>
+      </div>
+
+      <div class="mb">
+        <b>다른 목록 쓰기</b>
+        <div class="hint">확장에 들어 있는 목록 대신 다른 것을 쓸 때만.</div>
+        <div class="row">
+          <button id="pickFile">다른 목록 파일 고르기</button>
+          <button id="toggleBox">직접 붙여넣기</button>
+        </div>
+        <input type="file" id="jobsFile" accept=".json,application/json" style="display:none">
+        <div id="boxWrap" style="display:none">
+          <textarea id="jobs" placeholder='[{"id":"유아치약-01","name":"...","price":7080}, ...]'></textarea>
+        </div>
+      </div>
+
+      <div class="mb">
+        <b>확장이 직접 검색하기</b>
+        <div class="hint"><b>쿠팡이 거부하는 것이 확인됐습니다</b>("사용권한이 없습니다").
+          화면이 바뀌면 다시 될 수도 있어 남겨 둡니다.</div>
+        <div class="row">
+          <button id="startSearch">하나씩 검색해서 찾기</button>
+          <button id="stopSearch">중단</button>
+        </div>
+      </div>
+
+      <div class="mb">
+        <b class="danger">되돌릴 수 없음</b>
+        <div class="hint">찾은 주소 기록을 전부 지웁니다. 지우기 전에 반드시 저장하세요.</div>
+        <div class="row"><button id="resetSearch" class="danger">검색기록 초기화</button></div>
+      </div>
+    </details>
   </div>
 
   <div id="paneCollect" class="pane on">
-  <div id="collectInfo" class="hint" style="padding:6px 8px;background:#eef7ee;border-radius:3px">
-    주소 목록을 불러오는 중…</div>
   <div class="row" style="margin-top:6px">
-    <!-- ①에서 방금 찾은 주소를 바로 ②로 넘긴다.
-         전에는 '결과 내보내기'로 파일을 뺀 뒤 그 파일을 나한테 보내 주시면
-         내가 목록을 새로 만들어 다음 판을 보내 드려야 했다. 사장님이
-         한 번 기다리셔야 했는데, 기다릴 이유가 없는 기다림이었다.
-         주소는 이미 확장 안에 다 들어 있다. -->
+    <!-- ①에서 방금 찾은 주소를 바로 ②로 넘긴다. 주소는 이미 확장 안에 있다. -->
     <button id="loadFound" class="primary">① 에서 찾은 주소 넣기</button>
-    <button id="loadCore">핵심 148개 넣기</button>
-    <button id="loadAll">전체 269개 넣기</button>
   </div>
-  <div class="hint">핵심 6개(세탁·캡슐·유연제·탈취제·주방·살균)는
-    <b>견적서와 USP 문서가 그 위에 서 있는 데이터</b>입니다. 먼저 이것부터 하시면 됩니다.<br>
-    예상 시간 — 핵심 <b>약 46분</b> / 전체 <b>약 83분</b>. 켜 두고 다른 일 하셔도 됩니다.<br>
-    엑셀은 275행이지만 <b>같은 상품이 두 번 올라온 6건</b>은 한 번만 수집해 269개입니다.</div>
 
-  <label for="urls">상품 주소 (한 줄에 하나)</label>
-  <textarea id="urls" placeholder="주소만 한 줄에 하나씩 붙여넣으면 됩니다.
-https://www.coupang.com/vp/products/1234567?...
+  <textarea id="urls" placeholder="위 버튼을 누르면 여기가 채워집니다.
+직접 넣으시려면 한 줄에 주소 하나씩.
 
-이름을 붙이고 싶으면 | 로 나눠 주세요.
-세탁세제-01 | https://www.coupang.com/vp/products/1234567"></textarea>
-  <div class="hint">
-    <b>구분자는 <code>|</code></b> 입니다 (쉼표·탭·공백도 됩니다).
-    <code>이름 | 주소</code> 꼴로 넣으면 그 이름이 항목 이름이 됩니다.
-    이름을 안 넣으면 <b>딜번호</b>가 이름이 됩니다.
-  </div>
+이름을 붙이려면 | 로 나눠 주세요.
+유아치약-01 | https://www.coupang.com/vp/products/1234567"></textarea>
 
   <div id="preview"></div>
 
-  <div class="row">
-    <button id="useTab">지금 보는 탭 주소 넣기</button>
-    <button id="clear">비우기</button>
-  </div>
+  <!-- 평소에 손댈 일이 없는 것은 접어 둔다. 기본값이 이미 맞다. -->
+  <details class="more">
+    <summary>가끔 쓰는 것</summary>
 
-  <label for="folderMode">저장 폴더 이름</label>
-  <select id="folderMode">
-    <option value="id" selected>딜번호 (예: 8765432)</option>
-    <option value="id_title">딜번호 + 제품명 (예: 8765432_리큅 세탁세제 3L)</option>
-    <option value="label">내가 붙인 이름 (예: 세탁세제-01)</option>
-  </select>
-  <div class="hint">같은 상품을 다시 돌리면 <b>같은 폴더에 덮어씁니다</b>.
-    딜번호는 상품마다 하나뿐이어서, 순서가 바뀌어도 폴더가 섞이지 않습니다.</div>
+    <div class="mb">
+      <b>지난 작업 목록</b>
+      <div class="hint">이전에 조사한 11개 카테고리입니다. 지금 작업과 무관합니다.</div>
+      <div class="row">
+        <button id="loadCore">핵심 148개 넣기</button>
+        <button id="loadAll">전체 269개 넣기</button>
+      </div>
+      <div id="collectInfo" class="hint"></div>
+    </div>
 
-  </div>
+    <div class="mb">
+      <b>주소 직접 다루기</b>
+      <div class="row">
+        <button id="useTab">지금 보는 탭 주소 넣기</button>
+        <button id="clear">비우기</button>
+      </div>
+    </div>
 
-  <div class="row">
-    <span>상품 사이 대기</span>
-    <input type="number" id="gapMin" value="12" min="5"> ~
-    <input type="number" id="gapMax" value="25" min="5"> 초
-  </div>
-  <div class="hint">사람이 보는 속도로 둡니다. 줄이지 마세요.</div>
+    <div class="mb">
+      <b>저장 폴더 이름</b>
+      <select id="folderMode">
+        <option value="id">딜번호 (예: 8765432)</option>
+        <option value="id_title">딜번호 + 제품명</option>
+        <option value="label" selected>내가 붙인 이름 (예: 유아치약-01)</option>
+      </select>
+      <div class="hint">같은 상품을 다시 돌리면 <b>같은 폴더에 덮어씁니다</b>.</div>
+    </div>
 
-  <div class="row">
-    <label style="margin:0;font-weight:400">
-      <input type="checkbox" id="urlOnly"> 내 컴퓨터에 <b>이미지 파일은 저장하지 않기</b>
-    </label>
-  </div>
-  <div class="hint">
-    <b>상세 이미지가 어디 있는지(주소)는 어느 쪽이든 기록에 항상 남습니다.</b>
-    이 칸은 그 이미지를 <b>내 디스크에 파일로 받을지</b>만 정합니다.
-    (제가 넣는 '상품 주소'와는 다른 것입니다 — 상품 페이지 안에 들어 있는
-    상세 이미지 한 장 한 장의 주소를 말합니다)<br>
-    체크하면 150개 기준 <b>약 2GB를 아끼고 7분쯤 빨라집니다.</b>
-    이미지는 기록에 남은 주소로 나중에 받을 수 있습니다.</div>
+    <div class="mb">
+      <b>상품 사이 대기</b>
+      <div class="row">
+        <input type="number" id="gapMin" value="12" min="5"> ~
+        <input type="number" id="gapMax" value="25" min="5"> 초
+      </div>
+      <div class="hint">사람이 보는 속도로 둡니다. <b>줄이지 마세요.</b></div>
+    </div>
 
-  <div class="row">
-    <label style="margin:0;font-weight:400">
-      <input type="checkbox" id="tryMobile" checked> 실패하면 <b>모바일 주소</b>로 한 번 더 시도
-    </label>
-  </div>
+    <div class="mb">
+      <div class="row">
+        <label style="margin:0;font-weight:400">
+          <input type="checkbox" id="urlOnly"> 이미지 파일은 저장하지 않기 (주소만 기록)
+        </label>
+      </div>
+      <div class="hint">이미지가 어디 있는지는 어느 쪽이든 기록에 남습니다.
+        체크하면 디스크와 시간을 아끼지만, <b>나중에 다시 받아야 합니다.</b></div>
+      <div class="row">
+        <label style="margin:0;font-weight:400">
+          <input type="checkbox" id="tryMobile" checked> 실패하면 모바일 주소로 한 번 더 시도
+        </label>
+      </div>
+    </div>
+  </details>
 
+  <!-- 수집 시작·중단은 ②번 탭 안에 둔다. ①번(주소 찾기) 화면에서
+       '수집 시작'이 보이면 지금 뭘 하는 중인지 헷갈린다. -->
   <div class="row">
     <button id="start" class="primary">수집 시작</button>
     <button id="stop" disabled>중단</button>
-    <button id="export">결과 내보내기</button>
-    <button id="reset">기록 초기화</button>
+  </div>
+
+  <!-- 되돌릴 수 없는 버튼은 '수집 시작' 옆에 두지 않는다.
+       손이 미끄러질 자리에 둘 버튼이 아니다. -->
+  <details class="more">
+    <summary>되돌릴 수 없는 것</summary>
+    <div class="mb">
+      <div class="hint">수집한 기록을 전부 지웁니다. 지우기 전에 반드시 <b>결과 저장</b>을 하세요.</div>
+      <div class="row"><button id="reset" class="danger">수집기록 초기화</button></div>
+    </div>
+  </details>
+  </div><!-- /paneCollect -->
+
+  <!-- 저장만 탭 바깥에 둔다. 어느 화면에 있든 손이 닿아야 하는 유일한 버튼. -->
+  <div class="row">
+    <button id="export">결과 저장</button>
   </div>
 
   <!-- 경고 문구와 버튼을 갈라 둔다.
@@ -242,7 +280,15 @@ https://www.coupang.com/vp/products/1234567?...
     <span id="saveWarnText"></span>
     <br><button id="saveNow" class="primary">지금 파일로 저장하기</button>
   </div>
+  <!-- 평소에는 한 줄 요약만. 항목별 기록은 궁금할 때만 편다.
+       ("진행기록같은거는 굳이 표시해야하나 싶네") -->
+  <!-- 늘 보이는 것은 한 줄 요약(#status). 28곳이 이미 이 id 로 글을 쓰므로
+       id 는 그대로 두고, 길어지는 항목별 기록만 #statusLog 로 떼어 접는다. -->
   <div id="status">대기 중</div>
+  <details id="logWrap" class="more" style="display:none">
+    <summary>항목별 기록 보기</summary>
+    <div id="statusLog"></div>
+  </details>
 
   <script src="panel.js"></script>
 </body>
