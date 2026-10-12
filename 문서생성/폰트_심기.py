@@ -50,6 +50,13 @@ face = ("  @font-face{font-family:'Pretendard Variable';font-style:normal;"
 
 # CDN link 를 지우고 @font-face 를 <style> 맨 앞에 넣는다.
 html = re.sub(r'\s*<link rel="stylesheet" href="https://cdn\.jsdelivr\.net[^>]*>\n?', '\n', html)
+# 이미 심어 둔 @font-face 가 있으면 먼저 걷어낸다. 안 그러면 본문을 고칠 때마다
+# 낡은 글자 묶음이 뒤에 쌓이고, 새로 추가한 글자가 그 낡은 쪽으로 걸려
+# 다른 글꼴로 떨어진다.
+before = len(html)
+html = re.sub(r"[ \t]*@font-face\{font-family:'Pretendard Variable';[^}]*\}\n?", '', html)
+if len(html) != before:
+    print('기존 @font-face 를 걷어냄')
 assert '<style>' in html
 html = html.replace('<style>', '<style>\n' + face, 1)
 open(HTML, 'w', encoding='utf-8').write(html)
