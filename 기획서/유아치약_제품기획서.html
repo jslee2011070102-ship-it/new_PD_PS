@@ -71,9 +71,7 @@
   .bar .fl.a{background:var(--accent);}
   .bar .vl{width:62px;flex:none;text-align:right;font-variant-numeric:tabular-nums;color:var(--sub);}
   /* 인쇄 — 한 섹션이 A4 한 장에 정확히 들어가게 맞춘다.
-     화면용 치수 그대로 찍으면 쪽이 쪼개지고, 그러면 하단 쪽번호가
-     실제 쪽과 어긋난다. 기준은 '브라우저에서 잰 높이'가 아니라
-     '실제로 뽑은 PDF 의 쪽수'다 — 섹션 수와 같아질 때까지 맞췄다. */
+     기준은 '브라우저에서 잰 높이'가 아니라 '실제로 뽑은 PDF 의 쪽수'다. */
   @page { size: A4; margin: 0; }
   @media print{
     body{background:#fff;}
@@ -146,12 +144,12 @@
 
   <h3>핵심 차별화 요약</h3>
   <div class="grid-3">
-    <div class="box hl"><div class="bt">POINT 01</div><div class="bignum green">1펌프<br>= 1회분</div><div class="bv" style="margin-top:8px;">펌프를 가진 제품 2개는 &lsquo;간편·위생&rsquo;으로만 팔고, 양을 말하는 제품 3개는 <span class="strong">글로만 안내</span>. <span class="strong">둘을 합친 제품이 없음</span></div></div>
+    <div class="box hl"><div class="bt">POINT 01</div><div class="bignum green">1펌프<br>= 1회분</div><div class="bv" style="margin-top:8px;"><span class="strong">법정 표시사항이 전 제품에 &lsquo;1회당 완두콩 크기&rsquo;를 적게 하는데</span>, 그걸 지킬 수단을 준 제품이 25개 중 0개</div></div>
     <div class="box hl"><div class="bt">POINT 02</div><div class="bignum green">수요는<br>이미 있음</div><div class="bv" style="margin-top:8px;">1위 닥터노아가 입구를 50% 좁히고 쌀알·완두콩 가이드를 실어 <span class="strong">&lsquo;양&rsquo;이라는 문제를 시장에 심어 놓음</span>. 그 수요에 더 나은 해법으로 진입</div></div>
     <div class="box hl"><div class="bt">POINT 03</div><div class="bignum green">단가 200원<br>구간 진입</div><div class="bv" style="margin-top:8px;">펌프 2개는 단가 477·557원으로 <span class="strong">가성비 구간에 펌프가 없음</span>. 묶음·리필로 200원대 진입 시 구조와 가격을 동시 확보</div></div>
   </div>
 
-  <div class="note">수치는 2026.10.12 쿠팡 화면 실측. 매출은 판매가 × 월 구매자수(쿠팡 배지값) × 2의 추정치이며 실제 매출이 아님. 상세페이지는 25개 중 11개를 전문 판독했고(03은 01과 동일), 나머지는 썸네일·상품요약 기준.</div>
+  <div class="note">수치는 2026.10.12 쿠팡 화면 실측. 매출은 판매가 × 월 구매자수(쿠팡 배지값) × 2의 추정치이며 실제 매출이 아님. 상세페이지는 <b>25개 전수</b>를 판독했다. 법정 표시사항 전문은 해상도 한계로 3건에서만 직접 확인.</div>
 
   <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>1</span></div>
 </section>
@@ -316,22 +314,23 @@
 <section class="page">
   <div class="sec-label">SECTION 03 / USP CENSUS</div>
   <h2>경쟁사 USP 전수조사 (1)</h2>
-  <div class="sec-lead">상세페이지 이미지 160장(총 572,947px) 판독. 썸네일에 없는 시험성적서·임상·인증·성분 전략</div>
+  <div class="sec-lead">TOP25 <span class="strong">전수</span> 상세페이지 판독 — 이미지 160장 / 총 572,947px. 썸네일에 없는 시험성적서·임상·인증·성분 전략</div>
 
   <h3>각 축의 천장 — 누가 어디까지 갔나</h3>
   <table class="sm">
     <tr><th>축</th><th>천장</th><th>내용</th></tr>
     <tr><td class="k green">안전 입증</td><td class="strong">닥터노아<br>(1·3위)</td><td>유해물질 <span class="strong">390항목 불검출</span> = 중금속 4종 + 보존제 3종 + PFAS 381종 + BPA·프탈레이트 2종. KTR·KOTITI 성적서 이미지 게재. 자체기준 납 1ppm 이하(KC 영유아 기준 100ppm의 100배). <span class="strong">튜브(용기)까지 검사</span></td></tr>
-    <tr><td class="k green">효능 입증</td><td class="strong">뷰카<br>(2·5·19위)</td><td>인체적용시험 <span class="strong">20명</span> / 1회 사용 후 황화수소 83%↓·메틸메르캅탄 93%↓ / 그래프·p값 게재(마리디엠). 별도 항균력 시험 뮤탄스균 99.7%↓(한국분석시험연구원)</td></tr>
+    <tr><td class="k green">효능 입증</td><td class="strong">뷰카<br>(2·5·19위)</td><td>인체적용시험 <span class="strong">20명</span> / 1회 사용 후 황화수소 83%↓·메틸메르캅탄 93%↓ / 그래프·p값 게재(마리디엠). 항균력 뮤탄스균 99.7%↓(한국분석시험연구원). 누적판매 <span class="strong">420만개</span>·후기 18만개·평점 4.8</td></tr>
     <tr><td class="k green">연령 구성</td><td class="strong">2080 키즈크리닉<br>(8위)</td><td><span class="strong">4단계</span> — 0~2세 불소ZERO / 3세+ 500ppm / 6세+ 1000ppm / 8세+ 1450ppm. 시장 최다 단계이자 단가 최저(194원)</td></tr>
-    <tr><td class="k">인증</td><td>닥터노아</td><td>비건(한국비건인증원) + 에코서트 + USDA + 할랄 + 코셔 5종</td></tr>
-    <tr><td class="k">권위</td><td>센토 (14·20위)</td><td>특허 등록 6종 생약성분 <span class="strong">특허번호 명시(10-2594674)</span> — 번호를 적은 곳은 여기뿐 / 2026 KCAB 대상</td></tr>
+    <tr><td class="k">서류 게재</td><td>센토 (14·20위)</td><td><span class="strong">특허증 원본</span>(특허청 제10-2594674호, 식물유래 구강건강 복합성분 6종) + 비건인증서 원본. 불검출 CMIT·MIT/파라벤 7종/중금속. 우려성분 17종 미포함. 2026 KCAB 대상</td></tr>
+    <tr><td class="k">제3자 권위</td><td>에이카랩스 (11·23위)</td><td><span class="strong">KAPD(소아치과학회) 인증 마크</span> — 학회 마크를 단 곳은 시장에서 여기뿐. 자체 기준이 아닌 외부 권위</td></tr>
+    <tr><td class="k">인증 폭</td><td>닥터노아</td><td>비건(한국비건인증원) + 에코서트 + USDA + 할랄 + 코셔 5종</td></tr>
   </table>
 
   <h3>이 카테고리만의 문법 — 성분은 &lsquo;적을수록&rsquo; 좋다</h3>
   <div class="callout">
     <div class="tag">CATEGORY GRAMMAR</div>
-    <p>1위 닥터노아의 성분 소구는 <span class="strong">&ldquo;꼭 필요한 성분 14종만 담았어요&rdquo;</span>. 세탁세제에서 &lsquo;효소 9종&rsquo;처럼 <span class="strong">많을수록 좋은 것과 정반대</span>. 아이 입에 들어가는 제품이라 <span class="green">덜어낸 것이 곧 가치</span>로 읽힘. 신제품 설계에서 성분 가짓수를 늘리는 방향은 이 카테고리에서 역효과.</p>
+    <p>1위 닥터노아의 성분 소구는 <span class="strong">&ldquo;꼭 필요한 성분 14종만 담았어요&rdquo;</span>. 세탁세제에서 &lsquo;효소 9종&rsquo;처럼 <span class="strong">많을수록 좋은 것과 정반대</span>. 센토도 &lsquo;우려성분 17종 미포함&rsquo;, 2080도 &lsquo;8무첨가&rsquo;, 라이온도 &lsquo;3無&rsquo;. 아이 입에 들어가는 제품이라 <span class="green">덜어낸 것이 곧 가치</span>로 읽힘. 성분 가짓수를 늘리는 설계는 이 카테고리에서 역효과.</p>
   </div>
 
   <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>6</span></div>
@@ -341,7 +340,7 @@
 <section class="page">
   <div class="sec-label">SECTION 03 / USP CENSUS</div>
   <h2>경쟁사 USP 전수조사 (2)</h2>
-  <div class="sec-lead">1위의 서사 구조와 전체 집계</div>
+  <div class="sec-lead">1위의 서사 구조, 개별 아이디어, 전수 집계</div>
 
   <h3>공포 → 규제 공백 → 자체 검증 (1위의 서사)</h3>
   <ul class="dash">
@@ -349,25 +348,34 @@
     <li><span class="strong">&ldquo;치약 완제품에는 중금속 관리기준이 없다&rdquo;</span> — 규제 공백을 명시</li>
     <li>WHO &lsquo;납에 안전한 수준은 없다&rsquo; / 영유아 흡수율 성인 4~5배 / ADHD·지능저하 보도</li>
     <li>대한소아치과학회지 2020;47(3) 영유아 구강검진 69,253건 — 유치충치 2세 13.4% → 4세 42.1%</li>
-    <li>→ 결론: <span class="green">&ldquo;기준이 없으니 우리가 만들었다&rdquo;</span>. 390항목은 그 약속의 증거물</li>
+    <li>→ <span class="green">&ldquo;기준이 없으니 우리가 만들었다&rdquo;</span>. 390항목은 그 약속의 증거물</li>
   </ul>
+  <div class="note">6위 2080은 반대 방향으로 간다 — 2022년 치과의사 상담 매뉴얼을 인용해 <span class="strong">&ldquo;무불소·저불소는 충치 예방 효과가 없다&rdquo;</span>며 저불소 진영을 공격. 같은 카테고리 안에서 &lsquo;안전&rsquo;과 &lsquo;효과&rsquo;가 서로를 겨누고 있음.</div>
 
-  <h3>판독 12개 기준 집계</h3>
+  <h3>한 곳씩만 가진 것 — 베낄 수 있는 아이디어</h3>
+  <table class="sm">
+    <tr><th>아이디어</th><th>보유</th><th>노리는 수요</th></tr>
+    <tr><td class="k">미니치약 15g 동봉</td><td>예꼬맘 22위</td><td>외출·어린이집. 본품 수량만큼 넣어 줌</td></tr>
+    <tr><td class="k">네임 스티커 동봉</td><td>티타드 10위</td><td>어린이집에 두고 쓰는 치약에 이름 붙이기</td></tr>
+    <tr><td class="k">리필 구조</td><td>조르단 18위</td><td>재구매·친환경. 본품 188g + 리필 188g</td></tr>
+    <tr><td class="k">캐릭터 라이선스</td><td>오루루 17위</td><td>아이가 고르게 만듦(캐치티니핑)</td></tr>
+    <tr><td class="k">공장 주소 명시</td><td>2080 6·24위</td><td>국내생산 신뢰(애경산업 청양공장)</td></tr>
+    <tr><td class="k">학회 인증 마크</td><td>에이카랩스 11·23위</td><td>자체 기준이 아닌 외부 권위</td></tr>
+  </table>
+
+  <h3>전수 집계 (25개)</h3>
   <table class="sm">
     <tr><th>항목</th><th class="num">건수</th><th>해석</th></tr>
-    <tr><td class="k">연령 단계 구성</td><td class="num">6</td><td>절반이 보유 — 차별점 아님</td></tr>
-    <tr><td class="k">전성분 전체 공개</td><td class="num">4</td><td>확산 중</td></tr>
-    <tr><td class="k">양 사용량 가이드(글)</td><td class="num">3</td><td>닥터노아·블랑키즐·라이온</td></tr>
-    <tr><td class="k">시험성적서 이미지</td><td class="num">2</td><td>닥터노아·뷰카</td></tr>
-    <tr><td class="k">펌프 보유</td><td class="num">2</td><td>2080·조르단</td></tr>
+    <tr><td class="k">연령 단계 구성</td><td class="num">8</td><td>3분의 1 — 차별점 아님</td></tr>
+    <tr><td class="k">양 사용량을 소구로 끌어올림</td><td class="num">4</td><td>닥터노아·블랑키즐·라이온·2080 일사오공</td></tr>
+    <tr><td class="k">시험성적서·인증서 원본 게재</td><td class="num">3</td><td>닥터노아·뷰카·센토</td></tr>
+    <tr><td class="k">펌프 보유</td><td class="num">2</td><td>2080 15위·조르단 18위</td></tr>
     <tr><td class="k">인체적용시험 수치</td><td class="num">1</td><td>뷰카</td></tr>
-    <tr><td class="k">양 조절 &lsquo;구조&rsquo; 설계</td><td class="num">1</td><td>닥터노아(입구 50% 축소 + 말랑한 튜브)</td></tr>
-    <tr><td class="k">리필 구조</td><td class="num">1</td><td>조르단(본품 188g + 리필 188g)</td></tr>
-    <tr><td class="k">미니치약 동봉</td><td class="num">1</td><td>예꼬맘(15g, 외출·어린이집용)</td></tr>
-    <tr><td class="k warn-t">정량 토출 설계</td><td class="num warn-t">0</td><td class="warn-t">없음</td></tr>
-    <tr><td class="k warn-t">펌프를 &lsquo;정량&rsquo;으로 소구</td><td class="num warn-t">0</td><td class="warn-t">없음 — 두 펌프 모두 &lsquo;간편·위생·넉넉함&rsquo;으로만 소구</td></tr>
+    <tr><td class="k">양 조절 &lsquo;구조&rsquo; 설계</td><td class="num">1</td><td>닥터노아 — 입구 50% 축소 + 말랑한 튜브</td></tr>
+    <tr><td class="k warn-t">정량 토출 설계</td><td class="num warn-t">0</td><td class="warn-t">없음 — <span class="strong">전수 확정</span></td></tr>
+    <tr><td class="k warn-t">펌프를 &lsquo;정량&rsquo;으로 소구</td><td class="num warn-t">0</td><td class="warn-t">없음 — 두 펌프 모두 &lsquo;간편·위생·넉넉함&rsquo;</td></tr>
   </table>
-  <div class="note gap">집계는 <span class="strong">상세 판독한 12개(11개 + 동일내용 1개) 기준</span>. 판독하지 않은 13개에서 추가 소구가 나올 수 있으므로 &lsquo;0건&rsquo;은 전수 확정이 아님. 확정이 필요하면 나머지 13개를 추가 판독해야 함.</div>
+  <div class="note">25개 전수 판독 완료. 이전 판의 &lsquo;12개 기준 추정&rsquo;에서 <span class="strong">전수 확정</span>으로 갱신. 다만 상세페이지 하단 법정 표시사항 전문은 해상도 한계로 3건(17·24·25)에서만 직접 읽었고, 나머지는 의약외품 공통 문구로 판단.</div>
 
   <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>7</span></div>
 </section>
@@ -376,40 +384,49 @@
 <section class="page">
   <div class="sec-label">SECTION 04 / THE GAP</div>
   <h2>비어 있는 자리</h2>
-  <div class="sec-lead">두 개의 선이 교차하지 않은 지점. 수요는 1위가 이미 만들어 놓았고, 해법은 비어 있음</div>
+  <div class="sec-lead">법이 &lsquo;완두콩만큼&rsquo; 쓰라고 적게 해 놓았는데, 그걸 지킬 수단을 준 제품이 없다</div>
+
+  <h3>법정 표시사항에 이미 답이 적혀 있다</h3>
+  <table class="sm">
+    <tr><th>항목</th><th>법정 표시 문구</th><th>성격</th></tr>
+    <tr><td class="k">용법·용량</td><td>&ldquo;<span class="strong">적당량</span>을 칫솔에 묻혀 칫솔질에 의해 치아를 닦는다&rdquo;</td><td class="warn-t">모호</td></tr>
+    <tr><td class="k">사용상 주의사항</td><td>&ldquo;만 6세 이하의 어린이가 사용할 경우, 1회당 <span class="strong">완두콩 크기 정도의 소량</span>의 치약을 사용하고, 빨아 먹거나 삼키지 않도록 보호자의 지도하에 사용할 것&rdquo;</td><td class="green">구체적</td></tr>
+  </table>
+  <div class="callout fill">
+    <div class="tag">KEY FINDING</div>
+    <p>이 두 문구는 <span class="strong">의약외품 공통 표시사항</span>이라 TOP25 전 제품의 상세페이지 하단에 실려 있음(17·24·25에서 글자 그대로 동일한 문장 확인). 즉 <span class="strong">모든 제조사가 &lsquo;완두콩만큼 쓰라&rsquo;고 적어 두고, 동시에 용법에는 &lsquo;적당량&rsquo;이라고 적는다.</span> 그 사이를 메우는 수단을 준 제품은 <span class="green">25개 중 0개</span>.</p>
+  </div>
 
   <h3>두 집단이 서로를 모른다</h3>
   <div class="grid-2">
-    <div class="box"><div class="bt">A. 양을 말하는 제품 (3)</div>
-      <div class="bv">닥터노아 1위 · 블랑키즐 7위 · 라이온 21위<br><br>
-      <span class="strong">해법은 전부 수동</span> — 좁은 입구, 말랑한 튜브, 쌀알/완두콩 그림, Q&amp;A 문장.<br>
-      결국 <span class="warn-t">아이와 부모가 눈대중으로 맞춰야 함</span></div></div>
+    <div class="box"><div class="bt">A. 양을 소구로 올린 제품 (4)</div>
+      <div class="bv">닥터노아 1위 · 블랑키즐 7위 · 라이온 21위 · 2080 6위<br><br>
+      <span class="strong">해법은 전부 설명</span> — 좁은 입구, 말랑한 튜브, 쌀알/완두콩 그림, 불소 그램 환산, Q&amp;A 문장.<br>
+      <span class="warn-t">결국 아이와 부모가 눈대중으로 맞춰야 함</span></div></div>
     <div class="box"><div class="bt">B. 펌프를 가진 제품 (2)</div>
       <div class="bv">2080 15위 · 조르단 18위<br><br>
-      <span class="strong">정량 구조를 손에 쥐고도</span> 소구는 &ldquo;짜지 않아 간편&rdquo;, &ldquo;위생적&rdquo;, &ldquo;튜브의 2.5배 넉넉한 양&rdquo;, &ldquo;리필로 친환경&rdquo;.<br>
+      <span class="strong">정량 구조를 손에 쥐고도</span> 소구는 &ldquo;짜지 않아 간편&rdquo;, &ldquo;위생적&rdquo;, &ldquo;튜브의 2.5배&rdquo;, &ldquo;리필로 친환경&rdquo;.<br>
       <span class="warn-t">&lsquo;정량&rsquo;이라는 단어가 상세페이지 어디에도 없음</span></div></div>
   </div>
-  <div class="callout fill">
-    <div class="tag">THE GAP</div>
-    <p><span class="strong">A ∩ B = 0.</span> 1위가 &ldquo;불소는 적정 사용량이 중요하다&rdquo;고 상세페이지에 적어 수요를 만들어 놓았는데, 정작 그 문제를 <span class="strong">구조로 해결한 제품이 없다</span>. 펌프를 가진 두 제품은 자기가 가진 것의 가치를 모른 채 &lsquo;편리함&rsquo;으로만 팔고 있음.</p>
-  </div>
+  <p class="body"><span class="strong">A ∩ B = 0.</span> 1위가 &ldquo;불소는 적정 사용량이 중요하다&rdquo;고 상세페이지에 적어 수요를 만들어 놓았는데, 정작 그 문제를 <span class="strong">구조로 해결한 제품이 없다</span>. 펌프를 가진 두 제품은 자기가 가진 것의 가치를 모른 채 &lsquo;편리함&rsquo;으로만 판다. 게다가 둘 다 단가 477·557원으로 <span class="strong">가성비 구간 밖</span>에 있다.</p>
 
   <h3>왜 &lsquo;양&rsquo;이 맞는 축인가 — 근거</h3>
   <table class="sm">
     <tr><th>근거</th><th>내용</th><th>출처</th></tr>
-    <tr><td class="k">임상 근거</td><td>6세 미만 어린이의 불소증 위험은 <span class="strong">농도보다 사용량</span>에서 온다. 440ppm 대 1450ppm 비교에서 저농도군의 불소증 위험이 낮게 나타남(중간 수준 확실성)</td><td>코크란 리뷰</td></tr>
-    <tr><td class="k">권고 기준</td><td>3세 미만 쌀알(smear), 3~6세 완두콩(pea) — ADA·NHS 공통. <span class="strong">완두콩 1회 = 약 0.25g</span></td><td>ADA / NHS</td></tr>
-    <tr><td class="k">실행 격차</td><td>손으로 짜면 사람은 과다 투여하는 경향이 있음</td><td>정량 디스펜서 설계 문헌</td></tr>
-    <tr><td class="k">시장 방향</td><td>TOP25가 1450ppm으로 몰리는 중(7개). <span class="strong">농도가 올라갈수록 양 통제의 가치가 커짐</span></td><td>본 조사 실측</td></tr>
+    <tr><td class="k">법정 표시</td><td>전 제품이 &lsquo;1회당 완두콩 크기&rsquo;를 의무 표시. <span class="strong">업계가 이미 합의한 기준</span></td><td>의약외품 표시사항</td></tr>
+    <tr><td class="k">임상 근거</td><td>6세 미만 불소증 위험은 <span class="strong">농도보다 사용량</span>. 440ppm 대 1450ppm 비교에서 저농도군 위험이 낮게 나타남(중간 수준 확실성)</td><td>코크란 리뷰</td></tr>
+    <tr><td class="k">권고 기준</td><td>3세 미만 쌀알, 3~6세 완두콩 — ADA·NHS 공통. <span class="strong">완두콩 1회 ≈ 0.25g</span></td><td>ADA / NHS</td></tr>
+    <tr><td class="k">실행 격차</td><td>손으로 짜면 사람은 과다 투여하는 경향</td><td>정량 디스펜서 설계 문헌</td></tr>
+    <tr><td class="k">시장 방향</td><td>1450ppm이 7개로 최다. <span class="strong">농도가 올라갈수록 양 통제의 가치가 커짐</span></td><td>본 조사 실측</td></tr>
   </table>
 
   <h3>국내외 벤치마킹</h3>
   <table class="sm">
     <tr><th>사례</th><th>무엇을 했나</th><th>우리에게 주는 것</th></tr>
-    <tr><td class="k">콜게이트 키즈 펌프<br>(해외)</td><td>어린이용 펌프형 출시. 치과의사 리뷰 매체가 &ldquo;칫솔에 올리는 양을 더 잘 통제할 수 있다&rdquo;고 평가</td><td><span class="green">펌프 = 양 통제</span>라는 연결이 해외에서는 이미 말해지고 있음. 국내 TOP25에는 없음</td></tr>
-    <tr><td class="k">진공 펌프식<br>디스펜서 (해외)</td><td>칫솔 머리를 눌러 넣으면 <span class="strong">완두콩 크기만큼</span> 토출되는 구조</td><td>1회 토출량 고정이 기구적으로 가능하다는 증거</td></tr>
-    <tr><td class="k">조르단 뉴스텝2<br>(국내 18위)</td><td>펌프 + 리필(188g+188g). 튜브 대비 2.5배 양, 리필로 친환경 소구</td><td><span class="green">리필 구조가 국내 쿠팡에서 이미 통한다</span>는 증거. 다만 조립 4단계가 마찰점 — 우리는 조립 없는 완제 펌프로</td></tr>
-    <tr><td class="k">예꼬맘 (국내 22위)</td><td>본품 수량만큼 15g 미니치약 동봉</td><td>외출·어린이집 수요가 실재. <span class="green">펌프(집) + 미니튜브(외출)</span> 조합의 근거</td></tr>
+    <tr><td class="k">콜게이트 키즈 펌프<br>(해외)</td><td>어린이용 펌프형. 치과의사 리뷰 매체가 &ldquo;칫솔에 올리는 양을 더 잘 통제할 수 있다&rdquo;고 평가</td><td><span class="green">펌프 = 양 통제</span>라는 연결이 해외에서는 이미 말해짐. 국내 TOP25에는 없음</td></tr>
+    <tr><td class="k">진공 펌프식 디스펜서<br>(해외)</td><td>칫솔 머리를 눌러 넣으면 <span class="strong">완두콩 크기만큼</span> 토출</td><td>1회 토출량 고정이 기구적으로 가능하다는 증거</td></tr>
+    <tr><td class="k">조르단 뉴스텝2<br>(국내 18위)</td><td>펌프 + 리필(188g+188g), 친환경 소구</td><td><span class="green">리필이 국내 쿠팡에서 통한다</span>는 증거. 조립 4단계가 마찰점 — 우리는 조립 없는 완제로</td></tr>
+    <tr><td class="k">예꼬맘·티타드<br>(국내 22·10위)</td><td>미니치약 15g 동봉 / 네임 스티커 동봉</td><td>외출·어린이집 수요가 실재. <span class="green">펌프(집) + 미니튜브(외출)</span> 조합의 근거</td></tr>
   </table>
   <div class="note gap"><span class="strong">확인 못 한 것:</span> &lsquo;정량 토출 어린이 치약&rsquo;으로 디자인 어워드를 받은 상용 제품은 확인되지 않음. 레드닷·iF·굿디자인 수상 DB를 직접 확인해야 함. 위 해외 사례는 제품·매체 리뷰 수준의 근거임.</div>
 
