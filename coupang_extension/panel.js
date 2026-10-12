@@ -462,6 +462,21 @@ async function refresh() {
   // 이 결과는 크롬 안에만 있어서 컴퓨터를 옮기면 따라오지 않는다.
   const found = (s.doneIds || []).length;
   const saved = s.exportedCount || 0;
+  // 같은 딜번호가 여러 항목에 붙었으면 알린다. 한 페이지가 서로 다른
+  // 두 상품일 수는 없으므로, 적어도 하나는 틀린 것이다.
+  const dups = s.dupPids || [];
+  if (dups.length) {
+    $("dupWarn").style.display = "";
+    $("dupWarn").innerHTML =
+      `<b>⚠ 같은 딜번호가 여러 항목에 붙었습니다 (${dups.length}건).</b><br>` +
+      `한 페이지가 서로 다른 상품일 수는 없으니, 적어도 하나는 틀렸습니다.<br>` +
+      dups.map((g) => `&nbsp;&nbsp;· <code>${esc(g.pid)}</code> → ${g.ids.map(esc).join(", ")}`).join("<br>") +
+      `<br>'애매한 것 확인하기' 에서 해당 항목의 주소를 다시 넣어 주세요.` +
+      `<br><span class="hint">같은 상품이 순위에 두 번 오른 경우라면 그대로 두셔도 됩니다.</span>`;
+  } else {
+    $("dupWarn").style.display = "none";
+  }
+
   if (found > saved) {
     $("saveWarn").style.display = "";
     // 글자만 바꾼다. 버튼은 panel.html 에 붙박이로 있다.

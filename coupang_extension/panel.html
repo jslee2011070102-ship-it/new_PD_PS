@@ -31,6 +31,11 @@
   }
   .hint { color: #666; font-size: 11px; margin-top: 4px; }
   .warn { color: #a33; }
+  #dupWarn {
+    background:#fff4e5; border:1px solid #e0a800; border-radius:4px;
+    padding:8px 10px; margin:10px 0; font-size:12px; line-height:1.6;
+  }
+  #dupWarn b { color:#a35200; }
   #saveWarn {
     margin-top: 10px; padding: 9px 10px; border-radius: 4px;
     background: #fdecec; border-left: 4px solid #c33; font-size: 12px; line-height: 1.5;
@@ -232,6 +237,7 @@ https://www.coupang.com/vp/products/1234567?...
        2초마다 새로 만들었다. 누르는 순간 버튼이 갈려 나가면 클릭이 통째로
        사라진다("지금 파일로 저장하기 눌렀는데 왜 안되지?").
        버튼은 여기 붙박이로 두고, 2초마다 바뀌는 건 글자뿐이다. -->
+  <div id="dupWarn" style="display:none"></div>
   <div id="saveWarn" style="display:none">
     <span id="saveWarnText"></span>
     <br><button id="saveNow" class="primary">지금 파일로 저장하기</button>

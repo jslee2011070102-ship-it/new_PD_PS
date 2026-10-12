@@ -895,6 +895,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             .filter((r) => r.verdict === "애매").map((r) => r.id),
           exportedCount: state.exportedCount || 0,
           exportedAt: state.exportedAt || "",
+          /* 서로 다른 항목에 같은 딜번호가 붙었는지 본다.
+           *
+           * 왜: 직접 주소를 넣는 화면이 같은 주소를 몇 번이든 받아 준다.
+           * 실제로 2080 제품 세 개(06·08·24)에 같은 딜번호 하나가 붙었고,
+           * 전부 '확실'로 보였다. 한 페이지가 서로 다른 세 상품일 수는 없다.
+           * 같은 상품이 순위에 두 번 오르는 일은 있지만(엑셀의 '중복' 칸),
+           * 그건 사람이 보고 판단할 일이지 조용히 넘어갈 일이 아니다.
+           */
+          dupPids: Object.values(
+            Object.values(state.found)
+              .filter((r) => r.verdict === "확실" && r.pid)
+              .reduce((a, r) => {
+                (a[r.pid] = a[r.pid] || { pid: r.pid, ids: [] }).ids.push(r.id);
+                return a;
+              }, {})
+          ).filter((g) => g.ids.length > 1),
           recent: Object.values(state.found).slice(-5).map((r) =>
             `${r.id}: ${r.verdict}` +
             (r.pid ? ` · ${r.pid}` : "") +
