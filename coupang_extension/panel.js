@@ -345,6 +345,44 @@ $("stopSearch").addEventListener("click", async () => {
   $("status").textContent = "중단 요청을 보냈습니다. 진행 중인 한 건을 마치고 멈춥니다.";
 });
 
+/* 내보낸 검색결과.json 을 되돌린다.
+ *
+ * 왜 필요한가: 찾은 기록은 chrome.storage.local, 즉 이 크롬 안에만 있다.
+ * 확장을 지우면 같이 지워지고, 다른 컴퓨터로도 따라가지 않는다.
+ * 실제로 두 번 잃었다(컴퓨터 이동 131건, 재설치 25건).
+ * 경고만 띄우고 되돌릴 길을 안 둔 것이 잘못이었다. 저장한 게 있으면
+ * 되돌아와야 한다.
+ */
+$("pickFound").addEventListener("click", () => $("foundFile").click());
+$("foundFile").addEventListener("change", async (e) => {
+  const f = e.target.files && e.target.files[0];
+  e.target.value = "";
+  if (!f) return;
+  let data;
+  try {
+    data = JSON.parse(await f.text());
+  } catch (err) {
+    $("status").textContent = `${f.name} 을 읽지 못했습니다 — JSON 형식이 아닙니다.`;
+    return;
+  }
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    $("status").textContent =
+      `${f.name} 은 검색결과.json 이 아닌 것 같습니다.\n` +
+      `'검색결과.json' 을 고르셨는지 확인해 주세요 (수집기록.json 과 헷갈리기 쉽습니다).`;
+    return;
+  }
+  const r = await send({ cmd: "importFound", found: data });
+  if (!r || !r.ok) {
+    $("status").textContent = `되돌리지 못했습니다: ${(r && r.error) || "알 수 없는 오류"}`;
+    return;
+  }
+  $("status").textContent =
+    `${f.name} 에서 ${r.added}건을 되돌렸습니다.` +
+    (r.kept ? ` (이미 찾아 둔 ${r.kept}건은 그대로 뒀습니다)` : "") +
+    (r.skipped ? ` (주소가 없는 ${r.skipped}건은 건너뜀)` : "");
+  refresh();
+});
+
 $("resetSearch").addEventListener("click", async () => {
   if (!confirm("지금까지 찾은 주소 기록을 지웁니다. 계속할까요?")) return;
   await send({ cmd: "resetSearch" });

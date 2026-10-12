@@ -939,6 +939,34 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     // 왜: 찾은 결과는 크롬 안에만 있다. 컴퓨터를 옮기면 따라오지 않는다.
     // 실제로 131건을 찾아 두고 내보내지 않은 채 다른 컴퓨터로 옮겨 전부 날렸다.
     // 그래서 '아직 안 내보냈다'를 눈에 보이게 한다.
+    /* 내보낸 검색결과.json 을 되돌린다.
+     *
+     * 이미 찾아 둔 것은 덮지 않는다. 되돌리기가 지금 상태를 뒤엎으면
+     * 그건 복구가 아니라 또 다른 손실이다. 비어 있는 자리만 채운다.
+     * 주소가 없는 기록(못찾음·애매로 남은 것)은 넣어 봐야 쓸모가 없으므로 건너뛴다.
+     */
+    if (msg.cmd === "importFound") {
+      const src = msg.found;
+      if (!src || typeof src !== "object" || Array.isArray(src)) {
+        sendResponse({ ok: false, error: "검색결과.json 형식이 아닙니다." });
+        return;
+      }
+      let added = 0, kept = 0, skipped = 0;
+      for (const [id, rec] of Object.entries(src)) {
+        if (!rec || typeof rec !== "object" || !rec.url) { skipped++; continue; }
+        const prev = state.found[id];
+        if (prev && prev.verdict === "확실") { kept++; continue; }
+        state.found[id] = rec;
+        added++;
+      }
+      // 파일에서 되돌린 것은 이미 파일에 있는 것이므로, 저장 경고를 다시 띄우지 않는다.
+      state.exportedCount = Object.values(state.found)
+        .filter((f) => f && f.verdict === "확실").length;
+      await save();
+      sendResponse({ ok: true, added, kept, skipped });
+      return;
+    }
+
     if (msg.cmd === "markExported") {
       state.exportedCount = Object.values(state.found)
         .filter((r) => r.verdict === "확실").length;

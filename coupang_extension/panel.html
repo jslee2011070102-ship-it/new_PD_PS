@@ -133,6 +133,17 @@
       <button id="stopSearch">중단</button>
       <button id="resetSearch">검색기록 초기화</button>
     </div>
+
+    <!-- 찾은 기록은 크롬 안에만 산다. 확장을 지우면 같이 지워진다.
+         실제로 두 번 잃었다 — 집↔회사 컴퓨터를 옮길 때 131건,
+         폴더 이름을 바꾸느라 지우고 다시 깔 때 25건.
+         내보낸 파일이 있으면 되돌릴 수 있어야 한다. 되돌릴 길이 없는 게 문제였다. -->
+    <div class="row" style="margin-top:10px">
+      <button id="pickFound">검색결과.json 불러오기</button>
+      <input type="file" id="foundFile" accept=".json,application/json" style="display:none">
+    </div>
+    <div class="hint">전에 내보낸 <code>검색결과.json</code> 이 있으면 여기서 되돌립니다.
+      컴퓨터를 옮기거나 확장을 다시 깔았을 때 쓰세요. 이미 찾은 것은 덮어쓰지 않습니다.</div>
   </div>
 
   <div id="paneCollect" class="pane on">
