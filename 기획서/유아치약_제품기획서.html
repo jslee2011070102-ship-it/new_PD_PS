@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>쿠팡향 유아치약 제품 기획서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  :root{
+    --ink:#191b1f;--sub:#5b6068;--line:#d8dade;--line-strong:#191b1f;
+    --bg:#ffffff;--bg-soft:#f4f5f7;--bg-head:#191b1f;
+    --accent:#0d5c4d;--accent-soft:#e7f0ed;--warn:#8a4b12;--warn-soft:#f6ede2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{font-size:15px;}
+  body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;color:var(--ink);background:#e9eaec;line-height:1.6;-webkit-font-smoothing:antialiased;word-break:keep-all;}
+  .page{background:var(--bg);max-width:940px;margin:0 auto 24px;padding:56px 64px 72px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+  .page-foot{position:absolute;left:64px;right:64px;bottom:28px;display:flex;justify-content:space-between;font-size:11px;color:var(--sub);border-top:1px solid var(--line);padding-top:8px;letter-spacing:.02em;}
+  .eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.18em;color:var(--sub);text-transform:uppercase;margin-bottom:14px;}
+  h1{font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1.25;margin-bottom:10px;}
+  .subtitle{font-size:16px;color:var(--sub);margin-bottom:34px;}
+  .meta-row{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--line-strong);border-bottom:1px solid var(--line);}
+  .meta-cell{padding:14px 4px 12px 10px;border-right:1px solid var(--line);}
+  .meta-cell:first-child{padding-left:4px;}
+  .meta-cell:last-child{border-right:none;}
+  .meta-cell .k{font-size:11px;color:var(--sub);letter-spacing:.06em;margin-bottom:3px;}
+  .meta-cell .v{font-size:15px;font-weight:700;}
+  .sec-label{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.16em;color:#fff;background:var(--bg-head);padding:5px 12px;margin-bottom:14px;}
+  h2{font-size:24px;font-weight:800;letter-spacing:-.015em;margin-bottom:6px;}
+  .sec-lead{font-size:14.5px;color:var(--sub);margin-bottom:26px;}
+  h3{font-size:14px;font-weight:800;margin:30px 0 10px;padding-left:10px;border-left:3px solid var(--ink);}
+  p.body{font-size:13.5px;margin-bottom:10px;color:#2c2f34;}
+  ul.dash{list-style:none;margin-bottom:14px;}
+  ul.dash li{font-size:13.5px;color:#2c2f34;padding-left:16px;position:relative;margin-bottom:7px;}
+  ul.dash li::before{content:"–";position:absolute;left:0;color:var(--sub);}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0 18px;}
+  th{background:var(--bg-head);color:#fff;font-weight:700;text-align:left;padding:9px 12px;font-size:12.5px;}
+  td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+  tr:last-child td{border-bottom:1px solid var(--line-strong);}
+  td.k{font-weight:700;white-space:nowrap;background:var(--bg-soft);width:130px;}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  table.sm{font-size:12px;} table.sm td,table.sm th{padding:8px 9px;} table.sm td.k{white-space:normal;width:92px;}
+  table.xs{font-size:11.5px;} table.xs td,table.xs th{padding:6px 7px;}
+  .strong{font-weight:800;}
+  .green{color:var(--accent);font-weight:800;}
+  .warn-t{color:var(--warn);font-weight:800;}
+  .note{font-size:12px;color:var(--sub);background:var(--bg-soft);padding:10px 14px;margin:10px 0 18px;border-left:3px solid var(--line);}
+  .note.gap{background:var(--warn-soft);border-left-color:var(--warn);color:#6b3c0e;}
+  .callout{border:1.5px solid var(--ink);padding:18px 20px;margin:18px 0;}
+  .callout .tag{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--accent);margin-bottom:6px;}
+  .callout p{font-size:13.5px;}
+  .callout.fill{background:var(--accent-soft);border-color:var(--accent);}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0 18px;}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:14px 0 18px;}
+  .box{border:1px solid var(--line);padding:16px 18px;}
+  .box .bt{font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--sub);margin-bottom:8px;}
+  .box .bv{font-size:13.5px;}
+  .box.hl{border:1.5px solid var(--accent);background:var(--accent-soft);}
+  .bignum{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.15;}
+  .flow{display:flex;margin:14px 0 20px;font-size:12.5px;}
+  .flow .step{flex:1;border:1px solid var(--line-strong);padding:12px;text-align:center;background:var(--bg);}
+  .flow .step + .step{border-left:none;}
+  .flow .step .st{font-size:10.5px;font-weight:800;letter-spacing:.1em;color:var(--sub);margin-bottom:4px;}
+  .flow .step .sv{font-weight:700;}
+  .flow .step.hl{background:var(--accent-soft);}
+  .tbl-wrap{overflow-x:auto;}
+  .bar{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:12px;}
+  .bar .lb{width:104px;flex:none;}
+  .bar .tr{flex:1;background:var(--bg-soft);height:15px;position:relative;}
+  .bar .fl{height:15px;background:var(--ink);}
+  .bar .fl.a{background:var(--accent);}
+  .bar .vl{width:62px;flex:none;text-align:right;font-variant-numeric:tabular-nums;color:var(--sub);}
+  @media print{body{background:#fff;}.page{box-shadow:none;margin:0;page-break-after:always;max-width:none;}}
+  @media (max-width:720px){
+    .page{padding:28px 16px 64px;}
+    .page-foot{left:16px;right:16px;}
+    .meta-row{grid-template-columns:1fr 1fr;}
+    .grid-2,.grid-3{grid-template-columns:1fr;}
+    .flow{flex-direction:column;}
+    .flow .step + .step{border-left:1px solid var(--line-strong);border-top:none;}
+    h1{font-size:26px;} h2{font-size:21px;}
+    table{min-width:560px;}
+    .bar .lb{width:78px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 -->
+<section class="page">
+  <div class="eyebrow">NEW PRODUCT DEVELOPMENT</div>
+  <h1>쿠팡향 유아치약<br>제품 기획서</h1>
+  <div class="subtitle">쿠팡 유아치약 TOP25 전수조사 / 경쟁 USP 분석 / 차별화 설계</div>
+
+  <div class="meta-row">
+    <div class="meta-cell"><div class="k">진입 채널</div><div class="v">쿠팡</div></div>
+    <div class="meta-cell"><div class="k">카테고리</div><div class="v">유아치약 (의약외품)</div></div>
+    <div class="meta-cell"><div class="k">조사 기준</div><div class="v">2026.10.12 / TOP25</div></div>
+    <div class="meta-cell"><div class="k">목표 포지션</div><div class="v">가성비 PB</div></div>
+  </div>
+
+  <h3>기획 개요</h3>
+  <table>
+    <tr><td class="k">제품</td><td>쿠팡 판매용 어린이 치약 (의약외품) / 묶음 구성</td></tr>
+    <tr><td class="k">조사 범위</td><td>쿠팡 유아치약 구매 순위 1~25위 전수 / 썸네일·상품정보 실측</td></tr>
+    <tr><td class="k">시장 성격</td><td>13개 브랜드가 25개 자리를 분점. 최대 브랜드 점유율도 29.4%로 <span class="strong">지배 사업자 부재</span></td></tr>
+    <tr><td class="k">기획 방향</td><td>포화된 성분 소구(비건·자연유래·충치)로는 차별화 불가. <span class="strong">고불소 경쟁의 사각지대인 &lsquo;사용량 설계&rsquo;</span>를 축으로 설정</td></tr>
+    <tr><td class="k">현재 단계</td><td>썸네일 전수조사 완료 / 상세페이지 USP 전수조사 진행 전</td></tr>
+  </table>
+
+  <h3>핵심 차별화 요약</h3>
+  <div class="grid-3">
+    <div class="box hl"><div class="bt">POINT 01</div><div class="bignum green">양 조절<br>구조 설계</div><div class="bv" style="margin-top:8px;">TOP25가 전부 &lsquo;농도&rsquo;로 경쟁. 6세 미만 불소증 위험은 농도가 아니라 <span class="strong">양</span>에서 온다는 것이 코크란 리뷰의 결론. 양을 설계한 제품은 25개 중 1개뿐</div></div>
+    <div class="box hl"><div class="bt">POINT 02</div><div class="bignum green">단계 구성<br>1팩 완결</div><div class="bv" style="margin-top:8px;">연령별로 농도가 갈리는데(500/1000/1450ppm) 소비자는 아이가 크면 다시 사야 함. 단계별 구성을 한 팩에 담은 제품은 2개뿐</div></div>
+    <div class="box hl"><div class="bt">POINT 03</div><div class="bignum green">단가 193원<br>구간 공략</div><div class="bv" style="margin-top:8px;">10g당 단가가 194~1,400원으로 <span class="strong">7.2배</span> 벌어짐. 묶음 수가 단가를 지배. 대용량 묶음이 가성비 포지션의 유일한 레버</div></div>
+  </div>
+
+  <div class="note">본 기획서의 수치는 2026.10.12 쿠팡 유아치약 구매 순위 1~25위 화면 실측값. 매출은 판매가 × 월 구매자수(쿠팡 표기 배지값) × 2 방식의 추정치이며 실제 매출이 아님.</div>
+
+  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>1</span></div>
+</section>
+
+<!-- PAGE 2 -->
+<section class="page">
+  <div class="sec-label">SECTION 01 / MARKET</div>
+  <h2>시장 규모 및 구조</h2>
+  <div class="sec-lead">카테고리 규모와 브랜드 집중도. 공개 통계와 실측 추산을 구분해 표기</div>
+
+  <h3>카테고리 규모</h3>
+  <div class="grid-3">
+    <div class="box"><div class="bt">TOP25 월 매출 추산</div><div class="bignum">14.9억원</div><div class="bv" style="margin-top:6px;color:#5b6068;">연 환산 약 178억원</div></div>
+    <div class="box"><div class="bt">TOP25 누적 리뷰</div><div class="bignum">181,887건</div><div class="bv" style="margin-top:6px;color:#5b6068;">1위 2080 키즈크리닉 29,030건</div></div>
+    <div class="box"><div class="bt">브랜드 수</div><div class="bignum">13개</div><div class="bv" style="margin-top:6px;color:#5b6068;">25개 자리를 분점</div></div>
+  </div>
+  <div class="note gap"><span class="strong">확인 못 한 것:</span> 국내 어린이치약만의 공식 시장 규모 통계는 찾지 못함. 검색된 국내 자료는 2020~2021년 구강제품 전체 기준이고 서로 수치가 맞지 않아 인용하지 않음. 위 규모는 <span class="strong">쿠팡 TOP25 한정 추산치</span>로, 카테고리 전체 규모가 아님. 공식 수치가 필요하면 식약처 의약외품 생산실적을 별도 확인 필요.</div>
+
+  <h3>글로벌 성장 전망 (참고)</h3>
+  <table class="sm">
+    <tr><th>구분</th><th>전망</th><th>출처</th></tr>
+    <tr><td class="k">어린이용 치약</td><td>2031년까지 연평균 3.32% 성장 / 치약 세부 분야 중 최고 성장률</td><td>Mordor Intelligence (2026)</td></tr>
+    <tr><td class="k">구강관리 아동 부문</td><td>2031년까지 연평균 5.87% 성장</td><td>Mordor Intelligence (2026)</td></tr>
+    <tr><td class="k">치약 전체(글로벌)</td><td>2026년 299.2억달러 → 2031년 330.8억달러 (연 2.03%)</td><td>Mordor Intelligence (2026)</td></tr>
+  </table>
+  <div class="note">글로벌 기준이며 국내 적용 시 보정 필요. 다만 <span class="strong">어린이 세그먼트가 치약 전체(2.03%)보다 빠르게 성장</span>한다는 방향성은 진입 근거로 사용 가능.</div>
+
+  <h3>브랜드 집중도 — 지배 사업자 없음</h3>
+  <table class="sm">
+    <tr><th>브랜드</th><th class="num">진입 SKU</th><th class="num">매출 추산</th><th class="num">점유율</th><th>성격</th></tr>
+    <tr><td class="k">닥터노아</td><td class="num">2</td><td class="num">4.37억</td><td class="num">29.4%</td><td>1·3위 동시 점유 / 중소</td></tr>
+    <tr><td class="k">뷰카</td><td class="num">3</td><td class="num">3.40억</td><td class="num">22.9%</td><td>2·5·19위 / 중소</td></tr>
+    <tr><td class="k">2080</td><td class="num">4</td><td class="num">2.13억</td><td class="num">14.3%</td><td>최다 SKU이나 매출 3위 / 대기업</td></tr>
+    <tr><td class="k">블랑키즐</td><td class="num">1</td><td class="num">1.03억</td><td class="num">6.9%</td><td>7위 단일 SKU</td></tr>
+    <tr><td class="k">조르단</td><td class="num">3</td><td class="num">0.83억</td><td class="num">5.6%</td><td>해외 브랜드</td></tr>
+    <tr><td class="k">제니튼</td><td class="num">2</td><td class="num">0.74억</td><td class="num">5.0%</td><td>12·25위</td></tr>
+    <tr><td class="k">벨레다</td><td class="num">2</td><td class="num">0.66억</td><td class="num">4.4%</td><td>해외 브랜드 / 최고단가</td></tr>
+    <tr><td class="k">기타 6개 브랜드</td><td class="num">8</td><td class="num">1.70억</td><td class="num">11.5%</td><td>에이카랩스·센토·티타드·오루루·라이온·예꼬맘</td></tr>
+  </table>
+
+  <div class="callout fill">
+    <div class="tag">MARKET READ</div>
+    <p>국내 최대 구강 브랜드가 <span class="strong">SKU를 4개나 올리고도 점유율 14.3%</span>에 그치고, 1·3위를 중소 브랜드가 가져간 구조. 브랜드 파워보다 <span class="strong">개별 SKU의 소구력과 가격 구성이 순위를 만드는 시장</span>으로 판단. 신규 PB 진입 여지가 있는 카테고리.</p>
+  </div>
+
+  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>2</span></div>
+</section>
+
+<!-- PAGE 3 -->
+<section class="page">
+  <div class="sec-label">SECTION 02 / COMPETITION</div>
+  <h2>경쟁사 전수 — TOP25</h2>
+  <div class="sec-lead">썸네일 및 상품정보 실측. 형태 / 용량 / 구성 / 판가 / 단가 / 판매량 / 매출 추산</div>
+
+  <div class="tbl-wrap">
+  <table class="xs">
+    <tr><th class="num">순위</th><th>브랜드</th><th>제품</th><th>형태</th><th class="num">낱개</th><th class="num">구성</th><th class="num">총용량</th><th class="num">판가</th><th class="num">10g당</th><th class="num">월구매</th><th class="num">리뷰</th><th class="num">매출추산</th></tr>
+    <tr><td class="num">1</td><td>닥터노아</td><td>닥터노아 중금속 안심 불소 유아 아기 치약 라즈베리 레몬향</td><td>튜브</td><td class="num">60g</td><td class="num">1개</td><td class="num">60g</td><td class="num">7,080</td><td class="num">1,180</td><td class="num">10,000</td><td class="num">14,403</td><td class="num">1.42억</td></tr>
+    <tr><td class="num">2</td><td>뷰카</td><td>뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 포도향</td><td>튜브</td><td class="num">110g</td><td class="num">4개</td><td class="num">440g</td><td class="num">9,800</td><td class="num">223</td><td class="num">10,000</td><td class="num">20,354</td><td class="num">1.96억</td></tr>
+    <tr><td class="num">3</td><td>닥터노아</td><td>닥터노아 중금속 안심 1450 고불소 어린이치약 포도향</td><td>튜브</td><td class="num">60g</td><td class="num">3개</td><td class="num">180g</td><td class="num">18,480</td><td class="num">1,027</td><td class="num">8,000</td><td class="num">1,413</td><td class="num">2.96억</td></tr>
+    <tr><td class="num">4</td><td>벨레다</td><td>벨레다 1450 고불소 어린이 치약 스피아민트향</td><td>튜브</td><td class="num">50g</td><td class="num">1개</td><td class="num">50g</td><td class="num">6,500</td><td class="num">1,300</td><td class="num">4,000</td><td class="num">4,611</td><td class="num">0.52억</td></tr>
+    <tr><td class="num">5</td><td>뷰카</td><td>뷰카 주니어 마일드 고불소 비건치약 110g x 4종 세트 프루티믹스</td><td>튜브</td><td class="num">110g</td><td class="num">4개입 1세트</td><td class="num">440g</td><td class="num">12,200</td><td class="num">277</td><td class="num">5,000</td><td class="num">2,031</td><td class="num">1.22억</td></tr>
+    <tr><td class="num">6</td><td>2080</td><td>2080 일사오공 고불소 주니어 치약 애플라임향</td><td>튜브</td><td class="num">80g</td><td class="num">3개</td><td class="num">240g</td><td class="num">11,600</td><td class="num">483</td><td class="num">4,000</td><td class="num">10,098</td><td class="num">0.93억</td></tr>
+    <tr><td class="num">7</td><td>블랑키즐</td><td>블랑키즐 유아용 고불소 치약 애플망고향</td><td>튜브</td><td class="num">60g</td><td class="num">1개입 2개</td><td class="num">120g</td><td class="num">12,900</td><td class="num">1,075</td><td class="num">4,000</td><td class="num">8,104</td><td class="num">1.03억</td></tr>
+    <tr><td class="num">8</td><td>2080</td><td>2080 키즈크리닉 4스텝 치약 순한민트향</td><td>튜브</td><td class="num">80g</td><td class="num">6개</td><td class="num">480g</td><td class="num">9,300</td><td class="num">194</td><td class="num">4,000</td><td class="num">29,030</td><td class="num">0.74억</td></tr>
+    <tr><td class="num">9</td><td>조르단</td><td>조르단 뉴스텝1 어린이 불소 치약 딸기향</td><td>튜브</td><td class="num">90g</td><td class="num">1개</td><td class="num">90g</td><td class="num">4,250</td><td class="num">472</td><td class="num">3,000</td><td class="num">4,120</td><td class="num">0.26억</td></tr>
+    <tr><td class="num">10</td><td>티타드</td><td>티타드 주니어 불소 치약</td><td>튜브</td><td class="num">60g</td><td class="num">1개</td><td class="num">60g</td><td class="num">7,450</td><td class="num">1,242</td><td class="num">2,000</td><td class="num">2,164</td><td class="num">0.30억</td></tr>
+    <tr><td class="num">11</td><td>에이카랩스</td><td>에이카랩스 코뿔소 어린이 불소 치약 청포도향</td><td>튜브</td><td class="num">60g</td><td class="num">1개</td><td class="num">60g</td><td class="num">6,400</td><td class="num">1,067</td><td class="num">2,000</td><td class="num">2,013</td><td class="num">0.26억</td></tr>
+    <tr><td class="num">12</td><td>제니튼</td><td>제니튼 닥터제니 1450 고불소 주니어치약 샤인머스켓향</td><td>튜브</td><td class="num">60g</td><td class="num">2개</td><td class="num">120g</td><td class="num">14,100</td><td class="num">1,175</td><td class="num">2,000</td><td class="num">2,789</td><td class="num">0.56억</td></tr>
+    <tr><td class="num">13</td><td>조르단</td><td>조르단 뉴스텝2 어린이 고불소 치약 포도향</td><td>튜브</td><td class="num">90g</td><td class="num">3개</td><td class="num">270g</td><td class="num">10,780</td><td class="num">399</td><td class="num">1,000</td><td class="num">3,589</td><td class="num">0.22억</td></tr>
+    <tr><td class="num">14</td><td>센토</td><td>센토 주니어 세이프 고불소 구취케어 비건 어린이치약 풍선껌향</td><td>튜브</td><td class="num">120g</td><td class="num">1개입 4개</td><td class="num">480g</td><td class="num">9,960</td><td class="num">208</td><td class="num">1,000</td><td class="num">1,563</td><td class="num">0.20억</td></tr>
+    <tr><td class="num">15</td><td>2080</td><td>2080 주니어 1450 고불소 충치케어 펌핑치약</td><td>펌프</td><td class="num">220g</td><td class="num">1개</td><td class="num">220g</td><td class="num">12,250</td><td class="num">557</td><td class="num">1,000</td><td class="num">1,942</td><td class="num">0.24억</td></tr>
+    <tr><td class="num">16</td><td>벨레다</td><td>벨레다 어린이 고불소 마일드 민트 치약</td><td>튜브</td><td class="num">50g</td><td class="num">1개</td><td class="num">50g</td><td class="num">7,000</td><td class="num">1,400</td><td class="num">1,000</td><td class="num">233</td><td class="num">0.14억</td></tr>
+    <tr><td class="num">17</td><td>오루루</td><td>오루루 캐치티니핑 고불소치약</td><td>튜브</td><td class="num">80g</td><td class="num">2개</td><td class="num">160g</td><td class="num">6,300</td><td class="num">394</td><td class="num">1,000</td><td class="num">599</td><td class="num">0.13억</td></tr>
+    <tr><td class="num">18</td><td>조르단</td><td>조르단 아동용 뉴스텝2 고불소 펌프치약 포도향 188g + 리필 188g 세트</td><td>펌프</td><td class="num">376g</td><td class="num">1세트(본품 188g + 리필 188g)</td><td class="num">376g</td><td class="num">17,940</td><td class="num">477</td><td class="num">1,000</td><td class="num">987</td><td class="num">0.36억</td></tr>
+    <tr><td class="num">19</td><td>뷰카</td><td>뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향</td><td>튜브</td><td class="num">110g</td><td class="num">4개</td><td class="num">440g</td><td class="num">10,990</td><td class="num">250</td><td class="num">1,000</td><td class="num">6,309</td><td class="num">0.22억</td></tr>
+    <tr><td class="num">20</td><td>센토</td><td>센토 주니어 세이프 고불소 구취케어 비건 어린이치약 포도향</td><td>튜브</td><td class="num">120g</td><td class="num">4개</td><td class="num">480g</td><td class="num">9,960</td><td class="num">208</td><td class="num">1,000</td><td class="num">3,569</td><td class="num">0.20억</td></tr>
+    <tr><td class="num">21</td><td>라이온 키즈세이프</td><td>라이온 키즈세이프 충치 집중케어 치약</td><td>튜브</td><td class="num">60g</td><td class="num">3개</td><td class="num">180g</td><td class="num">6,340</td><td class="num">352</td><td class="num">1,000</td><td class="num">13,054</td><td class="num">0.13억</td></tr>
+    <tr><td class="num">22</td><td>예꼬맘</td><td>예꼬맘 3단계 어린이치약 고불소 60g + 미니치약 15g 스피아민트향</td><td>튜브</td><td class="num">75g</td><td class="num">3세트(60g + 미니 15g)</td><td class="num">225g</td><td class="num">11,700</td><td class="num">520</td><td class="num">1,000</td><td class="num">6,650</td><td class="num">0.23억</td></tr>
+    <tr><td class="num">23</td><td>에이카랩스</td><td>에이카랩스 어린이 코뿔소 치약 사과향 1450ppm</td><td>튜브</td><td class="num">60g</td><td class="num">2개</td><td class="num">120g</td><td class="num">12,800</td><td class="num">1,067</td><td class="num">1,000</td><td class="num">1,901</td><td class="num">0.26억</td></tr>
+    <tr><td class="num">24</td><td>2080</td><td>2080 주니어 자일리 플러스 치약</td><td>튜브</td><td class="num">80g</td><td class="num">1개입 6개</td><td class="num">480g</td><td class="num">10,600</td><td class="num">221</td><td class="num">1,000</td><td class="num">9,597</td><td class="num">0.21억</td></tr>
+    <tr><td class="num">25</td><td>제니튼</td><td>제니튼 닥터제니 저불소 어린이 치약</td><td>튜브</td><td class="num">60g</td><td class="num">2개</td><td class="num">120g</td><td class="num">8,790</td><td class="num">732</td><td class="num">1,000</td><td class="num">30,764</td><td class="num">0.18억</td></tr>  </table>
+  </div>
+  <div class="note">판가는 조사 시점 할인가. 매출 추산 = 판가 × 월 구매자수(쿠팡 배지값) × 2. 쿠팡 배지는 &lsquo;N명 이상&rsquo; 하한값이므로 실제 판매량은 이보다 많을 수 있음.</div>
+  <div class="note gap"><span class="strong">검증 과정에서 걸러낸 것:</span> 수집된 25건이 모두 &lsquo;확실&rsquo; 판정이었으나 교차 대조 결과 3건의 상품 주소가 잘못 연결돼 있었음(동일 딜번호가 서로 다른 3개 상품에 중복 지정). 해당 3건은 주소 재확인 대상이며, 위 표의 <span class="strong">제품 정보 자체는 썸네일 실측값이라 영향 없음</span>.</div>
+
+  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>3</span></div>
+</section>
+
+<!-- PAGE 4 -->
+<section class="page">
+  <div class="sec-label">SECTION 02 / COMPETITION</div>
+  <h2>경쟁 구조 분석</h2>
+  <div class="sec-lead">가격 / 용량 / 형태 / 불소 농도 / 소구 문구 네 축의 실측 분포</div>
+
+  <h3>1. 가격 — 묶음 수가 단가를 지배</h3>
+  <table class="sm">
+    <tr><th>구분</th><th class="num">최저</th><th class="num">중앙</th><th class="num">최고</th><th class="num">배수</th></tr>
+    <tr><td class="k">10g당 단가</td><td class="num">194원</td><td class="num">483원</td><td class="num">1,400원</td><td class="num">7.2배</td></tr>
+    <tr><td class="k">판매가</td><td class="num">4,250원</td><td class="num">9,960원</td><td class="num">18,480원</td><td class="num">4.3배</td></tr>
+  </table>
+  <ul class="dash">
+    <li>단가 하위권은 전부 <span class="strong">4~6개 묶음</span>(2080 키즈크리닉 6개 194원 / 센토 4개 208원 / 2080 자일리 6개 221원 / 뷰카 4개 223원)</li>
+    <li>단가 상위권은 전부 <span class="strong">1개입 소용량</span>(벨레다 50g 1,400원 / 벨레다 50g 1,300원 / 티타드 60g 1,242원)</li>
+    <li>즉 <span class="green">가성비 포지션의 레버는 성분이 아니라 묶음 수</span>. 4개입 이상이 단가 경쟁의 진입선</li>
+  </ul>
+
+  <h3>2. 용량 — 60g이 사실상 표준 낱개</h3>
+  <div class="bar"><div class="lb">60g</div><div class="tr"><div class="fl" style="width:100%"></div></div><div class="vl">9개</div></div>
+  <div class="bar"><div class="lb">80g</div><div class="tr"><div class="fl" style="width:44%"></div></div><div class="vl">4개</div></div>
+  <div class="bar"><div class="lb">110g</div><div class="tr"><div class="fl" style="width:33%"></div></div><div class="vl">3개</div></div>
+  <div class="bar"><div class="lb">90g</div><div class="tr"><div class="fl" style="width:22%"></div></div><div class="vl">2개</div></div>
+  <div class="bar"><div class="lb">120g</div><div class="tr"><div class="fl" style="width:22%"></div></div><div class="vl">2개</div></div>
+  <div class="bar"><div class="lb">50g</div><div class="tr"><div class="fl" style="width:22%"></div></div><div class="vl">2개</div></div>
+  <div class="bar"><div class="lb">기타(75·220·376g)</div><div class="tr"><div class="fl" style="width:33%"></div></div><div class="vl">3개</div></div>
+  <p class="body">총 패키지 용량은 50g~480g으로 흩어지나, <span class="strong">낱개는 60g에 몰림(25개 중 9개)</span>. 60g 기준으로 설계하면 소비자 비교가 쉬움.</p>
+
+  <h3>3. 형태 — 튜브 일변도, 펌프는 비어 있음</h3>
+  <div class="grid-2">
+    <div class="box"><div class="bt">튜브</div><div class="bignum">23 / 25</div><div class="bv" style="margin-top:6px;color:#5b6068;">92%</div></div>
+    <div class="box hl"><div class="bt">펌프</div><div class="bignum green">2 / 25</div><div class="bv" style="margin-top:6px;">조르단 18위 / 2080 15위. 두 제품 모두 <span class="strong">단가 상위</span>(477원·557원)로 가성비 구간에는 펌프가 없음</div></div>
+  </div>
+
+  <h3>4. 불소 농도 — 양극화, 중간이 없음</h3>
+  <table class="sm">
+    <tr><th>농도</th><th class="num">제품 수</th><th>해당 제품</th><th>포지션</th></tr>
+    <tr><td class="k">1450ppm</td><td class="num">7</td><td>뷰카 3 / 센토 2 / 2080 1 / 벨레다 1</td><td>&lsquo;고불소&rsquo; 소구 / 영구치·주니어</td></tr>
+    <tr><td class="k">1000ppm</td><td class="num">7</td><td>예꼬맘·블랑키즐·조르단·에이카랩스·벨레다·라이온 등</td><td>유치~혼합치열</td></tr>
+    <tr><td class="k">950ppm</td><td class="num">1</td><td>2080 자일리 플러스</td><td>8~13세</td></tr>
+    <tr><td class="k">500ppm</td><td class="num">2</td><td>조르단 뉴스텝1 / 제니튼 저불소</td><td>&lsquo;저불소&rsquo; 소구 / 치약 뱉는 유아용</td></tr>
+    <tr><td class="k">표기 없음</td><td class="num">8</td><td>썸네일·요약 문구에 농도 미표기</td><td>상세페이지 확인 필요</td></tr>
+  </table>
+  <div class="callout">
+    <div class="tag">KEY FINDING</div>
+    <p>시장이 <span class="strong">1450ppm(고불소)과 500ppm(저불소) 양 극단으로 갈라져</span> 있고, 두 진영 모두 &lsquo;농도&rsquo;를 소구 축으로 삼음. 그런데 코크란 리뷰는 6세 미만 불소증 위험을 가르는 것이 농도 자체가 아니라 <span class="strong">사용량</span>이라고 정리. 농도를 올리면서 양을 통제하는 설계가 시장에 비어 있음.</p>
+  </div>
+
+  <h3>5. 소구 문구 — 상위 3개는 이미 진입요건</h3>
+  <div class="bar"><div class="lb">충치 케어</div><div class="tr"><div class="fl" style="width:100%"></div></div><div class="vl">40%</div></div>
+  <div class="bar"><div class="lb">비건 인증</div><div class="tr"><div class="fl" style="width:80%"></div></div><div class="vl">32%</div></div>
+  <div class="bar"><div class="lb">자연유래 성분</div><div class="tr"><div class="fl" style="width:80%"></div></div><div class="vl">32%</div></div>
+  <div class="bar"><div class="lb">항균 수치</div><div class="tr"><div class="fl a" style="width:40%"></div></div><div class="vl">16%</div></div>
+  <div class="bar"><div class="lb">불검출(중금속·유해)</div><div class="tr"><div class="fl a" style="width:30%"></div></div><div class="vl">12%</div></div>
+  <div class="bar"><div class="lb">원터치 뚜껑</div><div class="tr"><div class="fl a" style="width:30%"></div></div><div class="vl">12%</div></div>
+  <div class="bar"><div class="lb">자일리톨</div><div class="tr"><div class="fl a" style="width:30%"></div></div><div class="vl">12%</div></div>
+  <div class="bar"><div class="lb">전성분 공개</div><div class="tr"><div class="fl a" style="width:20%"></div></div><div class="vl">8%</div></div>
+  <div class="bar"><div class="lb">양 조절 설계</div><div class="tr"><div class="fl a" style="width:10%"></div></div><div class="vl">4%</div></div>
+
+  <table class="sm">
+    <tr><th>구분</th><th>해석</th></tr>
+    <tr><td class="k">포화 (30%+)</td><td>충치 / 비건 / 자연유래 — 없으면 열위, 있어도 차별화 아님. <span class="strong">진입요건</span></td></tr>
+    <tr><td class="k">숫자로 못 박은 소수</td><td>유해물질 390항목 불검출(닥터노아 1·3위) / 충치유발균 99.7% 항균(뷰카 2위) — <span class="green">매출 1·2위가 모두 숫자를 제시한 브랜드</span></td></tr>
+    <tr><td class="k">거의 비어 있음 (&le;12%)</td><td>전성분 공개 / 원터치 / <span class="strong">양 조절 설계(25개 중 1개, 닥터노아 &lsquo;양조절 쉬운 좁은 입구&rsquo;)</span></td></tr>
+  </table>
+
+  <div class="callout fill">
+    <div class="tag">CONCLUSION</div>
+    <p>성분 소구는 포화. 그런데 <span class="strong">매출 상위 두 브랜드는 공통적으로 &lsquo;검증 가능한 숫자&rsquo;를 제시</span>했음(390항목 / 99.7%). 즉 이 카테고리의 구매 결정은 &lsquo;좋은 성분&rsquo;이 아니라 <span class="strong">&lsquo;안전하다는 증거&rsquo;</span>로 움직임. 아이 입에 들어가는 제품이라는 카테고리 성격과 일치. 차별화는 성분 추가가 아니라 <span class="green">안전 근거의 형태</span>에서 찾아야 함.</p>
+  </div>
+
+  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>4</span></div>
+</section>
+
+<!-- PAGE 5 -->
+<section class="page">
+  <div class="sec-label">SECTION 03-04 / PENDING</div>
+  <h2>제품기획 · 차별화 — 데이터 대기</h2>
+  <div class="sec-lead">이 두 절은 상세페이지 USP 전수조사 없이 작성할 수 없음. 현재 비워 둔 이유와 필요 데이터</div>
+
+  <div class="note gap"><span class="strong">왜 비워 두는가.</span> SECTION 03(제품기획)은 &lsquo;경쟁사 USP를 모두 모아서&rsquo; 작성하는 절이고, 그 USP는 상세페이지에 있음. 지금 확보된 것은 썸네일과 상품 요약 문구뿐으로, 여기에는 <span class="strong">시험성적서·임상 수치·인증 마크·성분 함량·전성분 표기</span>가 없음. 이 상태에서 기획안을 쓰면 근거 없는 추정이 됨.</div>
+
+  <h3>진행 단계</h3>
+  <div class="flow">
+    <div class="step hl"><div class="st">STEP 1</div><div class="sv">시장조사<br>완료</div></div>
+    <div class="step hl"><div class="st">STEP 2</div><div class="sv">썸네일 전수<br>완료</div></div>
+    <div class="step"><div class="st">STEP 3</div><div class="sv">상세페이지<br>수집·분석</div></div>
+    <div class="step"><div class="st">STEP 4</div><div class="sv">제품기획<br>차별화</div></div>
+  </div>
+
+  <h3>SECTION 03 작성에 필요한 것</h3>
+  <table class="sm">
+    <tr><th>항목</th><th>어디서</th><th>현재</th></tr>
+    <tr><td class="k">경쟁사 USP 전수</td><td>TOP25 상세페이지 이미지</td><td class="warn-t">미수집</td></tr>
+    <tr><td class="k">성분 함량 표기</td><td>상세페이지 (예: 자일리톨 10배, 자연유래 98.9%)</td><td class="warn-t">미수집</td></tr>
+    <tr><td class="k">시험성적서 게재 여부</td><td>상세페이지 이미지</td><td class="warn-t">미수집</td></tr>
+    <tr><td class="k">인증 마크 종류</td><td>상세페이지 (비건·에코서트·USDA 등)</td><td class="warn-t">미수집</td></tr>
+    <tr><td class="k">형태 / 용량 / 구성 / 가격</td><td>썸네일 실측</td><td class="green">확보</td></tr>
+    <tr><td class="k">목표 생산원가</td><td>제조사 견적</td><td class="warn-t">미요청</td></tr>
+    <tr><td class="k">테스트 / 임상 구성</td><td>시험기관 견적</td><td class="warn-t">미요청</td></tr>
+  </table>
+
+  <h3>SECTION 04 작성에 필요한 것</h3>
+  <ul class="dash">
+    <li>국내 벤치마킹 — 타 카테고리에서 &lsquo;사용량 설계&rsquo;로 성공한 사례 조사 (조사 전)</li>
+    <li>해외 벤치마킹 — 어린이 치약 정량 토출 구조 사례. 1차 조사에서 콜게이트 키즈 펌프형이 &lsquo;양 조절&rsquo;을 소구한다는 것은 확인. <span class="strong">수상 이력이 있는 전용 사례는 확인되지 않음</span></li>
+    <li>차별화 가설(현재 1순위) — 고불소 농도를 유지하면서 1회 토출량을 구조로 통제. 농도 경쟁에 참여하지 않고 <span class="green">&lsquo;농도는 높이되 양은 정해준다&rsquo;</span>는 축으로 이동</li>
+  </ul>
+
+  <div class="callout">
+    <div class="tag">NEXT ACTION</div>
+    <p>① TOP25 상세페이지 수집 (예상 8분) → ② USP 전수조사 → ③ SECTION 03·04 작성. 썸네일 조사에서 나온 &lsquo;양 조절 설계 25개 중 1개&rsquo;라는 공백은 상세페이지 확인 후 확정 필요 — 상세페이지에서 양 조절을 소구한 제품이 더 있을 수 있음.</p>
+  </div>
+
+  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>5</span></div>
+</section>
+
+</body>
+</html>
