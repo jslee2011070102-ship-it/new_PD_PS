@@ -383,6 +383,39 @@ $("foundFile").addEventListener("change", async (e) => {
   refresh();
 });
 
+/* '지금 파일로 저장하기' — 이름 그대로 저장한다.
+ *
+ * 전에는 결과 페이지를 '열기만' 했다. 거기서 버튼을 한 번 더 눌러야
+ * 저장이 됐는데, 버튼 이름은 저장이라고 돼 있었다. 이름이 약속한 일을
+ * 안 하는 버튼이었다. 두 번 누르게 할 이유가 없다.
+ */
+async function saveFoundNow() {
+  const r = await send({ cmd: "export" });
+  const found = (r && r.found) || {};
+  const n = Object.values(found).filter((f) => f && f.verdict === "확실").length;
+  if (!Object.keys(found).length) {
+    $("status").textContent = "저장할 결과가 없습니다.";
+    return;
+  }
+  const blob = new Blob([JSON.stringify(found, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  try {
+    await chrome.downloads.download({ url, filename: "검색결과.json", saveAs: false });
+  } catch (e) {
+    // 사이드 패널에서 downloads 가 막히는 경우를 대비한 두 번째 길.
+    const a = document.createElement("a");
+    a.href = url; a.download = "검색결과.json";
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+  await send({ cmd: "markExported" });
+  $("status").textContent =
+    `검색결과.json 을 다운로드 폴더에 저장했습니다 (확실 ${n}건).\n` +
+    `이 파일만 있으면 컴퓨터를 옮기거나 확장을 다시 깔아도 '검색결과.json 불러오기' 로 되돌아옵니다.`;
+  refresh();
+}
+$("saveNow").addEventListener("click", saveFoundNow);
+
 $("resetSearch").addEventListener("click", async () => {
   if (!confirm("지금까지 찾은 주소 기록을 지웁니다. 계속할까요?")) return;
   await send({ cmd: "resetSearch" });
@@ -431,18 +464,12 @@ async function refresh() {
   const saved = s.exportedCount || 0;
   if (found > saved) {
     $("saveWarn").style.display = "";
-    $("saveWarn").innerHTML =
+    // 글자만 바꾼다. 버튼은 panel.html 에 붙박이로 있다.
+    $("saveWarnText").innerHTML =
       `<b>⚠ 찾은 ${found}건이 아직 파일로 저장되지 않았습니다.</b><br>` +
       `이 결과는 <b>이 크롬 안에만</b> 있습니다. 다른 컴퓨터로 옮겨지지 않고,
        확장을 지우면 사라집니다.` +
-      (saved ? `<br>(마지막 저장: ${saved}건)` : "") +
-      `<br><button id="saveNow" class="primary">지금 파일로 저장하기</button>`;
-    const b = document.getElementById("saveNow");
-    if (b) b.addEventListener("click", async () => {
-      await chrome.tabs.create({ url: chrome.runtime.getURL("results.html") });
-      $("status").textContent =
-        "결과 페이지를 열었습니다.\n'검색결과.json 저장' 을 누르시면 다운로드 폴더에 저장됩니다.";
-    });
+      (saved ? `<br>(마지막 저장: ${saved}건)` : "");
   } else {
     $("saveWarn").style.display = "none";
   }
