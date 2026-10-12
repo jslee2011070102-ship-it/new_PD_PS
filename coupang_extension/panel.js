@@ -367,8 +367,8 @@ $("foundFile").addEventListener("change", async (e) => {
   }
   if (!data || typeof data !== "object" || Array.isArray(data)) {
     $("status").textContent =
-      `${f.name} 은 검색결과.json 이 아닌 것 같습니다.\n` +
-      `'검색결과.json' 을 고르셨는지 확인해 주세요 (수집기록.json 과 헷갈리기 쉽습니다).`;
+      `${f.name} 은 주소찾기 결과 파일이 아닌 것 같습니다.\n` +
+      `이름이 '1_주소찾기…' 로 시작하는 파일을 고르셨는지 확인해 주세요.`;
     return;
   }
   const r = await send({ cmd: "importFound", found: data });
@@ -397,21 +397,24 @@ async function saveFoundNow() {
     $("status").textContent = "저장할 결과가 없습니다.";
     return;
   }
+  // 이름만 보고 무엇인지 알 수 있게 단계번호·카테고리·건수를 넣는다.
+  const cats = [...new Set(Object.keys(found).map((s) => s.replace(/-\d+$/, "")))];
+  const fname = `1_주소찾기${cats.length === 1 ? "_" + cats[0] : ""}_${Object.keys(found).length}건.json`;
   const blob = new Blob([JSON.stringify(found, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   try {
-    await chrome.downloads.download({ url, filename: "검색결과.json", saveAs: false });
+    await chrome.downloads.download({ url, filename: fname, saveAs: false });
   } catch (e) {
     // 사이드 패널에서 downloads 가 막히는 경우를 대비한 두 번째 길.
     const a = document.createElement("a");
-    a.href = url; a.download = "검색결과.json";
+    a.href = url; a.download = fname;
     document.body.appendChild(a); a.click(); a.remove();
   }
   setTimeout(() => URL.revokeObjectURL(url), 60000);
   await send({ cmd: "markExported" });
   $("status").textContent =
-    `검색결과.json 을 다운로드 폴더에 저장했습니다 (확실 ${n}건).\n` +
-    `이 파일만 있으면 컴퓨터를 옮기거나 확장을 다시 깔아도 '검색결과.json 불러오기' 로 되돌아옵니다.`;
+    `${fname} 을 다운로드 폴더에 저장했습니다 (확실 ${n}건).\n` +
+    `이 파일만 있으면 컴퓨터를 옮기거나 확장을 다시 깔아도 '주소찾기 결과 불러오기' 로 되돌아옵니다.`;
   refresh();
 }
 $("saveNow").addEventListener("click", saveFoundNow);

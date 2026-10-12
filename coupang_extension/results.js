@@ -174,8 +174,8 @@ function render() {
   $("foundSummary").textContent = nFound
     ? ($("foundSummary").textContent || `${nFound}건`)
     : "아직 주소 찾기를 하지 않았습니다.";
-  $("save").textContent = `수집기록.json 저장${ids.length ? ` (${ids.length}건)` : ""}`;
-  $("saveFound").textContent = `검색결과.json 저장${nFound ? ` (${nFound}건)` : ""}`;
+  $("save").textContent = `② 상세페이지 수집기록 저장${ids.length ? ` (${ids.length}건)` : ""}`;
+  $("saveFound").textContent = `① 주소찾기 결과 저장${nFound ? ` (${nFound}건)` : ""}`;
   $("save").className = ids.length ? "ready" : "noData";
   $("saveFound").className = nFound && !ids.length ? "ready" : (nFound ? "" : "noData");
 
@@ -232,7 +232,10 @@ $("save").addEventListener("click", () => {
   // 이 페이지는 닫히지 않으므로 주소가 살아 있다. 브라우저 기본 저장 기능을 쓴다.
   const a = document.createElement("a");
   a.href = url;
-  a.download = "수집기록.json";
+  // 파일 이름만 보고 무엇인지 알 수 있어야 한다.
+  // '검색결과'와 '수집기록' 네 글자씩이라 목록에서 구분이 안 됐고, 실제로
+  // 세 번 바뀌어 왔다. 카테고리와 건수를 이름에 넣으면 눈으로 갈린다.
+  a.download = fileName("2_상세페이지수집", ids.length);
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -240,12 +243,24 @@ $("save").addEventListener("click", () => {
   $("summary").textContent += "  —  저장했습니다 (다운로드 폴더)";
 });
 
+/* 파일 이름을 '무엇인지 + 어느 카테고리 + 몇 건'으로 만든다.
+ *   1_주소찾기_유아치약_25건.json
+ *   2_상세페이지수집_유아치약_25건.json
+ * 앞의 숫자가 단계 순서라 폴더에서 정렬하면 순서대로 선다.
+ */
+function fileName(kind, n) {
+  const ids = Object.keys(FOUND).concat(Object.keys(RESULTS));
+  const cats = [...new Set(ids.map((s) => s.replace(/-\d+$/, "")).filter(Boolean))];
+  const cat = cats.length === 1 ? `_${cats[0]}` : "";
+  return `${kind}${cat}_${n}건.json`;
+}
+
 $("saveFound").addEventListener("click", () => {
   if (!Object.keys(FOUND).length) { $("foundSummary").textContent = "찾은 주소가 없습니다."; return; }
   const blob = new Blob([JSON.stringify(FOUND, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url; a.download = "검색결과.json";
+  a.href = url; a.download = fileName("1_주소찾기", Object.keys(FOUND).length);
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 60000);
   send({ cmd: "markExported" });   // 패널의 '아직 안 내보냈다' 경고를 끈다
