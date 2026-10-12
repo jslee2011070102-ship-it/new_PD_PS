@@ -70,7 +70,43 @@
   .bar .fl{height:15px;background:var(--ink);}
   .bar .fl.a{background:var(--accent);}
   .bar .vl{width:62px;flex:none;text-align:right;font-variant-numeric:tabular-nums;color:var(--sub);}
-  @media print{body{background:#fff;}.page{box-shadow:none;margin:0;page-break-after:always;max-width:none;}}
+  /* 인쇄 — 한 섹션이 A4 한 장에 정확히 들어가게 맞춘다.
+     화면용 치수 그대로 찍으면 쪽이 쪼개지고, 그러면 하단 쪽번호가
+     실제 쪽과 어긋난다. 기준은 '브라우저에서 잰 높이'가 아니라
+     '실제로 뽑은 PDF 의 쪽수'다 — 섹션 수와 같아질 때까지 맞췄다. */
+  @page { size: A4; margin: 0; }
+  @media print{
+    body{background:#fff;}
+    .page{
+      box-shadow:none; margin:0; max-width:none;
+      width:210mm; height:296mm; padding:9mm 11mm 12mm;
+      page-break-after:always; break-after:page; overflow:hidden;
+    }
+    .page:last-of-type{page-break-after:auto; break-after:auto;}
+    .page-foot{left:11mm; right:11mm; bottom:5mm; padding-top:4px; font-size:9px;}
+    h1{font-size:28px;margin-bottom:6px;}
+    h2{font-size:19px;margin-bottom:4px;}
+    h3{font-size:12.5px;margin:14px 0 5px;}
+    .eyebrow{margin-bottom:10px;}
+    .subtitle{font-size:13px;margin-bottom:16px;}
+    .sec-label{margin-bottom:9px;padding:4px 10px;}
+    .sec-lead{font-size:12px;margin-bottom:12px;}
+    p.body{font-size:11.5px;margin-bottom:6px;}
+    ul.dash{margin-bottom:8px;} ul.dash li{font-size:11.5px;margin-bottom:3px;}
+    table{font-size:11px;margin:6px 0 9px;}
+    th{padding:4px 7px;font-size:10.5px;} td{padding:4px 7px;}
+    table.sm{font-size:10.3px;} table.sm td,table.sm th{padding:3.5px 6px;}
+    table.xs{font-size:9.3px;} table.xs td,table.xs th{padding:2.6px 4px;}
+    .note{font-size:10px;padding:6px 9px;margin:5px 0 9px;}
+    .callout{padding:10px 12px;margin:9px 0;} .callout p{font-size:11.5px;}
+    .box{padding:9px 11px;} .box .bv{font-size:11.5px;} .box .bt{margin-bottom:5px;}
+    .bignum{font-size:19px;}
+    .grid-2,.grid-3{gap:8px;margin:8px 0 9px;}
+    .meta-row .meta-cell{padding:9px 4px 8px 8px;}
+    .bar{margin-bottom:2.5px;font-size:10.3px;}
+    .bar .tr,.bar .fl{height:12px;}
+    .tbl-wrap{overflow:visible;} table{min-width:0;}
+  }
   @media (max-width:720px){
     .page{padding:28px 16px 64px;}
     .page-foot{left:16px;right:16px;}
@@ -169,7 +205,6 @@
   <div class="sec-label">SECTION 02 / COMPETITION</div>
   <h2>경쟁사 전수 — TOP25</h2>
   <div class="sec-lead">썸네일 및 상품정보 실측. 형태 / 용량 / 구성 / 판가 / 단가 / 판매량 / 매출 추산</div>
-
   <div class="tbl-wrap">
   <table class="xs">
     <tr><th class="num">순위</th><th>브랜드</th><th>제품</th><th>형태</th><th class="num">낱개</th><th class="num">구성</th><th class="num">총용량</th><th class="num">판가</th><th class="num">10g당</th><th class="num">월구매</th><th class="num">리뷰</th><th class="num">매출추산</th></tr>
@@ -199,16 +234,15 @@
     <tr><td class="num">24</td><td>2080</td><td>2080 주니어 자일리 플러스 치약</td><td>튜브</td><td class="num">80g</td><td class="num">1개입 6개</td><td class="num">480g</td><td class="num">10,600</td><td class="num">221</td><td class="num">1,000</td><td class="num">9,597</td><td class="num">0.21억</td></tr>
     <tr><td class="num">25</td><td>제니튼</td><td>제니튼 닥터제니 저불소 어린이 치약</td><td>튜브</td><td class="num">60g</td><td class="num">2개</td><td class="num">120g</td><td class="num">8,790</td><td class="num">732</td><td class="num">1,000</td><td class="num">30,764</td><td class="num">0.18억</td></tr>  </table>
   </div>
-  <div class="note">판가는 조사 시점 할인가. 매출 추산 = 판가 × 월 구매자수(쿠팡 배지값) × 2. 쿠팡 배지는 &lsquo;N명 이상&rsquo; 하한값이므로 실제 판매량은 이보다 많을 수 있음.</div>
-
+  <div class="note">판가는 조사 시점 할인가. 매출 추산 = 판가 × 월 구매자수(쿠팡 배지값) × 2. 쿠팡 배지는 &lsquo;N명 이상&rsquo; 하한값이므로 실제 판매량은 이보다 많을 수 있음. 19위 뷰카 딸기향은 2위와 같은 제품군의 향 변종이며 별도 딜번호.</div>
   <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>3</span></div>
 </section>
 
 <!-- PAGE 4 -->
 <section class="page">
   <div class="sec-label">SECTION 02 / COMPETITION</div>
-  <h2>경쟁 구조 분석</h2>
-  <div class="sec-lead">가격 / 용량 / 형태 / 불소 농도 / 소구 문구 다섯 축의 실측 분포</div>
+  <h2>경쟁 구조 분석 (1) — 가격 · 용량 · 형태</h2>
+  <div class="sec-lead">실측 분포. 가성비 포지션이 어디로 들어가야 하는가</div>
 
   <h3>1. 가격 — 묶음 수가 단가를 지배</h3>
   <table class="sm">
@@ -217,8 +251,8 @@
     <tr><td class="k">판매가</td><td class="num">4,250원</td><td class="num">9,960원</td><td class="num">18,480원</td><td class="num">4.3배</td></tr>
   </table>
   <ul class="dash">
-    <li>단가 하위권은 전부 <span class="strong">4~6개 묶음</span>(2080 키즈크리닉 6개 194원 / 센토 4개 208원 / 2080 자일리 6개 221원 / 뷰카 4개 223원)</li>
-    <li>단가 상위권은 전부 <span class="strong">1개입 소용량</span>(벨레다 50g 1,400원 / 벨레다 50g 1,300원 / 티타드 60g 1,242원)</li>
+    <li>단가 하위권은 전부 <span class="strong">4~6개 묶음</span> — 2080 키즈크리닉 6개 194원 / 센토 4개 208원 / 2080 자일리 6개 221원 / 뷰카 4개 223원</li>
+    <li>단가 상위권은 전부 <span class="strong">1개입 소용량</span> — 벨레다 50g 1,400원 / 벨레다 50g 1,300원 / 티타드 60g 1,242원</li>
     <li><span class="green">가성비 포지션의 레버는 성분이 아니라 묶음 수.</span> 4개입 이상이 단가 경쟁의 진입선</li>
   </ul>
 
@@ -236,10 +270,19 @@
     <div class="box hl"><div class="bt">펌프</div><div class="bignum green">2 / 25</div><div class="bv" style="margin-top:6px;">2080 15위(557원) / 조르단 18위(477원). <span class="strong">둘 다 단가 상위권</span> — 가성비 구간에는 펌프가 하나도 없음</div></div>
   </div>
 
+  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>4</span></div>
+</section>
+
+<!-- PAGE 5 -->
+<section class="page">
+  <div class="sec-label">SECTION 02 / COMPETITION</div>
+  <h2>경쟁 구조 분석 (2) — 불소 · 소구</h2>
+  <div class="sec-lead">무엇으로 싸우고 있고, 무엇이 이미 진입요건인가</div>
+
   <h3>4. 불소 농도 — 양극화, 중간이 없음</h3>
   <table class="sm">
     <tr><th>농도</th><th class="num">제품 수</th><th>해당 제품</th><th>포지션</th></tr>
-    <tr><td class="k">1450ppm</td><td class="num">7</td><td>뷰카 3 / 센토 2 / 2080 1 / 벨레다 1</td><td>&lsquo;고불소&rsquo; 소구 / 영구치·주니어</td></tr>
+    <tr><td class="k">1450ppm</td><td class="num">7</td><td>뷰카 3 / 센토 2 / 2080 1 / 벨레다 1</td><td>&lsquo;고불소&rsquo; / 영구치·주니어</td></tr>
     <tr><td class="k">1000ppm</td><td class="num">7</td><td>예꼬맘·블랑키즐·조르단·에이카랩스·벨레다·라이온 등</td><td>유치~혼합치열</td></tr>
     <tr><td class="k">950ppm</td><td class="num">1</td><td>2080 자일리 플러스</td><td>8~13세</td></tr>
     <tr><td class="k">500ppm 이하</td><td class="num">2</td><td>조르단 뉴스텝1 / 제니튼 저불소</td><td>&lsquo;저불소&rsquo; / 치약 뱉는 유아</td></tr>
@@ -255,26 +298,32 @@
   <div class="bar"><div class="lb">자일리톨 / 원터치</div><div class="tr"><div class="fl a" style="width:30%"></div></div><div class="vl">각 12%</div></div>
   <div class="bar"><div class="lb">전성분 공개</div><div class="tr"><div class="fl a" style="width:20%"></div></div><div class="vl">8%</div></div>
 
+  <table class="sm">
+    <tr><th>구분</th><th>해석</th></tr>
+    <tr><td class="k">포화 (30%+)</td><td>충치 / 비건 / 자연유래 — 없으면 열위, 있어도 차별화 아님. <span class="strong">진입요건</span></td></tr>
+    <tr><td class="k">숫자로 못 박은 소수</td><td>유해물질 390항목(닥터노아 1·3위) / 충치유발균 99.7%(뷰카 2위) — <span class="green">매출 1·2위가 모두 숫자를 제시</span></td></tr>
+  </table>
+
   <div class="callout fill">
     <div class="tag">CONCLUSION</div>
-    <p>성분 소구는 포화. 그런데 <span class="strong">매출 1·2위는 공통적으로 &lsquo;검증 가능한 숫자&rsquo;를 제시</span>했음(유해물질 390항목 / 충치유발균 99.7%). 이 카테고리의 구매 결정은 &lsquo;좋은 성분&rsquo;이 아니라 <span class="strong">&lsquo;안전하다는 증거&rsquo;</span>로 움직임. 아이 입에 들어가는 제품이라는 성격과 일치. 차별화는 성분 추가가 아니라 <span class="green">안전 근거의 형태</span>에서 찾아야 함.</p>
+    <p>성분 소구는 포화. 이 카테고리의 구매 결정은 &lsquo;좋은 성분&rsquo;이 아니라 <span class="strong">&lsquo;안전하다는 증거&rsquo;</span>로 움직임. 차별화는 성분 추가가 아니라 <span class="green">안전 근거의 형태</span>에서 찾아야 함.</p>
   </div>
 
-  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>4</span></div>
+  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>5</span></div>
 </section>
 
-<!-- PAGE 5 -->
+<!-- PAGE 6 -->
 <section class="page">
   <div class="sec-label">SECTION 03 / USP CENSUS</div>
-  <h2>경쟁사 USP 전수조사</h2>
-  <div class="sec-lead">상세페이지 이미지 160장(총 572,947px) 판독. 썸네일에는 없는 시험성적서·임상 수치·인증·성분 전략</div>
+  <h2>경쟁사 USP 전수조사 (1)</h2>
+  <div class="sec-lead">상세페이지 이미지 160장(총 572,947px) 판독. 썸네일에 없는 시험성적서·임상·인증·성분 전략</div>
 
   <h3>각 축의 천장 — 누가 어디까지 갔나</h3>
   <table class="sm">
     <tr><th>축</th><th>천장</th><th>내용</th></tr>
-    <tr><td class="k green">안전 입증</td><td class="strong">닥터노아 (1·3위)</td><td>유해물질 <span class="strong">390항목 불검출</span> = 중금속 4종 + 보존제 3종 + PFAS 381종 + BPA·프탈레이트 2종. KTR·KOTITI 성적서 이미지 게재. 자체기준 납 1ppm 이하(KC 영유아 기준 100ppm의 100배). <span class="strong">튜브(용기)까지 검사</span></td></tr>
-    <tr><td class="k green">효능 입증</td><td class="strong">뷰카 (2·5·19위)</td><td>인체적용시험 <span class="strong">20명</span> / 1회 사용 후 황화수소 83%↓·메틸메르캅탄 93%↓ / 그래프·p값 게재(마리디엠). 별도 항균력 시험 뮤탄스균 99.7%↓(한국분석시험연구원)</td></tr>
-    <tr><td class="k green">연령 구성</td><td class="strong">2080 키즈크리닉 (8위)</td><td><span class="strong">4단계</span> — 0~2세 불소ZERO / 3세+ 500ppm / 6세+ 1000ppm / 8세+ 1450ppm. 시장 최다 단계이자 단가 최저(194원)</td></tr>
+    <tr><td class="k green">안전 입증</td><td class="strong">닥터노아<br>(1·3위)</td><td>유해물질 <span class="strong">390항목 불검출</span> = 중금속 4종 + 보존제 3종 + PFAS 381종 + BPA·프탈레이트 2종. KTR·KOTITI 성적서 이미지 게재. 자체기준 납 1ppm 이하(KC 영유아 기준 100ppm의 100배). <span class="strong">튜브(용기)까지 검사</span></td></tr>
+    <tr><td class="k green">효능 입증</td><td class="strong">뷰카<br>(2·5·19위)</td><td>인체적용시험 <span class="strong">20명</span> / 1회 사용 후 황화수소 83%↓·메틸메르캅탄 93%↓ / 그래프·p값 게재(마리디엠). 별도 항균력 시험 뮤탄스균 99.7%↓(한국분석시험연구원)</td></tr>
+    <tr><td class="k green">연령 구성</td><td class="strong">2080 키즈크리닉<br>(8위)</td><td><span class="strong">4단계</span> — 0~2세 불소ZERO / 3세+ 500ppm / 6세+ 1000ppm / 8세+ 1450ppm. 시장 최다 단계이자 단가 최저(194원)</td></tr>
     <tr><td class="k">인증</td><td>닥터노아</td><td>비건(한국비건인증원) + 에코서트 + USDA + 할랄 + 코셔 5종</td></tr>
     <tr><td class="k">권위</td><td>센토 (14·20위)</td><td>특허 등록 6종 생약성분 <span class="strong">특허번호 명시(10-2594674)</span> — 번호를 적은 곳은 여기뿐 / 2026 KCAB 대상</td></tr>
   </table>
@@ -285,7 +334,16 @@
     <p>1위 닥터노아의 성분 소구는 <span class="strong">&ldquo;꼭 필요한 성분 14종만 담았어요&rdquo;</span>. 세탁세제에서 &lsquo;효소 9종&rsquo;처럼 <span class="strong">많을수록 좋은 것과 정반대</span>. 아이 입에 들어가는 제품이라 <span class="green">덜어낸 것이 곧 가치</span>로 읽힘. 신제품 설계에서 성분 가짓수를 늘리는 방향은 이 카테고리에서 역효과.</p>
   </div>
 
-  <h3>공포 → 규제 공백 → 자체 검증 (1위의 서사 구조)</h3>
+  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>6</span></div>
+</section>
+
+<!-- PAGE 7 -->
+<section class="page">
+  <div class="sec-label">SECTION 03 / USP CENSUS</div>
+  <h2>경쟁사 USP 전수조사 (2)</h2>
+  <div class="sec-lead">1위의 서사 구조와 전체 집계</div>
+
+  <h3>공포 → 규제 공백 → 자체 검증 (1위의 서사)</h3>
   <ul class="dash">
     <li>미국 치약 90%에서 중금속 검출 기사 / 한국에서도 수은 검출 6건 제시</li>
     <li><span class="strong">&ldquo;치약 완제품에는 중금속 관리기준이 없다&rdquo;</span> — 규제 공백을 명시</li>
@@ -295,7 +353,6 @@
   </ul>
 
   <h3>판독 12개 기준 집계</h3>
-  <div class="tbl-wrap">
   <table class="sm">
     <tr><th>항목</th><th class="num">건수</th><th>해석</th></tr>
     <tr><td class="k">연령 단계 구성</td><td class="num">6</td><td>절반이 보유 — 차별점 아님</td></tr>
@@ -310,13 +367,12 @@
     <tr><td class="k warn-t">정량 토출 설계</td><td class="num warn-t">0</td><td class="warn-t">없음</td></tr>
     <tr><td class="k warn-t">펌프를 &lsquo;정량&rsquo;으로 소구</td><td class="num warn-t">0</td><td class="warn-t">없음 — 두 펌프 모두 &lsquo;간편·위생·넉넉함&rsquo;으로만 소구</td></tr>
   </table>
-  </div>
   <div class="note gap">집계는 <span class="strong">상세 판독한 12개(11개 + 동일내용 1개) 기준</span>. 판독하지 않은 13개에서 추가 소구가 나올 수 있으므로 &lsquo;0건&rsquo;은 전수 확정이 아님. 확정이 필요하면 나머지 13개를 추가 판독해야 함.</div>
 
-  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>5</span></div>
+  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>7</span></div>
 </section>
 
-<!-- PAGE 6 -->
+<!-- PAGE 8 -->
 <section class="page">
   <div class="sec-label">SECTION 04 / THE GAP</div>
   <h2>비어 있는 자리</h2>
@@ -357,13 +413,13 @@
   </table>
   <div class="note gap"><span class="strong">확인 못 한 것:</span> &lsquo;정량 토출 어린이 치약&rsquo;으로 디자인 어워드를 받은 상용 제품은 확인되지 않음. 레드닷·iF·굿디자인 수상 DB를 직접 확인해야 함. 위 해외 사례는 제품·매체 리뷰 수준의 근거임.</div>
 
-  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>6</span></div>
+  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>8</span></div>
 </section>
 
-<!-- PAGE 7 -->
+<!-- PAGE 9 -->
 <section class="page">
   <div class="sec-label">SECTION 03 / PRODUCT PLAN</div>
-  <h2>제품 기획</h2>
+  <h2>제품 기획 (1) — 제품 사양</h2>
   <div class="sec-lead">형태 / 용량 / 구성 / 가격 / 목표 생산원가 / USP / 테스트·임상</div>
 
   <h3>제품 사양 (기획안)</h3>
@@ -380,6 +436,15 @@
     <tr><td class="k">성분 수</td><td><span class="strong">15종 이하로 제한</span></td><td>1위가 &lsquo;꼭 필요한 14종만&rsquo;. 이 카테고리는 덜어낸 것이 가치</td></tr>
   </table>
   <div class="note gap"><span class="strong">미확정:</span> 판매가 / 목표 생산원가 / 실제 토출량 공차. 아래 제조사 확인 항목의 회신 후 확정.</div>
+
+  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>9</span></div>
+</section>
+
+<!-- PAGE 10 -->
+<section class="page">
+  <div class="sec-label">SECTION 03 / PRODUCT PLAN</div>
+  <h2>제품 기획 (2) — USP 구성 · 임상</h2>
+  <div class="sec-lead">어느 축을 얼마나 따라가고, 무엇으로 증명할 것인가</div>
 
   <h3>USP 구성 — 어느 축을 얼마나 따라갈 것인가</h3>
   <table class="sm">
@@ -402,10 +467,11 @@
   </table>
   <div class="note">효능 문구는 시험 결과와 의약외품 허가 범위 내에서만 사용. 불소증·안전성에 관한 표현은 식약처 표시·광고 기준 확인 필수.</div>
 
-  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>7</span></div>
+  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>10</span></div>
 </section>
 
-<!-- PAGE 8 -->
+
+<!-- PAGE 11 -->
 <section class="page">
   <div class="sec-label">SECTION 04 / DIFFERENTIATION</div>
   <h2>차별화 포인트 정리</h2>
@@ -458,10 +524,10 @@
     <p>경쟁제품은 <span class="strong">&lsquo;무엇이 들어있지 않은가&rsquo;</span>(닥터노아 390항목)와 <span class="strong">&lsquo;얼마나 잘 듣는가&rsquo;</span>(뷰카 임상)로 갈려 경쟁 중. 두 축 모두 선두가 숫자로 천장을 쳐 놓아 후발이 따라가면 동점에 그침. 본 제품은 <span class="strong">제3의 축 — &lsquo;얼마나 들어가는가&rsquo;</span>로 이동. 1위가 이미 &ldquo;양이 중요하다&rdquo;고 시장을 교육해 수요를 만들어 놓았고, 그 해법은 아직 아무도 구조로 내놓지 않았음. 제품명과 메인 카피는 <span class="strong">&lsquo;1펌프 = 1회분&rsquo;</span>을 중심에, 안전 성적서와 가성비 구성은 서브로 배치.</p>
   </div>
 
-  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>8</span></div>
+  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>11</span></div>
 </section>
 
-<!-- PAGE 9 -->
+<!-- PAGE 12 -->
 <section class="page">
   <div class="sec-label">SECTION 05 / NEXT</div>
   <h2>확인 항목 및 남은 일</h2>
@@ -494,7 +560,7 @@
     <tr><td class="k">외부 자료</td><td>Mordor Intelligence(2026) / 코크란 리뷰 / ADA·NHS 권고 / 대한소아치과학회지 2020;47(3) — 학회지는 1위 상세페이지 인용분</td></tr>
   </table>
 
-  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>9</span></div>
+  <div class="page-foot"><span>쿠팡향 유아치약 제품 기획서</span><span>12</span></div>
 </section>
 
 </body>
