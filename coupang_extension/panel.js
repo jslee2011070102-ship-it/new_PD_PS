@@ -524,6 +524,37 @@ function fillUrls(list) {
 $("loadCore").addEventListener("click", () => fillUrls(COLLECT.filter((x) => x.core)));
 $("loadAll").addEventListener("click", () => fillUrls(COLLECT));
 
+/* ①에서 찾은 주소를 그대로 ②에 넣는다.
+ *
+ * 주소는 이미 확장 안(state.found)에 들어 있다. 그걸 꺼내 쓰면 되는데
+ * 전에는 그 길이 없어서, 파일로 빼서 → 나한테 보내고 → 내가 목록을 새로
+ * 만들어 → 다음 판을 설치하는 왕복이 있었다. 기다릴 이유가 없는 기다림이다.
+ *
+ * '확실'만 넣는다. 애매는 아직 어느 상품인지 정해지지 않았으므로
+ * 엉뚱한 상세페이지를 긁어 오게 된다.
+ */
+$("loadFound").addEventListener("click", async () => {
+  const r = await send({ cmd: "export" });
+  const found = (r && r.found) || {};
+  const list = Object.entries(found)
+    .filter(([, f]) => f && f.verdict === "확실" && f.url)
+    .map(([id, f]) => ({ id, url: f.url }))
+    .sort((a, b) => a.id.localeCompare(b.id, "ko", { numeric: true }));
+  if (!list.length) {
+    $("status").textContent =
+      "①에서 '확실'로 찾은 주소가 아직 없습니다.\n" +
+      "①번 탭에서 먼저 주소를 찾아 주세요.";
+    return;
+  }
+  const vague = Object.values(found).filter((f) => f && f.verdict === "애매").length;
+  fillUrls(list);
+  if (vague) {
+    $("status").textContent +=
+      `\n\n△ 애매 ${vague}개는 넣지 않았습니다 — 아직 어느 상품인지 정해지지 않아,` +
+      ` 넣으면 엉뚱한 상세페이지를 받게 됩니다. ①번 탭 '애매한 것 확인하기'에서 정하신 뒤 다시 누르세요.`;
+  }
+});
+
 // 패널을 열면 확장에 들어 있는 목록을 바로 읽는다. 사용자가 할 일이 없다.
 (async () => {
   loadCollect();
