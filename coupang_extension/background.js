@@ -394,6 +394,29 @@ function hasSpec(title, raw) {
   return new RegExp(`(^|[^0-9.])${esc}([^0-9]|$)`).test(t);
 }
 
+/* 같은 제품 라인에서 '향'만 다른 변종이 아주 흔하다.
+ *
+ *   뷰카 주니어 … 구취케어 비건 어린이 치약 **포도향**, 110g, 4개   (2위)
+ *   뷰카 주니어 … 구취케어 비건 어린이 치약 **딸기향**, 110g, 4개   (19위)
+ *
+ * 이 둘은 낱말 9개 중 8개가 같아 이름 점수 0.89 가 나오고, 용량도 구성도
+ * 글자 그대로 똑같다. 이름으로도 규격으로도 못 가른다. 가르는 건 '향' 하나뿐이다.
+ * 실제로 유아치약 25개를 미리 돌려 보니 이런 오매칭이 4건 나왔다
+ * (뷰카 2위↔19위, 센토 14위↔20위). 사람이 보기 전에 걸러야 한다.
+ *
+ * 한쪽에 향 표기가 아예 없으면 판단하지 않는다(null 과 false 는 다르다).
+ * 없는 것을 '다르다'로 치면 멀쩡한 것이 떨어진다.
+ */
+function scentOf(s) {
+  return new Set(tokens(s).filter((t) => t.length >= 3 && t.endsWith("향")));
+}
+function scentConflict(a, b) {
+  const x = scentOf(a), y = scentOf(b);
+  if (!x.size || !y.size) return false;          // 한쪽이라도 향 표기가 없으면 판단 보류
+  for (const t of x) if (y.has(t)) return false; // 하나라도 겹치면 같은 향
+  return true;                                   // 둘 다 있는데 하나도 안 겹친다 = 다른 변종
+}
+
 function scoreCandidate(item, cand) {
   const want = tokens(item.name);
   const got = new Set(tokens(cand.name));
@@ -417,9 +440,16 @@ function scoreCandidate(item, cand) {
   const sizeOk = hasSpec(cand.name, item.size);
   const countOk = hasSpec(cand.name, item.count);
 
+  // 향이 다른 것은 '비슷한 다른 상품'이 아니라 **확실히 다른 상품**이다.
+  // 그래서 애매로 올리지 않고 떨어뜨린다. 근거 있는 탈락이다.
+  const scentBad = scentConflict(item.name, cand.name);
+
   let verdict = "못찾음";
   let why = "";
-  if (sizeOk === false) {
+  if (scentBad) {
+    verdict = "못찾음";
+    why = `향이 다름 (찾는 것 ${[...scentOf(item.name)].join(", ")} / 이건 ${[...scentOf(cand.name)].join(", ")})`;
+  } else if (sizeOk === false) {
     // 용량이 다르면 다른 상품이다. 이름이 아무리 같아도 확정하지 않는다.
     // (실제로 "2.1L 1개" 와 "4.2L 2개" 가 이름이 100% 같았다)
     verdict = nameScore >= 0.5 ? "애매" : "못찾음";
@@ -459,7 +489,7 @@ function scoreCandidate(item, cand) {
   }
 
   return { ...cand, nameScore: Math.round(nameScore * 100) / 100,
-           priceGap, sizeOk, countOk, verdict, why };
+           priceGap, sizeOk, countOk, scentBad, verdict, why };
 }
 
 
