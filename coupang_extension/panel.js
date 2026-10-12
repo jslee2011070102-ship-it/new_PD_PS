@@ -527,8 +527,18 @@ $("loadAll").addEventListener("click", () => fillUrls(COLLECT));
 // 패널을 열면 확장에 들어 있는 목록을 바로 읽는다. 사용자가 할 일이 없다.
 (async () => {
   loadCollect();
+
+  // 판 번호와 '지금 들어 있는 목록이 무엇인지'를 먼저 띄운다.
+  // 새 판으로 바꿨는지 아닌지를 사장님이 눈으로 확인할 수 있어야 한다.
+  const mf = chrome.runtime.getManifest();
+  $("verLine").textContent = `버전 ${mf.version}`;
+
   const n = await loadBundled();
   if (n) {
+    const { items } = parseJobs($("jobs").value);
+    const cats = [...new Set(items.map((x) => x.listName || x.cat).filter(Boolean))];
+    $("verLine").textContent =
+      `버전 ${mf.version} · 들어 있는 목록: ${cats.join(", ")} ${n}개`;
     $("bundleInfo").innerHTML =
       `확장에 들어 있는 목록 <b>${n}개</b>를 바로 읽었습니다. 따로 파일을 찾으실 필요 없습니다.`;
   } else {
