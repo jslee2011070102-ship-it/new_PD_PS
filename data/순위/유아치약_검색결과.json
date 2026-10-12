@@ -1,707 +1,809 @@
 {
-  "유아치약-01": {
-    "at": "2026-10-12T08:53:34.277Z",
-    "candidates": [
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "닥터노아 불소 유아 아기 치약 라즈베리 레몬향, 60g, 3개",
-        "nameScore": 0.78,
-        "pid": "6422565931",
-        "price": 36000,
-        "priceGap": 0.8645480225988701,
-        "pricesSeen": [
-          36000,
-          17260,
-          959,
-          173
-        ],
-        "rank": 5,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/6422565931",
-        "verdict": "애매",
-        "why": "용량은 맞으나 구성이 다름 (찾는 것 1개)"
-      },
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "조르단 뉴스텝1 어린이 불소 치약 딸기향, 90g, 1개",
-        "nameScore": 0.22,
-        "pid": "8428289204",
-        "price": 6500,
-        "priceGap": 0.08192090395480225,
-        "pricesSeen": [
-          6500,
-          4250,
-          472
-        ],
-        "rank": 10,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8428289204",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 레몬향 / 이건 딸기향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "아텍스 시나모롤 고불소 레몬향 치약, 80g, 3개",
-        "nameScore": 0.22,
-        "pid": "9314529818",
-        "price": 10900,
-        "priceGap": 0.53954802259887,
-        "pricesSeen": [
-          10900,
-          454,
-          109
-        ],
-        "rank": 47,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9314529818",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 60g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 키즈크리닉 4스텝 치약 순한민트향                                    9,300원",
-        "nameScore": 0.11,
-        "pid": "6456138397",
-        "price": 9300,
-        "priceGap": 0.3135593220338983,
-        "pricesSeen": [
-          9300
-        ],
-        "rank": 2,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/6456138397",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 레몬향 / 이건 순한민트향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 일사오공 고불소 주니어 치약 애플라임향                                    11,600원",
-        "nameScore": 0.11,
-        "pid": "7444603797",
-        "price": 11600,
-        "priceGap": 0.6384180790960452,
-        "pricesSeen": [
-          11600
-        ],
-        "rank": 3,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/7444603797",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 레몬향 / 이건 애플라임향)"
-      }
-    ],
-    "cat": "유아치약",
-    "confirmedByUser": true,
-    "id": "유아치약-01",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
-      "애매 · 이름일치 78% · 가격차 86%",
-      "사람이 주소를 직접 넣음: 6422565931"
-    ],
-    "manualUrl": true,
-    "matchedName": "(사람이 직접 넣은 주소)",
-    "matchedPrice": null,
-    "name": "닥터노아 중금속 안심 불소 유아 아기 치약 라즈베리 레몬향",
-    "pid": "6422565931",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/6422565931?itemId=27338652458&vendorItemId=95175834890",
-    "verdict": "확실",
-    "wantCount": "1개",
-    "wantPrice": 7080,
-    "wantSize": "60g"
-  },
   "유아치약-02": {
-    "at": "2026-10-12T08:53:05.493Z",
+    "id": "유아치약-02",
+    "cat": "유아치약",
+    "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 포도향",
+    "wantPrice": 9800,
+    "wantSize": "110g",
+    "wantCount": "4개",
+    "verdict": "확실",
+    "pid": "7427543327",
+    "url": "https://www.coupang.com/vp/products/7427543327",
+    "matchedName": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 포도향, 110g, 4개",
+    "matchedPrice": 20900,
     "candidates": [
       {
-        "countOk": true,
         "isAd": true,
         "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 포도향, 110g, 4개",
-        "nameScore": 1,
         "pid": "7427543327",
         "price": 20900,
-        "priceGap": 0,
         "pricesSeen": [
           20900,
           9800,
           223
         ],
-        "rank": 9,
-        "scentBad": false,
-        "sizeOk": true,
+        "rank": 6,
         "url": "https://www.coupang.com/vp/products/7427543327",
+        "nameScore": 1,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
         "verdict": "확실",
         "why": "이름 100% + 용량·구성 일치"
       },
       {
+        "isAd": false,
+        "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 포도향, 120g, 4개",
+        "pid": "8803856645",
+        "price": 220,
+        "pricesSeen": [
+          220,
+          21500,
+          9960,
+          208,
+          100
+        ],
+        "rank": 43,
+        "url": "https://www.coupang.com/vp/products/8803856645",
+        "nameScore": 0.56,
+        "priceGap": 0.0163265306122449,
+        "sizeOk": false,
         "countOk": true,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "용량이 다름 (찾는 것 110g)"
+      },
+      {
         "isAd": false,
         "name": "뷰카 주니어 마일드 고불소 비건치약 110g x 4종 세트 프루티 믹스, 4개입, 1세트",
-        "nameScore": 0.44,
         "pid": "9427894228",
         "price": 20900,
-        "priceGap": 0.24489795918367346,
         "pricesSeen": [
           20900,
           12200,
           1109,
           122
         ],
-        "rank": 28,
-        "scentBad": false,
-        "sizeOk": true,
+        "rank": 10,
         "url": "https://www.coupang.com/vp/products/9427894228",
+        "nameScore": 0.44,
+        "priceGap": 0.24489795918367346,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
         "verdict": "애매",
         "why": "이름 44% · 용량 일치 · 가격차 24%"
       },
       {
-        "countOk": true,
-        "isAd": true,
+        "isAd": false,
         "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향, 110g, 4개",
-        "nameScore": 0.89,
         "pid": "7646155579",
         "price": 20900,
-        "priceGap": 0.12142857142857143,
         "pricesSeen": [
           20900,
           10990,
           250,
           110
         ],
-        "rank": 11,
-        "scentBad": true,
-        "sizeOk": true,
+        "rank": 34,
         "url": "https://www.coupang.com/vp/products/7646155579",
+        "nameScore": 0.89,
+        "priceGap": 0.12142857142857143,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": true,
         "verdict": "못찾음",
         "why": "향이 다름 (찾는 것 포도향 / 이건 딸기향)"
       },
       {
-        "countOk": true,
         "isAd": true,
         "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
-        "nameScore": 0.67,
         "pid": "9021724259",
         "price": 20900,
-        "priceGap": 0.24489795918367346,
         "pricesSeen": [
           20900,
           12200,
           277,
           122
         ],
-        "rank": 6,
-        "scentBad": true,
-        "sizeOk": true,
+        "rank": 8,
         "url": "https://www.coupang.com/vp/products/9021724259",
+        "nameScore": 0.67,
+        "priceGap": 0.24489795918367346,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": true,
         "verdict": "못찾음",
         "why": "향이 다름 (찾는 것 포도향 / 이건 사과향)"
-      },
-      {
-        "countOk": false,
-        "isAd": true,
-        "name": "크리오 치카부 고불소 비건 주니어 충치 치약 3단계 메론향, 90g, 1개입, 6개",
-        "nameScore": 0.44,
-        "pid": "9675159337",
-        "price": 33800,
-        "priceGap": 0.7724489795918368,
-        "pricesSeen": [
-          33800,
-          17370,
-          322,
-          174
-        ],
-        "rank": 15,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9675159337",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 포도향 / 이건 메론향)"
       }
     ],
-    "cat": "유아치약",
-    "id": "유아치약-02",
+    "source": "목록화면",
     "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
       "확실 · 이름일치 100% · 가격차 0%"
     ],
-    "matchedName": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 포도향, 110g, 4개",
-    "matchedPrice": 20900,
-    "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 포도향",
-    "pid": "7427543327",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/7427543327",
-    "verdict": "확실",
-    "wantCount": "4개",
-    "wantPrice": 9800,
-    "wantSize": "110g"
+    "at": "2026-10-12T13:04:23.276Z"
   },
   "유아치약-03": {
-    "at": "2026-10-12T08:53:05.494Z",
+    "id": "유아치약-03",
+    "cat": "유아치약",
+    "name": "닥터노아 중금속 안심 1450 고불소 어린이치약 포도향",
+    "wantPrice": 18480,
+    "wantSize": "60g",
+    "wantCount": "3개",
+    "verdict": "확실",
+    "pid": "9625125018",
+    "url": "https://www.coupang.com/vp/products/9625125018",
+    "matchedName": "닥터노아 중금속 안심 1450 고불소 어린이치약 포도향, 3개, 60g",
+    "matchedPrice": 38400,
     "candidates": [
       {
-        "countOk": true,
         "isAd": true,
         "name": "닥터노아 중금속 안심 1450 고불소 어린이치약 포도향, 3개, 60g",
-        "nameScore": 1,
         "pid": "9625125018",
         "price": 38400,
-        "priceGap": 0,
         "pricesSeen": [
           38400,
           18480,
           1027,
           185
         ],
-        "rank": 7,
-        "scentBad": false,
-        "sizeOk": true,
+        "rank": 5,
         "url": "https://www.coupang.com/vp/products/9625125018",
+        "nameScore": 1,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
         "verdict": "확실",
         "why": "이름 100% + 용량·구성 일치"
       },
       {
-        "countOk": false,
         "isAd": false,
-        "name": "덴탈업 치과 병원전용 1450 고불소 충치집중케어 어린이치약 / 치과전용 충치예방 구취제거 프로폴리스 함유, 5개, 80g",
-        "nameScore": 0.43,
-        "pid": "9690968798",
-        "price": 32000,
-        "priceGap": 0.21753246753246752,
+        "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 포도향, 120g, 4개",
+        "pid": "8803856645",
+        "price": 220,
         "pricesSeen": [
-          32000,
-          22500,
-          563,
-          225
+          220,
+          21500,
+          9960,
+          208,
+          100
         ],
-        "rank": 26,
-        "scentBad": false,
+        "rank": 43,
+        "url": "https://www.coupang.com/vp/products/8803856645",
+        "nameScore": 0.43,
+        "priceGap": 0.1634199134199134,
         "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9690968798",
+        "countOk": false,
+        "scentBad": false,
         "verdict": "못찾음",
         "why": "용량이 다름 (찾는 것 60g)"
       },
       {
-        "countOk": false,
         "isAd": true,
-        "name": "미미엔부 민티부 1450ppm 고불소 어린이치약 민트향, 4개, 100g",
-        "nameScore": 0.29,
-        "pid": "9124822395",
-        "price": 34000,
-        "priceGap": 0.07683982683982683,
-        "pricesSeen": [
-          34000,
-          19900,
-          498,
-          199
-        ],
-        "rank": 10,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9124822395",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 포도향 / 이건 민트향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "페리오 키즈 엄마치약이투명해요 1450 고불소 펌핑치약 민트향, 160g, 2개",
-        "nameScore": 0.29,
-        "pid": "9359566097",
-        "price": 15790,
-        "priceGap": 0.14556277056277056,
-        "pricesSeen": [
-          15790,
-          15310,
-          478,
-          153
-        ],
-        "rank": 13,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9359566097",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 포도향 / 이건 민트향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "마망엣파파 1450 고불소 키즈 치약 안 매운 민트향, 1개, 100g",
-        "nameScore": 0.29,
-        "pid": "9737052516",
-        "price": 8000,
-        "priceGap": 0.5670995670995671,
-        "pricesSeen": [
-          8000,
-          6900,
-          690
-        ],
-        "rank": 21,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9737052516",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 포도향 / 이건 민트향)"
-      }
-    ],
-    "cat": "유아치약",
-    "id": "유아치약-03",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
-      "확실 · 이름일치 100% · 가격차 0%"
-    ],
-    "matchedName": "닥터노아 중금속 안심 1450 고불소 어린이치약 포도향, 3개, 60g",
-    "matchedPrice": 38400,
-    "name": "닥터노아 중금속 안심 1450 고불소 어린이치약 포도향",
-    "pid": "9625125018",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/9625125018",
-    "verdict": "확실",
-    "wantCount": "3개",
-    "wantPrice": 18480,
-    "wantSize": "60g"
-  },
-  "유아치약-04": {
-    "at": "2026-10-12T08:53:28.100Z",
-    "candidates": [
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "벨레다 1450 고불소 어린이 치약 스피아민트향, 50g, 1개",
-        "nameScore": 1,
-        "pid": "8475675696",
-        "price": 8500,
-        "priceGap": 0,
-        "pricesSeen": [
-          8500,
-          6500,
-          1300
-        ],
-        "rank": 11,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/8475675696",
-        "verdict": "확실",
-        "why": "이름 100% + 용량·구성 일치"
-      },
-      {
-        "countOk": true,
-        "isAd": true,
-        "name": "페리오 키즈 효소의 발견 1450 고불소 치약 퓨어민트향, 80g, 1개",
-        "nameScore": 0.5,
-        "pid": "9371086951",
+        "name": "페리오 키즈 효소의 발견 1450 고불소 치약 트로피칼민트향, 80g, 1개",
+        "pid": "9371079604",
         "price": 9900,
-        "priceGap": 0.27692307692307694,
         "pricesSeen": [
           9900,
           4700,
           588
         ],
-        "rank": 47,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9371086951",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 스피아민트향 / 이건 퓨어민트향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "치카포카 고불소 충치케어 어린이 치약 포도향, 100g, 4개",
-        "nameScore": 0.5,
-        "pid": "8680397702",
-        "price": 200,
-        "priceGap": 0.35384615384615387,
-        "pricesSeen": [
-          200,
-          19600,
-          8800,
-          220
-        ],
-        "rank": 53,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8680397702",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 스피아민트향 / 이건 포도향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "페리오 키즈 효소의 발견 1450 고불소 치약 트로피칼민트향, 80g, 2개",
-        "nameScore": 0.5,
-        "pid": "9371079604",
-        "price": 19800,
-        "priceGap": 0.4323076923076923,
-        "pricesSeen": [
-          19800,
-          9310,
-          582
-        ],
-        "rank": 56,
-        "scentBad": true,
-        "sizeOk": false,
+        "rank": 9,
         "url": "https://www.coupang.com/vp/products/9371079604",
+        "nameScore": 0.29,
+        "priceGap": 0.4642857142857143,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
         "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 스피아민트향 / 이건 트로피칼민트향)"
+        "why": "향이 다름 (찾는 것 포도향 / 이건 트로피칼민트향)"
       },
       {
-        "countOk": false,
         "isAd": false,
-        "name": "조르단 뉴스텝2 어린이 고불소 치약 청사과향, 90g, 3개",
-        "nameScore": 0.5,
-        "pid": "8510746226",
-        "price": 19200,
-        "priceGap": 0.7615384615384615,
+        "name": "벨레다 1450 고불소 어린이 치약 스피아민트향, 50g, 1개",
+        "pid": "8475675696",
+        "price": 8500,
         "pricesSeen": [
-          19200,
-          11450,
-          424,
-          115
+          8500,
+          6500,
+          1300
         ],
-        "rank": 60,
-        "scentBad": true,
+        "rank": 27,
+        "url": "https://www.coupang.com/vp/products/8475675696",
+        "nameScore": 0.29,
+        "priceGap": 0.54004329004329,
         "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8510746226",
+        "countOk": false,
+        "scentBad": true,
         "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 스피아민트향 / 이건 청사과향)"
+        "why": "향이 다름 (찾는 것 포도향 / 이건 스피아민트향)"
+      },
+      {
+        "isAd": false,
+        "name": "예꼬맘 3단계 어린이치약 고불소 60g + 미니치약 15g 스피아민트향, 3세트, 75g",
+        "pid": "1514135504",
+        "price": 11700,
+        "pricesSeen": [
+          11700,
+          520,
+          117
+        ],
+        "rank": 29,
+        "url": "https://www.coupang.com/vp/products/1514135504",
+        "nameScore": 0.29,
+        "priceGap": 0.36688311688311687,
+        "sizeOk": true,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 포도향 / 이건 스피아민트향)"
       }
     ],
-    "cat": "유아치약",
-    "id": "유아치약-04",
+    "source": "목록화면",
     "log": [
       "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
       "확실 · 이름일치 100% · 가격차 0%"
     ],
+    "at": "2026-10-12T13:04:23.277Z"
+  },
+  "유아치약-04": {
+    "id": "유아치약-04",
+    "cat": "유아치약",
+    "name": "벨레다 1450 고불소 어린이 치약 스피아민트향",
+    "wantPrice": 6500,
+    "wantSize": "50g",
+    "wantCount": "1개",
+    "verdict": "확실",
+    "pid": "8475675696",
+    "url": "https://www.coupang.com/vp/products/8475675696",
     "matchedName": "벨레다 1450 고불소 어린이 치약 스피아민트향, 50g, 1개",
     "matchedPrice": 8500,
-    "name": "벨레다 1450 고불소 어린이 치약 스피아민트향",
-    "pid": "8475675696",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/8475675696",
-    "verdict": "확실",
-    "wantCount": "1개",
-    "wantPrice": 6500,
-    "wantSize": "50g"
-  },
-  "유아치약-05": {
-    "at": "2026-10-12T08:53:05.496Z",
     "candidates": [
       {
-        "countOk": true,
         "isAd": false,
-        "name": "뷰카 주니어 마일드 고불소 비건치약 110g x 4종 세트 프루티 믹스, 4개입, 1세트",
-        "nameScore": 0.89,
-        "pid": "9427894228",
-        "price": 20900,
-        "priceGap": 0,
+        "name": "벨레다 1450 고불소 어린이 치약 스피아민트향, 50g, 1개",
+        "pid": "8475675696",
+        "price": 8500,
         "pricesSeen": [
-          20900,
-          12200,
-          1109,
-          122
+          8500,
+          6500,
+          1300
         ],
-        "rank": 28,
-        "scentBad": false,
+        "rank": 27,
+        "url": "https://www.coupang.com/vp/products/8475675696",
+        "nameScore": 1,
+        "priceGap": 0,
         "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/9427894228",
+        "countOk": true,
+        "scentBad": false,
         "verdict": "확실",
-        "why": "이름 89% + 용량·구성 일치"
+        "why": "이름 100% + 용량·구성 일치"
       },
       {
-        "countOk": false,
-        "isAd": true,
-        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
-        "nameScore": 0.56,
-        "pid": "9021724259",
-        "price": 20900,
-        "priceGap": 0,
+        "isAd": false,
+        "name": "벨레다 어린이 고불소 마일드 민트 치약, 50g, 1개",
+        "pid": "9536173729",
+        "price": 7000,
         "pricesSeen": [
-          20900,
-          12200,
-          277,
-          122
+          7000,
+          1400
         ],
-        "rank": 6,
-        "scentBad": false,
+        "rank": 37,
+        "url": "https://www.coupang.com/vp/products/9536173729",
+        "nameScore": 0.67,
+        "priceGap": 0.07692307692307693,
         "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/9021724259",
+        "countOk": true,
+        "scentBad": false,
         "verdict": "애매",
-        "why": "이름 56% · 용량 일치 · 가격차 0%"
+        "why": "이름 67% · 용량 일치 · 가격차 8%"
       },
       {
-        "countOk": false,
         "isAd": true,
+        "name": "페리오 키즈 효소의 발견 1450 고불소 치약 트로피칼민트향, 80g, 1개",
+        "pid": "9371079604",
+        "price": 9900,
+        "pricesSeen": [
+          9900,
+          4700,
+          588
+        ],
+        "rank": 9,
+        "url": "https://www.coupang.com/vp/products/9371079604",
+        "nameScore": 0.5,
+        "priceGap": 0.27692307692307694,
+        "sizeOk": false,
+        "countOk": true,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 스피아민트향 / 이건 트로피칼민트향)"
+      },
+      {
+        "isAd": false,
+        "name": "조르단 뉴스텝2 어린이 고불소 치약 포도향, 90g, 3개",
+        "pid": "8428356943",
+        "price": 19200,
+        "pricesSeen": [
+          19200,
+          10780,
+          399,
+          108
+        ],
+        "rank": 30,
+        "url": "https://www.coupang.com/vp/products/8428356943",
+        "nameScore": 0.5,
+        "priceGap": 0.6584615384615384,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 스피아민트향 / 이건 포도향)"
+      },
+      {
+        "isAd": false,
         "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향, 110g, 4개",
-        "nameScore": 0.56,
         "pid": "7646155579",
         "price": 20900,
-        "priceGap": 0.09918032786885246,
         "pricesSeen": [
           20900,
           10990,
           250,
           110
         ],
-        "rank": 11,
-        "scentBad": false,
-        "sizeOk": true,
+        "rank": 34,
         "url": "https://www.coupang.com/vp/products/7646155579",
+        "nameScore": 0.5,
+        "priceGap": 0.6907692307692308,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 스피아민트향 / 이건 딸기향)"
+      }
+    ],
+    "source": "목록화면",
+    "log": [
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
+      "확실 · 이름일치 100% · 가격차 0%"
+    ],
+    "at": "2026-10-12T13:04:23.278Z"
+  },
+  "유아치약-05": {
+    "id": "유아치약-05",
+    "cat": "유아치약",
+    "name": "뷰카 주니어 마일드 고불소 비건치약 110g x 4종 세트 프루티믹스",
+    "wantPrice": 12200,
+    "wantSize": "110g",
+    "wantCount": "1세트",
+    "verdict": "확실",
+    "pid": "9427894228",
+    "url": "https://www.coupang.com/vp/products/9427894228",
+    "matchedName": "뷰카 주니어 마일드 고불소 비건치약 110g x 4종 세트 프루티 믹스, 4개입, 1세트",
+    "matchedPrice": 20900,
+    "candidates": [
+      {
+        "isAd": false,
+        "name": "뷰카 주니어 마일드 고불소 비건치약 110g x 4종 세트 프루티 믹스, 4개입, 1세트",
+        "pid": "9427894228",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          12200,
+          1109,
+          122
+        ],
+        "rank": 10,
+        "url": "https://www.coupang.com/vp/products/9427894228",
+        "nameScore": 0.89,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "확실",
+        "why": "이름 89% + 용량·구성 일치"
+      },
+      {
+        "isAd": false,
+        "name": "뷰카 주니어 마일드 고불소 비건치약 애플망고향, 110g, 4개",
+        "pid": "9393712522",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          12200,
+          277,
+          122
+        ],
+        "rank": 52,
+        "url": "https://www.coupang.com/vp/products/9393712522",
+        "nameScore": 0.67,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "용량은 맞으나 구성이 다름 (찾는 것 1세트)"
+      },
+      {
+        "isAd": true,
+        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
+        "pid": "9021724259",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          12200,
+          277,
+          122
+        ],
+        "rank": 8,
+        "url": "https://www.coupang.com/vp/products/9021724259",
+        "nameScore": 0.56,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "이름 56% · 용량 일치 · 가격차 0%"
+      },
+      {
+        "isAd": false,
+        "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향, 110g, 4개",
+        "pid": "7646155579",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          10990,
+          250,
+          110
+        ],
+        "rank": 34,
+        "url": "https://www.coupang.com/vp/products/7646155579",
+        "nameScore": 0.56,
+        "priceGap": 0.09918032786885246,
+        "sizeOk": true,
+        "countOk": false,
+        "scentBad": false,
         "verdict": "애매",
         "why": "이름 56% · 용량 일치 · 가격차 10%"
       },
       {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 일사오공 고불소 주니어 치약 애플라임향                                    11,600원",
-        "nameScore": 0.22,
-        "pid": "7444603797",
-        "price": 11600,
-        "priceGap": 0.04918032786885246,
-        "pricesSeen": [
-          11600
-        ],
-        "rank": 2,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/7444603797",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 110g)"
-      },
-      {
-        "countOk": false,
-        "isAd": true,
-        "name": "크리오 치카부 고불소 비건 주니어 충치 치약 3단계 메론향, 90g, 1개입, 6개",
-        "nameScore": 0.22,
-        "pid": "9675159337",
-        "price": 33800,
-        "priceGap": 0.4237704918032787,
-        "pricesSeen": [
-          33800,
-          17370,
-          322,
-          174
-        ],
-        "rank": 15,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9675159337",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 110g)"
-      }
-    ],
-    "cat": "유아치약",
-    "id": "유아치약-05",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
-      "확실 · 이름일치 89% · 가격차 0%"
-    ],
-    "matchedName": "뷰카 주니어 마일드 고불소 비건치약 110g x 4종 세트 프루티 믹스, 4개입, 1세트",
-    "matchedPrice": 20900,
-    "name": "뷰카 주니어 마일드 고불소 비건치약 110g x 4종 세트 프루티믹스",
-    "pid": "9427894228",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/9427894228",
-    "verdict": "확실",
-    "wantCount": "1세트",
-    "wantPrice": 12200,
-    "wantSize": "110g"
-  },
-  "유아치약-06": {
-    "at": "2026-10-12T08:53:34.277Z",
-    "candidates": [
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 일사오공 고불소 주니어 치약 애플라임향                                    11,600원",
-        "nameScore": 1,
-        "pid": "7444603797",
-        "price": 11600,
-        "priceGap": 0,
-        "pricesSeen": [
-          11600
-        ],
-        "rank": 3,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/7444603797",
-        "verdict": "애매",
-        "why": "용량이 다름 (찾는 것 80g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 주니어 1450 고불소 충치케어 펌핑치약                                    12,250원",
-        "nameScore": 0.5,
-        "pid": "8544556420",
-        "price": 12250,
-        "priceGap": 0.05603448275862069,
-        "pricesSeen": [
-          12250
-        ],
-        "rank": 1,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8544556420",
-        "verdict": "애매",
-        "why": "용량이 다름 (찾는 것 80g)"
-      },
-      {
-        "countOk": false,
         "isAd": false,
         "name": "지그비 대용량 주니어 마일드 고불소 구취케어 어린이 치약 엄마배우 Pick 청포도향, 4개, 117g",
-        "nameScore": 0.5,
         "pid": "8757252802",
         "price": 15900,
-        "priceGap": 0.02586206896551724,
         "pricesSeen": [
           15900,
           11900,
           254,
           119
         ],
-        "rank": 53,
-        "scentBad": true,
-        "sizeOk": false,
+        "rank": 54,
         "url": "https://www.coupang.com/vp/products/8757252802",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 애플라임향 / 이건 청포도향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 키즈크리닉 4스텝 치약 순한민트향                                    9,300원",
         "nameScore": 0.33,
-        "pid": "6456138397",
-        "price": 9300,
-        "priceGap": 0.19827586206896552,
-        "pricesSeen": [
-          9300
-        ],
-        "rank": 2,
-        "scentBad": true,
+        "priceGap": 0.02459016393442623,
         "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/6456138397",
+        "countOk": false,
+        "scentBad": false,
         "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 애플라임향 / 이건 순한민트향)"
+        "why": "용량이 다름 (찾는 것 110g)"
+      }
+    ],
+    "source": "목록화면",
+    "log": [
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
+      "확실 · 이름일치 89% · 가격차 0%"
+    ],
+    "at": "2026-10-12T13:04:23.279Z"
+  },
+  "유아치약-07": {
+    "id": "유아치약-07",
+    "cat": "유아치약",
+    "name": "블랑키즐 유아용 고불소 치약 애플망고향",
+    "wantPrice": 12900,
+    "wantSize": "60g",
+    "wantCount": "2개",
+    "verdict": "확실",
+    "pid": "7575239396",
+    "url": "https://www.coupang.com/vp/products/7575239396",
+    "matchedName": "블랑키즐 유아용 고불소 치약 애플망고향, 60g, 1개입, 2개",
+    "matchedPrice": 24000,
+    "candidates": [
+      {
+        "isAd": false,
+        "name": "블랑키즐 유아용 고불소 치약 애플망고향, 60g, 1개입, 2개",
+        "pid": "7575239396",
+        "price": 24000,
+        "pricesSeen": [
+          24000,
+          12900,
+          1075,
+          129
+        ],
+        "rank": 38,
+        "url": "https://www.coupang.com/vp/products/7575239396",
+        "nameScore": 1,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "확실",
+        "why": "이름 100% + 용량·구성 일치"
       },
       {
+        "isAd": true,
+        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
+        "pid": "9021724259",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          12200,
+          277,
+          122
+        ],
+        "rank": 8,
+        "url": "https://www.coupang.com/vp/products/9021724259",
+        "nameScore": 0.4,
+        "priceGap": 0.05426356589147287,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 애플망고향 / 이건 사과향)"
+      },
+      {
+        "isAd": true,
+        "name": "페리오 키즈 효소의 발견 1450 고불소 치약 트로피칼민트향, 80g, 1개",
+        "pid": "9371079604",
+        "price": 9900,
+        "pricesSeen": [
+          9900,
+          4700,
+          588
+        ],
+        "rank": 9,
+        "url": "https://www.coupang.com/vp/products/9371079604",
+        "nameScore": 0.4,
+        "priceGap": 0.23255813953488372,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 애플망고향 / 이건 트로피칼민트향)"
+      },
+      {
+        "isAd": true,
+        "name": "아텍스 시나모롤 고불소 레몬향 치약, 80g, 3개",
+        "pid": "9314529818",
+        "price": 10900,
+        "pricesSeen": [
+          10900,
+          454,
+          109
+        ],
+        "rank": 11,
+        "url": "https://www.coupang.com/vp/products/9314529818",
+        "nameScore": 0.4,
+        "priceGap": 0.15503875968992248,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 애플망고향 / 이건 레몬향)"
+      },
+      {
+        "isAd": false,
+        "name": "조르단 뉴스텝2 어린이 고불소 치약 포도향, 90g, 3개",
+        "pid": "8428356943",
+        "price": 19200,
+        "pricesSeen": [
+          19200,
+          10780,
+          399,
+          108
+        ],
+        "rank": 30,
+        "url": "https://www.coupang.com/vp/products/8428356943",
+        "nameScore": 0.4,
+        "priceGap": 0.16434108527131783,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 애플망고향 / 이건 포도향)"
+      }
+    ],
+    "source": "목록화면",
+    "log": [
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
+      "확실 · 이름일치 100% · 가격차 0%"
+    ],
+    "at": "2026-10-12T13:04:23.281Z"
+  },
+  "유아치약-09": {
+    "id": "유아치약-09",
+    "cat": "유아치약",
+    "name": "조르단 뉴스텝1 어린이 불소 치약 딸기향",
+    "wantPrice": 4250,
+    "wantSize": "90g",
+    "wantCount": "1개",
+    "verdict": "확실",
+    "pid": "8428289204",
+    "url": "https://www.coupang.com/vp/products/8428289204",
+    "matchedName": "조르단 뉴스텝1 어린이 불소 치약 딸기향, 90g, 1개",
+    "matchedPrice": 6500,
+    "candidates": [
+      {
+        "isAd": false,
+        "name": "조르단 뉴스텝1 어린이 불소 치약 딸기향, 90g, 1개",
+        "pid": "8428289204",
+        "price": 6500,
+        "pricesSeen": [
+          6500,
+          4250,
+          472
+        ],
+        "rank": 45,
+        "url": "https://www.coupang.com/vp/products/8428289204",
+        "nameScore": 1,
+        "priceGap": 0,
+        "sizeOk": true,
         "countOk": true,
+        "scentBad": false,
+        "verdict": "확실",
+        "why": "이름 100% + 용량·구성 일치"
+      },
+      {
+        "isAd": false,
+        "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향, 110g, 4개",
+        "pid": "7646155579",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          10990,
+          250,
+          110
+        ],
+        "rank": 34,
+        "url": "https://www.coupang.com/vp/products/7646155579",
+        "nameScore": 0.5,
+        "priceGap": 0.9411764705882353,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "용량이 다름 (찾는 것 90g)"
+      },
+      {
+        "isAd": false,
+        "name": "조르단 뉴스텝2 어린이 고불소 치약 포도향, 90g, 3개",
+        "pid": "8428356943",
+        "price": 19200,
+        "pricesSeen": [
+          19200,
+          10780,
+          399,
+          108
+        ],
+        "rank": 30,
+        "url": "https://www.coupang.com/vp/products/8428356943",
+        "nameScore": 0.5,
+        "priceGap": 0.9061176470588236,
+        "sizeOk": true,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 딸기향 / 이건 포도향)"
+      },
+      {
+        "isAd": false,
+        "name": "에이카랩스 코뿔소 어린이 불소 치약 청포도향, 60g, 1개",
+        "pid": "7560673413",
+        "price": 10000,
+        "pricesSeen": [
+          10000,
+          6400,
+          1067
+        ],
+        "rank": 41,
+        "url": "https://www.coupang.com/vp/products/7560673413",
+        "nameScore": 0.5,
+        "priceGap": 0.5058823529411764,
+        "sizeOk": false,
+        "countOk": true,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 딸기향 / 이건 청포도향)"
+      },
+      {
+        "isAd": false,
+        "name": "조르단 뉴스텝2 어린이 고불소 치약 청사과향, 90g, 3개",
+        "pid": "8510746226",
+        "price": 19200,
+        "pricesSeen": [
+          19200,
+          11450,
+          424,
+          115
+        ],
+        "rank": 55,
+        "url": "https://www.coupang.com/vp/products/8510746226",
+        "nameScore": 0.5,
+        "priceGap": 0.900235294117647,
+        "sizeOk": true,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 딸기향 / 이건 청사과향)"
+      }
+    ],
+    "source": "목록화면",
+    "log": [
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
+      "확실 · 이름일치 100% · 가격차 0%"
+    ],
+    "at": "2026-10-12T13:04:23.282Z"
+  },
+  "유아치약-10": {
+    "id": "유아치약-10",
+    "cat": "유아치약",
+    "name": "티타드 주니어 불소 치약",
+    "wantPrice": 7450,
+    "wantSize": "",
+    "wantCount": "",
+    "verdict": "확실",
+    "pid": "9167355510",
+    "url": "https://www.coupang.com/vp/products/9167355510",
+    "matchedName": "티타드 주니어 불소 치약, 60g, 1개입, 4개",
+    "matchedPrice": 28700,
+    "candidates": [
+      {
+        "isAd": true,
+        "name": "티타드 주니어 불소 치약, 60g, 1개입, 4개",
+        "pid": "9167355510",
+        "price": 28700,
+        "pricesSeen": [
+          28700,
+          1196,
+          287
+        ],
+        "rank": 7,
+        "url": "https://www.coupang.com/vp/products/9167355510",
+        "nameScore": 1,
+        "priceGap": 0.8394630872483222,
+        "sizeOk": null,
+        "countOk": null,
+        "scentBad": false,
+        "verdict": "확실",
+        "why": "이름 100% (제목에 규격 표기 없음)"
+      },
+      {
+        "isAd": true,
+        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
+        "pid": "9021724259",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          12200,
+          277,
+          122
+        ],
+        "rank": 8,
+        "url": "https://www.coupang.com/vp/products/9021724259",
+        "nameScore": 0.5,
+        "priceGap": 0.6375838926174496,
+        "sizeOk": null,
+        "countOk": null,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "이름 50% · 가격차 64%"
+      },
+      {
         "isAd": false,
         "name": "제니튼 주니어 치약 민트향, 60g, 3개입, 1개",
-        "nameScore": 0.33,
         "pid": "1291548235",
         "price": 15760,
-        "priceGap": 0.3103448275862069,
         "pricesSeen": [
           15760,
           15200,
@@ -709,346 +811,1629 @@
           152
         ],
         "rank": 12,
-        "scentBad": true,
-        "sizeOk": false,
         "url": "https://www.coupang.com/vp/products/1291548235",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 애플라임향 / 이건 민트향)"
+        "nameScore": 0.5,
+        "priceGap": 0.66,
+        "sizeOk": null,
+        "countOk": null,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "이름 50% · 가격차 66%"
+      },
+      {
+        "isAd": false,
+        "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향, 110g, 4개",
+        "pid": "7646155579",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          10990,
+          250,
+          110
+        ],
+        "rank": 34,
+        "url": "https://www.coupang.com/vp/products/7646155579",
+        "nameScore": 0.5,
+        "priceGap": 0.47516778523489933,
+        "sizeOk": null,
+        "countOk": null,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "이름 50% · 가격차 48%"
+      },
+      {
+        "isAd": false,
+        "name": "에이카랩스 코뿔소 어린이 불소 치약 청포도향, 60g, 1개",
+        "pid": "7560673413",
+        "price": 10000,
+        "pricesSeen": [
+          10000,
+          6400,
+          1067
+        ],
+        "rank": 41,
+        "url": "https://www.coupang.com/vp/products/7560673413",
+        "nameScore": 0.5,
+        "priceGap": 0.14093959731543623,
+        "sizeOk": null,
+        "countOk": null,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "이름 50% · 가격차 14%"
       }
     ],
-    "cat": "유아치약",
-    "confirmedByUser": true,
-    "id": "유아치약-06",
+    "source": "목록화면",
     "log": [
       "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
-      "애매 · 이름일치 100% · 가격차 0%",
-      "사람이 주소를 직접 넣음: 7444603797"
+      "확실 · 이름일치 100% · 가격차 84%"
     ],
-    "manualUrl": true,
-    "matchedName": "(사람이 직접 넣은 주소)",
-    "matchedPrice": null,
-    "name": "2080 일사오공 고불소 주니어 치약 애플라임향",
-    "pid": "7444603797",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/7444603797?itemId=19367024138&vendorItemId=86479922183",
-    "verdict": "확실",
-    "wantCount": "3개",
-    "wantPrice": 11600,
-    "wantSize": "80g"
+    "at": "2026-10-12T13:04:23.283Z"
   },
-  "유아치약-07": {
-    "at": "2026-10-12T08:53:13.269Z",
+  "유아치약-11": {
+    "id": "유아치약-11",
+    "cat": "유아치약",
+    "name": "에이카랩스 코뿔소 어린이 불소 치약 청포도향",
+    "wantPrice": 6400,
+    "wantSize": "60g",
+    "wantCount": "1개",
+    "verdict": "확실",
+    "pid": "7560673413",
+    "url": "https://www.coupang.com/vp/products/7560673413",
+    "matchedName": "에이카랩스 코뿔소 어린이 불소 치약 청포도향, 60g, 1개",
+    "matchedPrice": 10000,
     "candidates": [
       {
-        "countOk": true,
         "isAd": false,
-        "name": "블랑키즐 유아용 고불소 치약 애플망고향, 60g, 1개입, 2개",
-        "nameScore": 1,
-        "pid": "7575239396",
-        "price": 24000,
-        "priceGap": 0,
+        "name": "에이카랩스 코뿔소 어린이 불소 치약 청포도향, 60g, 1개",
+        "pid": "7560673413",
+        "price": 10000,
         "pricesSeen": [
-          24000,
-          12900,
-          1075,
-          129
+          10000,
+          6400,
+          1067
         ],
-        "rank": 9,
-        "scentBad": false,
+        "rank": 41,
+        "url": "https://www.coupang.com/vp/products/7560673413",
+        "nameScore": 1,
+        "priceGap": 0,
         "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/7575239396",
+        "countOk": true,
+        "scentBad": false,
         "verdict": "확실",
         "why": "이름 100% + 용량·구성 일치"
       },
       {
-        "countOk": true,
         "isAd": false,
-        "name": "블랑키즐 유아용 1450 고불소 치약 복숭아향, 60g, 1개입, 2개",
-        "nameScore": 0.8,
-        "pid": "9454818011",
-        "price": 24000,
-        "priceGap": 0,
+        "name": "지그비 대용량 주니어 마일드 고불소 구취케어 어린이 치약 엄마배우 Pick 청포도향, 4개, 117g",
+        "pid": "8757252802",
+        "price": 15900,
         "pricesSeen": [
-          24000,
-          12900,
-          1075,
-          129
+          15900,
+          11900,
+          254,
+          119
         ],
-        "rank": 48,
-        "scentBad": true,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/9454818011",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 애플망고향 / 이건 복숭아향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 일사오공 고불소 주니어 치약 애플라임향                                    11,600원",
-        "nameScore": 0.4,
-        "pid": "7444603797",
-        "price": 11600,
-        "priceGap": 0.10077519379844961,
-        "pricesSeen": [
-          11600
-        ],
-        "rank": 2,
-        "scentBad": true,
+        "rank": 54,
+        "url": "https://www.coupang.com/vp/products/8757252802",
+        "nameScore": 0.5,
+        "priceGap": 0.859375,
         "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/7444603797",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 애플망고향 / 이건 애플라임향)"
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "용량이 다름 (찾는 것 60g)"
       },
       {
+        "isAd": true,
+        "name": "에이카랩스 어린이 코뿔소 치약 사과향 1450ppm, 60g, 6개",
+        "pid": "7560527159",
+        "price": 750,
+        "pricesSeen": [
+          750,
+          60000,
+          36300,
+          1008,
+          363
+        ],
+        "rank": 26,
+        "url": "https://www.coupang.com/vp/products/7560527159",
+        "nameScore": 0.67,
+        "priceGap": 0.8425,
+        "sizeOk": true,
         "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 청포도향 / 이건 사과향)"
+      },
+      {
         "isAd": false,
         "name": "조르단 뉴스텝2 어린이 고불소 치약 포도향, 90g, 3개",
-        "nameScore": 0.4,
         "pid": "8428356943",
         "price": 19200,
-        "priceGap": 0.16434108527131783,
         "pricesSeen": [
           19200,
           10780,
           399,
           108
         ],
-        "rank": 15,
-        "scentBad": true,
-        "sizeOk": false,
+        "rank": 30,
         "url": "https://www.coupang.com/vp/products/8428356943",
+        "nameScore": 0.33,
+        "priceGap": 0.684375,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
         "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 애플망고향 / 이건 포도향)"
+        "why": "향이 다름 (찾는 것 청포도향 / 이건 포도향)"
       },
       {
-        "countOk": false,
         "isAd": false,
-        "name": "벨레다 어린이 고불소 마일드 민트 치약, 50g, 1개",
-        "nameScore": 0.4,
-        "pid": "9536173729",
-        "price": 7000,
-        "priceGap": 0.4573643410852713,
+        "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향, 110g, 4개",
+        "pid": "7646155579",
+        "price": 20900,
         "pricesSeen": [
-          7000,
-          1400
+          20900,
+          10990,
+          250,
+          110
         ],
-        "rank": 17,
-        "scentBad": false,
+        "rank": 34,
+        "url": "https://www.coupang.com/vp/products/7646155579",
+        "nameScore": 0.33,
+        "priceGap": 0.7171875,
         "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9536173729",
+        "countOk": false,
+        "scentBad": true,
         "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 60g)"
+        "why": "향이 다름 (찾는 것 청포도향 / 이건 딸기향)"
       }
     ],
-    "cat": "유아치약",
-    "id": "유아치약-07",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
-      "확실 · 이름일치 100% · 가격차 0%"
-    ],
-    "matchedName": "블랑키즐 유아용 고불소 치약 애플망고향, 60g, 1개입, 2개",
-    "matchedPrice": 24000,
-    "name": "블랑키즐 유아용 고불소 치약 애플망고향",
-    "pid": "7575239396",
     "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/7575239396",
-    "verdict": "확실",
-    "wantCount": "2개",
-    "wantPrice": 12900,
-    "wantSize": "60g"
-  },
-  "유아치약-08": {
-    "at": "2026-10-12T08:53:34.278Z",
-    "candidates": [
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 키즈크리닉 4스텝 치약 순한민트향                                    9,300원",
-        "nameScore": 1,
-        "pid": "6456138397",
-        "price": 9300,
-        "priceGap": 0,
-        "pricesSeen": [
-          9300
-        ],
-        "rank": 2,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/6456138397",
-        "verdict": "애매",
-        "why": "용량이 다름 (찾는 것 80g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 일사오공 고불소 주니어 치약 애플라임향                                    11,600원",
-        "nameScore": 0.4,
-        "pid": "7444603797",
-        "price": 11600,
-        "priceGap": 0.24731182795698925,
-        "pricesSeen": [
-          11600
-        ],
-        "rank": 3,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/7444603797",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 순한민트향 / 이건 애플라임향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 주니어 1450 고불소 충치케어 펌핑치약                                    12,250원",
-        "nameScore": 0.2,
-        "pid": "8544556420",
-        "price": 12250,
-        "priceGap": 0.3172043010752688,
-        "pricesSeen": [
-          12250
-        ],
-        "rank": 1,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8544556420",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 80g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "닥터노아 불소 유아 아기 치약 라즈베리 레몬향, 60g, 3개",
-        "nameScore": 0.2,
-        "pid": "6422565931",
-        "price": 36000,
-        "priceGap": 0.8559139784946237,
-        "pricesSeen": [
-          36000,
-          17260,
-          959,
-          173
-        ],
-        "rank": 5,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/6422565931",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 순한민트향 / 이건 레몬향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "조르단 뉴스텝1 어린이 불소 치약 딸기향, 90g, 1개",
-        "nameScore": 0.2,
-        "pid": "8428289204",
-        "price": 6500,
-        "priceGap": 0.3010752688172043,
-        "pricesSeen": [
-          6500,
-          4250,
-          472
-        ],
-        "rank": 10,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8428289204",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 순한민트향 / 이건 딸기향)"
-      }
-    ],
-    "cat": "유아치약",
-    "confirmedByUser": true,
-    "id": "유아치약-08",
     "log": [
       "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
-      "애매 · 이름일치 100% · 가격차 0%",
-      "사람이 주소를 직접 넣음: 7444603797"
+      "확실 · 이름일치 100% · 가격차 0%"
     ],
-    "manualUrl": true,
-    "matchedName": "(사람이 직접 넣은 주소)",
-    "matchedPrice": null,
-    "name": "2080 키즈크리닉 4스텝 치약 순한민트향",
-    "pid": "7444603797",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/7444603797?itemId=19367024138&vendorItemId=86479922183",
-    "verdict": "확실",
-    "wantCount": "6개",
-    "wantPrice": 9300,
-    "wantSize": "80g"
+    "at": "2026-10-12T13:04:23.283Z"
   },
-  "유아치약-09": {
-    "at": "2026-10-12T08:53:34.279Z",
+  "유아치약-12": {
+    "id": "유아치약-12",
+    "cat": "유아치약",
+    "name": "제니튼 닥터제니 1450 고불소 주니어치약 샤인머스켓향",
+    "wantPrice": 14100,
+    "wantSize": "60g",
+    "wantCount": "2개",
+    "verdict": "확실",
+    "pid": "7923007337",
+    "url": "https://www.coupang.com/vp/products/7923007337",
+    "matchedName": "제니튼 닥터제니 1450 고불소 주니어치약 샤인머스켓향, 60g, 2개",
+    "matchedPrice": 19800,
     "candidates": [
       {
-        "countOk": true,
         "isAd": false,
-        "name": "조르단 뉴스텝1 어린이 불소 치약 딸기향, 90g, 1개",
-        "nameScore": 1,
-        "pid": "8428289204",
-        "price": 6500,
-        "priceGap": 0,
+        "name": "제니튼 닥터제니 1450 고불소 주니어치약 샤인머스켓향, 60g, 2개",
+        "pid": "7923007337",
+        "price": 19800,
         "pricesSeen": [
-          6500,
-          4250,
-          472
+          19800,
+          14100,
+          1175,
+          141
         ],
-        "rank": 10,
-        "scentBad": false,
+        "rank": 40,
+        "url": "https://www.coupang.com/vp/products/7923007337",
+        "nameScore": 1,
+        "priceGap": 0,
         "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/8428289204",
+        "countOk": true,
+        "scentBad": false,
         "verdict": "확실",
         "why": "이름 100% + 용량·구성 일치"
       },
       {
+        "isAd": false,
+        "name": "제니튼 닥터제니 주니어치약 라임향 불소함유, 60g, 3개입, 1개",
+        "pid": "1291548190",
+        "price": 15760,
+        "pricesSeen": [
+          15760,
+          15200,
+          2533,
+          152
+        ],
+        "rank": 13,
+        "url": "https://www.coupang.com/vp/products/1291548190",
+        "nameScore": 0.5,
+        "priceGap": 0.07801418439716312,
+        "sizeOk": true,
         "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 샤인머스켓향 / 이건 라임향)"
+      },
+      {
+        "isAd": false,
+        "name": "제니튼 닥터제니 주니어치약 라임향 + 민트향, 1세트, 60g",
+        "pid": "1417484291",
+        "price": 10900,
+        "pricesSeen": [
+          10900,
+          1817,
+          109
+        ],
+        "rank": 15,
+        "url": "https://www.coupang.com/vp/products/1417484291",
+        "nameScore": 0.5,
+        "priceGap": 0.22695035460992907,
+        "sizeOk": true,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 샤인머스켓향 / 이건 라임향, 민트향)"
+      },
+      {
+        "isAd": true,
+        "name": "페리오 키즈 효소의 발견 1450 고불소 치약 트로피칼민트향, 80g, 1개",
+        "pid": "9371079604",
+        "price": 9900,
+        "pricesSeen": [
+          9900,
+          4700,
+          588
+        ],
+        "rank": 9,
+        "url": "https://www.coupang.com/vp/products/9371079604",
+        "nameScore": 0.33,
+        "priceGap": 0.2978723404255319,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 샤인머스켓향 / 이건 트로피칼민트향)"
+      },
+      {
+        "isAd": false,
+        "name": "제니튼 닥터제니 베이비 치약, 60g, 1개",
+        "pid": "9930927",
+        "price": 8000,
+        "pricesSeen": [
+          8000,
+          4490,
+          748,
+          4350
+        ],
+        "rank": 19,
+        "url": "https://www.coupang.com/vp/products/9930927",
+        "nameScore": 0.33,
+        "priceGap": 0.4326241134751773,
+        "sizeOk": true,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "이름 33% — 기준 미달"
+      }
+    ],
+    "source": "목록화면",
+    "log": [
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
+      "확실 · 이름일치 100% · 가격차 0%"
+    ],
+    "at": "2026-10-12T13:04:23.284Z"
+  },
+  "유아치약-13": {
+    "id": "유아치약-13",
+    "cat": "유아치약",
+    "name": "조르단 뉴스텝2 어린이 고불소 치약 포도향",
+    "wantPrice": 10780,
+    "wantSize": "90g",
+    "wantCount": "3개",
+    "verdict": "확실",
+    "pid": "8428356943",
+    "url": "https://www.coupang.com/vp/products/8428356943",
+    "matchedName": "조르단 뉴스텝2 어린이 고불소 치약 포도향, 90g, 3개",
+    "matchedPrice": 19200,
+    "candidates": [
+      {
+        "isAd": false,
+        "name": "조르단 뉴스텝2 어린이 고불소 치약 포도향, 90g, 3개",
+        "pid": "8428356943",
+        "price": 19200,
+        "pricesSeen": [
+          19200,
+          10780,
+          399,
+          108
+        ],
+        "rank": 30,
+        "url": "https://www.coupang.com/vp/products/8428356943",
+        "nameScore": 1,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "확실",
+        "why": "이름 100% + 용량·구성 일치"
+      },
+      {
+        "isAd": false,
+        "name": "조르단 아동용 뉴스텝2 고불소 펌프치약 포도향 188g + 리필 188g 세트, 1세트, 376g",
+        "pid": "8599187819",
+        "price": 400,
+        "pricesSeen": [
+          400,
+          23800,
+          17940,
+          477,
+          179
+        ],
+        "rank": 44,
+        "url": "https://www.coupang.com/vp/products/8599187819",
+        "nameScore": 0.67,
+        "priceGap": 0.6641929499072357,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "용량이 다름 (찾는 것 90g)"
+      },
+      {
+        "isAd": false,
+        "name": "치카포카 고불소 충치케어 어린이 치약 포도향, 100g, 4개",
+        "pid": "8680397702",
+        "price": 200,
+        "pricesSeen": [
+          200,
+          19600,
+          8800,
+          220
+        ],
+        "rank": 50,
+        "url": "https://www.coupang.com/vp/products/8680397702",
+        "nameScore": 0.67,
+        "priceGap": 0.1836734693877551,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "용량이 다름 (찾는 것 90g)"
+      },
+      {
+        "isAd": false,
+        "name": "벨레다 어린이 고불소 마일드 민트 치약, 50g, 1개",
+        "pid": "9536173729",
+        "price": 7000,
+        "pricesSeen": [
+          7000,
+          1400
+        ],
+        "rank": 37,
+        "url": "https://www.coupang.com/vp/products/9536173729",
+        "nameScore": 0.5,
+        "priceGap": 0.35064935064935066,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "용량이 다름 (찾는 것 90g)"
+      },
+      {
         "isAd": false,
         "name": "조르단 뉴스텝2 어린이 고불소 치약 청사과향, 90g, 3개",
-        "nameScore": 0.5,
         "pid": "8510746226",
         "price": 19200,
-        "priceGap": 0.900235294117647,
         "pricesSeen": [
           19200,
           11450,
           424,
           115
         ],
-        "rank": 52,
-        "scentBad": true,
-        "sizeOk": true,
+        "rank": 55,
         "url": "https://www.coupang.com/vp/products/8510746226",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 딸기향 / 이건 청사과향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "닥터노아 불소 유아 아기 치약 라즈베리 레몬향, 60g, 3개",
-        "nameScore": 0.33,
-        "pid": "6422565931",
-        "price": 36000,
-        "priceGap": 0.7743529411764706,
-        "pricesSeen": [
-          36000,
-          17260,
-          959,
-          173
-        ],
-        "rank": 5,
+        "nameScore": 0.83,
+        "priceGap": 0.06215213358070501,
+        "sizeOk": true,
+        "countOk": true,
         "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/6422565931",
         "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 딸기향 / 이건 레몬향)"
+        "why": "향이 다름 (찾는 것 포도향 / 이건 청사과향)"
+      }
+    ],
+    "source": "목록화면",
+    "log": [
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
+      "확실 · 이름일치 100% · 가격차 0%"
+    ],
+    "at": "2026-10-12T13:04:23.285Z"
+  },
+  "유아치약-14": {
+    "id": "유아치약-14",
+    "cat": "유아치약",
+    "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 풍선껌향",
+    "wantPrice": 9960,
+    "wantSize": "120g",
+    "wantCount": "4개",
+    "verdict": "확실",
+    "pid": "9278059411",
+    "url": "https://www.coupang.com/vp/products/9278059411",
+    "matchedName": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 풍선껌향, 120g, 1개입, 4개",
+    "matchedPrice": 200,
+    "candidates": [
+      {
+        "isAd": false,
+        "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 풍선껌향, 120g, 1개입, 4개",
+        "pid": "9278059411",
+        "price": 200,
+        "pricesSeen": [
+          200,
+          21500,
+          8960,
+          187
+        ],
+        "rank": 32,
+        "url": "https://www.coupang.com/vp/products/9278059411",
+        "nameScore": 1,
+        "priceGap": 0.10040160642570281,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "확실",
+        "why": "이름 100% + 용량·구성 일치"
       },
       {
+        "isAd": false,
+        "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 포도향, 120g, 4개",
+        "pid": "8803856645",
+        "price": 220,
+        "pricesSeen": [
+          220,
+          21500,
+          9960,
+          208,
+          100
+        ],
+        "rank": 43,
+        "url": "https://www.coupang.com/vp/products/8803856645",
+        "nameScore": 0.88,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 풍선껌향 / 이건 포도향)"
+      },
+      {
+        "isAd": false,
+        "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향, 110g, 4개",
+        "pid": "7646155579",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          10990,
+          250,
+          110
+        ],
+        "rank": 34,
+        "url": "https://www.coupang.com/vp/products/7646155579",
+        "nameScore": 0.5,
+        "priceGap": 0.10341365461847389,
+        "sizeOk": false,
+        "countOk": true,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 풍선껌향 / 이건 딸기향)"
+      },
+      {
+        "isAd": true,
+        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
+        "pid": "9021724259",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          12200,
+          277,
+          122
+        ],
+        "rank": 8,
+        "url": "https://www.coupang.com/vp/products/9021724259",
+        "nameScore": 0.38,
+        "priceGap": 0.2248995983935743,
+        "sizeOk": false,
+        "countOk": true,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 풍선껌향 / 이건 사과향)"
+      },
+      {
+        "isAd": false,
+        "name": "자연유래 99% 지그비 대용량 고불소 구취제거 주니어 어린이치약 딸기향, 117g, 4개",
+        "pid": "9033881029",
+        "price": 15900,
+        "pricesSeen": [
+          15900,
+          11900,
+          254,
+          119
+        ],
+        "rank": 46,
+        "url": "https://www.coupang.com/vp/products/9033881029",
+        "nameScore": 0.38,
+        "priceGap": 0.19477911646586346,
+        "sizeOk": false,
+        "countOk": true,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 풍선껌향 / 이건 딸기향)"
+      }
+    ],
+    "source": "목록화면",
+    "log": [
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
+      "확실 · 이름일치 100% · 가격차 10%"
+    ],
+    "at": "2026-10-12T13:04:23.285Z"
+  },
+  "유아치약-15": {
+    "id": "유아치약-15",
+    "cat": "유아치약",
+    "name": "2080 주니어 1450 고불소 충치케어 펌핑치약",
+    "wantPrice": 12250,
+    "wantSize": "220g",
+    "wantCount": "1개",
+    "verdict": "확실",
+    "pid": "8544556420",
+    "url": "https://www.coupang.com/vp/products/8544556420?itemId=24739992049&vendorItemId=91748701080",
+    "matchedName": "(사람이 직접 넣은 주소)",
+    "matchedPrice": null,
+    "candidates": [
+      {
+        "isAd": false,
+        "name": "페리오 키즈 엄마치약이투명해요 1450 고불소 펌핑치약 민트향, 160g, 2개",
+        "pid": "9359566097",
+        "price": 15790,
+        "pricesSeen": [
+          15790,
+          15310,
+          478,
+          153
+        ],
+        "rank": 42,
+        "url": "https://www.coupang.com/vp/products/9359566097",
+        "nameScore": 0.5,
+        "priceGap": 0.24979591836734694,
+        "sizeOk": false,
         "countOk": false,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "용량이 다름 (찾는 것 220g)"
+      },
+      {
+        "isAd": true,
+        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
+        "pid": "9021724259",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          12200,
+          277,
+          122
+        ],
+        "rank": 8,
+        "url": "https://www.coupang.com/vp/products/9021724259",
+        "nameScore": 0.33,
+        "priceGap": 0.004081632653061225,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 220g)"
+      },
+      {
+        "isAd": true,
+        "name": "페리오 키즈 효소의 발견 1450 고불소 치약 트로피칼민트향, 80g, 1개",
+        "pid": "9371079604",
+        "price": 9900,
+        "pricesSeen": [
+          9900,
+          4700,
+          588
+        ],
+        "rank": 9,
+        "url": "https://www.coupang.com/vp/products/9371079604",
+        "nameScore": 0.33,
+        "priceGap": 0.19183673469387755,
+        "sizeOk": false,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 220g)"
+      },
+      {
+        "isAd": false,
+        "name": "자연유래 99% 지그비 대용량 고불소 구취제거 주니어 어린이치약 딸기향, 117g, 4개",
+        "pid": "9033881029",
+        "price": 15900,
+        "pricesSeen": [
+          15900,
+          11900,
+          254,
+          119
+        ],
+        "rank": 46,
+        "url": "https://www.coupang.com/vp/products/9033881029",
+        "nameScore": 0.33,
+        "priceGap": 0.02857142857142857,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 220g)"
+      },
+      {
+        "isAd": false,
+        "name": "페리오 키즈 효소의 발견 1450 고불소 치약 퓨어민트향, 80g, 1개",
+        "pid": "9371086951",
+        "price": 9900,
+        "pricesSeen": [
+          9900,
+          4700,
+          588
+        ],
+        "rank": 47,
+        "url": "https://www.coupang.com/vp/products/9371086951",
+        "nameScore": 0.33,
+        "priceGap": 0.19183673469387755,
+        "sizeOk": false,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 220g)"
+      }
+    ],
+    "source": "목록화면",
+    "log": [
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
+      "애매 · 이름일치 50% · 가격차 25%",
+      "사람이 주소를 직접 넣음: 8544556420"
+    ],
+    "at": "2026-10-12T13:04:53.183Z",
+    "confirmedByUser": true,
+    "manualUrl": true
+  },
+  "유아치약-16": {
+    "id": "유아치약-16",
+    "cat": "유아치약",
+    "name": "벨레다 어린이 고불소 마일드 민트 치약",
+    "wantPrice": 7000,
+    "wantSize": "50g",
+    "wantCount": "1개",
+    "verdict": "확실",
+    "pid": "9536173729",
+    "url": "https://www.coupang.com/vp/products/9536173729",
+    "matchedName": "벨레다 어린이 고불소 마일드 민트 치약, 50g, 1개",
+    "matchedPrice": 7000,
+    "candidates": [
+      {
+        "isAd": false,
+        "name": "벨레다 어린이 고불소 마일드 민트 치약, 50g, 1개",
+        "pid": "9536173729",
+        "price": 7000,
+        "pricesSeen": [
+          7000,
+          1400
+        ],
+        "rank": 37,
+        "url": "https://www.coupang.com/vp/products/9536173729",
+        "nameScore": 1,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "확실",
+        "why": "이름 100% + 용량·구성 일치"
+      },
+      {
+        "isAd": false,
+        "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향, 110g, 4개",
+        "pid": "7646155579",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          10990,
+          250,
+          110
+        ],
+        "rank": 34,
+        "url": "https://www.coupang.com/vp/products/7646155579",
+        "nameScore": 0.67,
+        "priceGap": 0.57,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "용량이 다름 (찾는 것 50g)"
+      },
+      {
+        "isAd": false,
+        "name": "지그비 대용량 주니어 마일드 고불소 구취케어 어린이 치약 엄마배우 Pick 청포도향, 4개, 117g",
+        "pid": "8757252802",
+        "price": 15900,
+        "pricesSeen": [
+          15900,
+          11900,
+          254,
+          119
+        ],
+        "rank": 54,
+        "url": "https://www.coupang.com/vp/products/8757252802",
+        "nameScore": 0.67,
+        "priceGap": 0.7,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "용량이 다름 (찾는 것 50g)"
+      },
+      {
+        "isAd": true,
+        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
+        "pid": "9021724259",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          12200,
+          277,
+          122
+        ],
+        "rank": 8,
+        "url": "https://www.coupang.com/vp/products/9021724259",
+        "nameScore": 0.5,
+        "priceGap": 0.7428571428571429,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "용량이 다름 (찾는 것 50g)"
+      },
+      {
+        "isAd": false,
+        "name": "치카포카 고불소 충치케어 어린이 치약 포도향, 100g, 4개",
+        "pid": "8680397702",
+        "price": 200,
+        "pricesSeen": [
+          200,
+          19600,
+          8800,
+          220
+        ],
+        "rank": 50,
+        "url": "https://www.coupang.com/vp/products/8680397702",
+        "nameScore": 0.5,
+        "priceGap": 0.2571428571428571,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "용량이 다름 (찾는 것 50g)"
+      }
+    ],
+    "source": "목록화면",
+    "log": [
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
+      "확실 · 이름일치 100% · 가격차 0%"
+    ],
+    "at": "2026-10-12T13:04:23.286Z"
+  },
+  "유아치약-17": {
+    "id": "유아치약-17",
+    "cat": "유아치약",
+    "name": "오루루 캐치티니핑 고불소치약",
+    "wantPrice": 6300,
+    "wantSize": "80g",
+    "wantCount": "2개",
+    "verdict": "확실",
+    "pid": "9325937896",
+    "url": "https://www.coupang.com/vp/products/9325937896",
+    "matchedName": "오루루 캐치티니핑 고불소치약, 2개, 80g",
+    "matchedPrice": 6300,
+    "candidates": [
+      {
+        "isAd": false,
+        "name": "오루루 캐치티니핑 고불소치약, 2개, 80g",
+        "pid": "9325937896",
+        "price": 6300,
+        "pricesSeen": [
+          6300,
+          394
+        ],
+        "rank": 36,
+        "url": "https://www.coupang.com/vp/products/9325937896",
+        "nameScore": 1,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "확실",
+        "why": "이름 100% + 용량·구성 일치"
+      },
+      {
+        "isAd": false,
+        "name": "",
+        "pid": "7444603797",
+        "price": 11500,
+        "pricesSeen": [
+          11500
+        ],
+        "rank": 1,
+        "url": "https://www.coupang.com/vp/products/7444603797",
+        "nameScore": 0,
+        "priceGap": 0.8253968253968254,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 80g)"
+      },
+      {
+        "isAd": false,
+        "name": "",
+        "pid": "6422565931",
+        "price": 7080,
+        "pricesSeen": [
+          7080
+        ],
+        "rank": 2,
+        "url": "https://www.coupang.com/vp/products/6422565931",
+        "nameScore": 0,
+        "priceGap": 0.12380952380952381,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 80g)"
+      },
+      {
+        "isAd": false,
+        "name": "",
+        "pid": "8544556420",
+        "price": 12250,
+        "pricesSeen": [
+          12250
+        ],
+        "rank": 3,
+        "url": "https://www.coupang.com/vp/products/8544556420",
+        "nameScore": 0,
+        "priceGap": 0.9444444444444444,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 80g)"
+      },
+      {
+        "isAd": false,
+        "name": "",
+        "pid": "6456138397",
+        "price": 9300,
+        "pricesSeen": [
+          9300
+        ],
+        "rank": 4,
+        "url": "https://www.coupang.com/vp/products/6456138397",
+        "nameScore": 0,
+        "priceGap": 0.47619047619047616,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 80g)"
+      }
+    ],
+    "source": "목록화면",
+    "log": [
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
+      "확실 · 이름일치 100% · 가격차 0%"
+    ],
+    "at": "2026-10-12T13:04:23.287Z"
+  },
+  "유아치약-18": {
+    "id": "유아치약-18",
+    "cat": "유아치약",
+    "name": "조르단 아동용 뉴스텝2 고불소 펌프치약 포도향 188g + 리필 188g 세트",
+    "wantPrice": 17940,
+    "wantSize": "376g",
+    "wantCount": "1세트",
+    "verdict": "확실",
+    "pid": "8599187819",
+    "url": "https://www.coupang.com/vp/products/8599187819",
+    "matchedName": "조르단 아동용 뉴스텝2 고불소 펌프치약 포도향 188g + 리필 188g 세트, 1세트, 376g",
+    "matchedPrice": 400,
+    "candidates": [
+      {
+        "isAd": false,
+        "name": "조르단 아동용 뉴스텝2 고불소 펌프치약 포도향 188g + 리필 188g 세트, 1세트, 376g",
+        "pid": "8599187819",
+        "price": 400,
+        "pricesSeen": [
+          400,
+          23800,
+          17940,
+          477,
+          179
+        ],
+        "rank": 44,
+        "url": "https://www.coupang.com/vp/products/8599187819",
+        "nameScore": 1,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "확실",
+        "why": "이름 100% + 용량·구성 일치"
+      },
+      {
+        "isAd": false,
+        "name": "조르단 뉴스텝2 어린이 고불소 치약 청사과향, 90g, 3개",
+        "pid": "8510746226",
+        "price": 19200,
+        "pricesSeen": [
+          19200,
+          11450,
+          424,
+          115
+        ],
+        "rank": 55,
+        "url": "https://www.coupang.com/vp/products/8510746226",
+        "nameScore": 0.33,
+        "priceGap": 0.07023411371237458,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 포도향 / 이건 청사과향)"
+      },
+      {
+        "isAd": false,
+        "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 포도향, 120g, 4개",
+        "pid": "8803856645",
+        "price": 220,
+        "pricesSeen": [
+          220,
+          21500,
+          9960,
+          208,
+          100
+        ],
+        "rank": 43,
+        "url": "https://www.coupang.com/vp/products/8803856645",
+        "nameScore": 0.22,
+        "priceGap": 0.19843924191750278,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 376g)"
+      },
+      {
+        "isAd": false,
+        "name": "치카포카 고불소 충치케어 어린이 치약 포도향, 100g, 4개",
+        "pid": "8680397702",
+        "price": 200,
+        "pricesSeen": [
+          200,
+          19600,
+          8800,
+          220
+        ],
+        "rank": 50,
+        "url": "https://www.coupang.com/vp/products/8680397702",
+        "nameScore": 0.22,
+        "priceGap": 0.09253065774804906,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 376g)"
+      },
+      {
+        "isAd": true,
+        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
+        "pid": "9021724259",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          12200,
+          277,
+          122
+        ],
+        "rank": 8,
+        "url": "https://www.coupang.com/vp/products/9021724259",
+        "nameScore": 0.11,
+        "priceGap": 0.16499442586399107,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 포도향 / 이건 사과향)"
+      }
+    ],
+    "source": "목록화면",
+    "log": [
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
+      "확실 · 이름일치 100% · 가격차 0%"
+    ],
+    "at": "2026-10-12T13:04:23.287Z"
+  },
+  "유아치약-19": {
+    "id": "유아치약-19",
+    "cat": "유아치약",
+    "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향",
+    "wantPrice": 10990,
+    "wantSize": "110g",
+    "wantCount": "4개",
+    "verdict": "확실",
+    "pid": "7646155579",
+    "url": "https://www.coupang.com/vp/products/7646155579",
+    "matchedName": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향, 110g, 4개",
+    "matchedPrice": 20900,
+    "candidates": [
+      {
+        "isAd": false,
+        "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향, 110g, 4개",
+        "pid": "7646155579",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          10990,
+          250,
+          110
+        ],
+        "rank": 34,
+        "url": "https://www.coupang.com/vp/products/7646155579",
+        "nameScore": 1,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "확실",
+        "why": "이름 100% + 용량·구성 일치"
+      },
+      {
+        "isAd": true,
+        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
+        "pid": "9021724259",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          12200,
+          277,
+          122
+        ],
+        "rank": 8,
+        "url": "https://www.coupang.com/vp/products/9021724259",
+        "nameScore": 0.67,
+        "priceGap": 0.11010009099181074,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 딸기향 / 이건 사과향)"
+      },
+      {
+        "isAd": false,
+        "name": "지그비 대용량 주니어 마일드 고불소 구취케어 어린이 치약 엄마배우 Pick 청포도향, 4개, 117g",
+        "pid": "8757252802",
+        "price": 15900,
+        "pricesSeen": [
+          15900,
+          11900,
+          254,
+          119
+        ],
+        "rank": 54,
+        "url": "https://www.coupang.com/vp/products/8757252802",
+        "nameScore": 0.67,
+        "priceGap": 0.08280254777070063,
+        "sizeOk": false,
+        "countOk": true,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 딸기향 / 이건 청포도향)"
+      },
+      {
+        "isAd": false,
+        "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 포도향, 120g, 4개",
+        "pid": "8803856645",
+        "price": 220,
+        "pricesSeen": [
+          220,
+          21500,
+          9960,
+          208,
+          100
+        ],
+        "rank": 43,
+        "url": "https://www.coupang.com/vp/products/8803856645",
+        "nameScore": 0.44,
+        "priceGap": 0.09372156505914468,
+        "sizeOk": false,
+        "countOk": true,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 딸기향 / 이건 포도향)"
+      },
+      {
+        "isAd": false,
+        "name": "크리오 치카부 고불소 비건 주니어 잇몸 치약 3단계 라즈베리향, 90g, 1개입, 3개",
+        "pid": "9682046373",
+        "price": 16900,
+        "pricesSeen": [
+          16900,
+          8910,
+          330
+        ],
+        "rank": 51,
+        "url": "https://www.coupang.com/vp/products/9682046373",
+        "nameScore": 0.44,
+        "priceGap": 0.18926296633303002,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 딸기향 / 이건 라즈베리향)"
+      }
+    ],
+    "source": "목록화면",
+    "log": [
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
+      "확실 · 이름일치 100% · 가격차 0%"
+    ],
+    "at": "2026-10-12T13:04:23.288Z"
+  },
+  "유아치약-20": {
+    "id": "유아치약-20",
+    "cat": "유아치약",
+    "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 포도향",
+    "wantPrice": 9960,
+    "wantSize": "120g",
+    "wantCount": "4개",
+    "verdict": "확실",
+    "pid": "8803856645",
+    "url": "https://www.coupang.com/vp/products/8803856645",
+    "matchedName": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 포도향, 120g, 4개",
+    "matchedPrice": 220,
+    "candidates": [
+      {
+        "isAd": false,
+        "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 포도향, 120g, 4개",
+        "pid": "8803856645",
+        "price": 220,
+        "pricesSeen": [
+          220,
+          21500,
+          9960,
+          208,
+          100
+        ],
+        "rank": 43,
+        "url": "https://www.coupang.com/vp/products/8803856645",
+        "nameScore": 1,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "확실",
+        "why": "이름 100% + 용량·구성 일치"
+      },
+      {
+        "isAd": true,
+        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
+        "pid": "9021724259",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          12200,
+          277,
+          122
+        ],
+        "rank": 8,
+        "url": "https://www.coupang.com/vp/products/9021724259",
+        "nameScore": 0.38,
+        "priceGap": 0.2248995983935743,
+        "sizeOk": false,
+        "countOk": true,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 포도향 / 이건 사과향)"
+      },
+      {
+        "isAd": false,
+        "name": "자연유래 99% 지그비 대용량 고불소 구취제거 주니어 어린이치약 딸기향, 117g, 4개",
+        "pid": "9033881029",
+        "price": 15900,
+        "pricesSeen": [
+          15900,
+          11900,
+          254,
+          119
+        ],
+        "rank": 46,
+        "url": "https://www.coupang.com/vp/products/9033881029",
+        "nameScore": 0.38,
+        "priceGap": 0.19477911646586346,
+        "sizeOk": false,
+        "countOk": true,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 포도향 / 이건 딸기향)"
+      },
+      {
+        "isAd": false,
+        "name": "크리오 치카부 고불소 비건 주니어 잇몸 치약 3단계 라즈베리향, 90g, 1개입, 3개",
+        "pid": "9682046373",
+        "price": 16900,
+        "pricesSeen": [
+          16900,
+          8910,
+          330
+        ],
+        "rank": 51,
+        "url": "https://www.coupang.com/vp/products/9682046373",
+        "nameScore": 0.38,
+        "priceGap": 0.10542168674698796,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 포도향 / 이건 라즈베리향)"
+      },
+      {
+        "isAd": false,
+        "name": "지그비 대용량 주니어 마일드 고불소 구취케어 어린이 치약 엄마배우 Pick 청포도향, 4개, 117g",
+        "pid": "8757252802",
+        "price": 15900,
+        "pricesSeen": [
+          15900,
+          11900,
+          254,
+          119
+        ],
+        "rank": 54,
+        "url": "https://www.coupang.com/vp/products/8757252802",
+        "nameScore": 0.38,
+        "priceGap": 0.19477911646586346,
+        "sizeOk": false,
+        "countOk": true,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 포도향 / 이건 청포도향)"
+      }
+    ],
+    "source": "목록화면",
+    "log": [
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
+      "확실 · 이름일치 100% · 가격차 0%"
+    ],
+    "at": "2026-10-12T13:04:23.288Z"
+  },
+  "유아치약-21": {
+    "id": "유아치약-21",
+    "cat": "유아치약",
+    "name": "라이온 키즈세이프 충치 집중케어 치약",
+    "wantPrice": 6340,
+    "wantSize": "60g",
+    "wantCount": "3개",
+    "verdict": "확실",
+    "pid": "6185905318",
+    "url": "https://www.coupang.com/vp/products/6185905318",
+    "matchedName": "라이온 키즈세이프 충치 집중케어 치약, 60g, 3개",
+    "matchedPrice": 11250,
+    "candidates": [
+      {
+        "isAd": false,
+        "name": "라이온 키즈세이프 충치 집중케어 치약, 60g, 3개",
+        "pid": "6185905318",
+        "price": 11250,
+        "pricesSeen": [
+          11250,
+          6340,
+          352
+        ],
+        "rank": 28,
+        "url": "https://www.coupang.com/vp/products/6185905318",
+        "nameScore": 1,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "확실",
+        "why": "이름 100% + 용량·구성 일치"
+      },
+      {
+        "isAd": false,
+        "name": "크리오 치카부 고불소 비건 주니어 충치 치약 3단계 메론향, 90g, 1개입, 3개",
+        "pid": "9675159337",
+        "price": 16900,
+        "pricesSeen": [
+          16900,
+          8910,
+          330
+        ],
+        "rank": 57,
+        "url": "https://www.coupang.com/vp/products/9675159337",
+        "nameScore": 0.4,
+        "priceGap": 0.40536277602523657,
+        "sizeOk": false,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 60g)"
+      },
+      {
+        "isAd": true,
+        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
+        "pid": "9021724259",
+        "price": 20900,
+        "pricesSeen": [
+          20900,
+          12200,
+          277,
+          122
+        ],
+        "rank": 8,
+        "url": "https://www.coupang.com/vp/products/9021724259",
+        "nameScore": 0.2,
+        "priceGap": 0.9242902208201893,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 60g)"
+      },
+      {
+        "isAd": true,
+        "name": "페리오 키즈 효소의 발견 1450 고불소 치약 트로피칼민트향, 80g, 1개",
+        "pid": "9371079604",
+        "price": 9900,
+        "pricesSeen": [
+          9900,
+          4700,
+          588
+        ],
+        "rank": 9,
+        "url": "https://www.coupang.com/vp/products/9371079604",
+        "nameScore": 0.2,
+        "priceGap": 0.2586750788643533,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 60g)"
+      },
+      {
+        "isAd": true,
+        "name": "아텍스 시나모롤 고불소 레몬향 치약, 80g, 3개",
+        "pid": "9314529818",
+        "price": 10900,
+        "pricesSeen": [
+          10900,
+          454,
+          109
+        ],
+        "rank": 11,
+        "url": "https://www.coupang.com/vp/products/9314529818",
+        "nameScore": 0.2,
+        "priceGap": 0.7192429022082019,
+        "sizeOk": false,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 60g)"
+      }
+    ],
+    "source": "목록화면",
+    "log": [
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
+      "확실 · 이름일치 100% · 가격차 0%"
+    ],
+    "at": "2026-10-12T13:04:23.289Z"
+  },
+  "유아치약-22": {
+    "id": "유아치약-22",
+    "cat": "유아치약",
+    "name": "예꼬맘 3단계 어린이치약 고불소 60g + 미니치약 15g 스피아민트향",
+    "wantPrice": 11700,
+    "wantSize": "75g",
+    "wantCount": "3세트",
+    "verdict": "확실",
+    "pid": "1514135504",
+    "url": "https://www.coupang.com/vp/products/1514135504",
+    "matchedName": "예꼬맘 3단계 어린이치약 고불소 60g + 미니치약 15g 스피아민트향, 3세트, 75g",
+    "matchedPrice": 11700,
+    "candidates": [
+      {
+        "isAd": false,
+        "name": "예꼬맘 3단계 어린이치약 고불소 60g + 미니치약 15g 스피아민트향, 3세트, 75g",
+        "pid": "1514135504",
+        "price": 11700,
+        "pricesSeen": [
+          11700,
+          520,
+          117
+        ],
+        "rank": 29,
+        "url": "https://www.coupang.com/vp/products/1514135504",
+        "nameScore": 1,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "확실",
+        "why": "이름 100% + 용량·구성 일치"
+      },
+      {
+        "isAd": false,
+        "name": "예꼬맘 1단계 아기치약 무불소 60g + 미니치약 15g 라즈베리향, 1세트",
+        "pid": "60847776",
+        "price": 3900,
+        "pricesSeen": [
+          3900
+        ],
+        "rank": 22,
+        "url": "https://www.coupang.com/vp/products/60847776",
+        "nameScore": 0.5,
+        "priceGap": 0.6666666666666666,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 스피아민트향 / 이건 라즈베리향)"
+      },
+      {
+        "isAd": false,
+        "name": "비지엔젤 저불소 어린이치약 2단계, 60g, 3개",
+        "pid": "286767162",
+        "price": 11870,
+        "pricesSeen": [
+          11870,
+          5110,
+          284
+        ],
+        "rank": 14,
+        "url": "https://www.coupang.com/vp/products/286767162",
+        "nameScore": 0.25,
+        "priceGap": 0.01452991452991453,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 75g)"
+      },
+      {
+        "isAd": false,
+        "name": "자연유래 99% 지그비 대용량 고불소 구취제거 주니어 어린이치약 딸기향, 117g, 4개",
+        "pid": "9033881029",
+        "price": 15900,
+        "pricesSeen": [
+          15900,
+          11900,
+          254,
+          119
+        ],
+        "rank": 46,
+        "url": "https://www.coupang.com/vp/products/9033881029",
+        "nameScore": 0.25,
+        "priceGap": 0.017094017094017096,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 스피아민트향 / 이건 딸기향)"
+      },
+      {
+        "isAd": false,
+        "name": "크리오 치카부 고불소 비건 주니어 잇몸 치약 3단계 라즈베리향, 90g, 1개입, 3개",
+        "pid": "9682046373",
+        "price": 16900,
+        "pricesSeen": [
+          16900,
+          8910,
+          330
+        ],
+        "rank": 51,
+        "url": "https://www.coupang.com/vp/products/9682046373",
+        "nameScore": 0.25,
+        "priceGap": 0.23846153846153847,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": true,
+        "verdict": "못찾음",
+        "why": "향이 다름 (찾는 것 스피아민트향 / 이건 라즈베리향)"
+      }
+    ],
+    "source": "목록화면",
+    "log": [
+      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
+      "확실 · 이름일치 100% · 가격차 0%"
+    ],
+    "at": "2026-10-12T13:04:23.289Z"
+  },
+  "유아치약-23": {
+    "id": "유아치약-23",
+    "cat": "유아치약",
+    "name": "에이카랩스 어린이 코뿔소 치약 사과향 1450ppm",
+    "wantPrice": 12800,
+    "wantSize": "60g",
+    "wantCount": "2개",
+    "verdict": "확실",
+    "pid": "7560527159",
+    "url": "https://www.coupang.com/vp/products/7560527159",
+    "matchedName": "에이카랩스 어린이 코뿔소 치약 사과향 1450ppm, 60g, 2개",
+    "matchedPrice": 20000,
+    "candidates": [
+      {
+        "isAd": false,
+        "name": "에이카랩스 어린이 코뿔소 치약 사과향 1450ppm, 60g, 2개",
+        "pid": "7560527159",
+        "price": 20000,
+        "pricesSeen": [
+          20000,
+          12800,
+          1067,
+          128
+        ],
+        "rank": 39,
+        "url": "https://www.coupang.com/vp/products/7560527159",
+        "nameScore": 1,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
+        "verdict": "확실",
+        "why": "이름 100% + 용량·구성 일치"
+      },
+      {
+        "isAd": false,
+        "name": "벨레다 어린이 치약, 50ml, 1개입, 1개",
+        "pid": "6659580843",
+        "price": 8500,
+        "pricesSeen": [
+          8500,
+          7100,
+          1420
+        ],
+        "rank": 11,
+        "url": "https://www.coupang.com/vp/products/6659580843",
+        "nameScore": 0.33,
+        "priceGap": 0.3359375,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 60g)"
+      },
+      {
+        "isAd": false,
+        "name": "페리오 키즈 포켓몬스터 치약, 사과향, 3개",
+        "pid": "6739937053",
+        "price": 10500,
+        "pricesSeen": [
+          10500,
+          5110
+        ],
+        "rank": 38,
+        "url": "https://www.coupang.com/vp/products/6739937053",
+        "nameScore": 0.33,
+        "priceGap": 0.1796875,
+        "sizeOk": false,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "못찾음",
+        "why": "용량이 다름 (찾는 것 60g)"
+      },
+      {
         "isAd": false,
         "name": "덴탈업 키즈 1450고불소 어린이 치약 / 충치집중예방 입냄새 구취제거 잇몸케어 프로폴리스 천연허브 맵지않은치약 항균 특허, 2개, 115g",
-        "nameScore": 0.33,
         "pid": "9053104032",
         "price": 18800,
-        "priceGap": 0.8663529411764705,
         "pricesSeen": [
           18800,
           13070,
@@ -1056,1927 +2441,123 @@
           131
         ],
         "rank": 42,
-        "scentBad": false,
-        "sizeOk": false,
         "url": "https://www.coupang.com/vp/products/9053104032",
+        "nameScore": 0.33,
+        "priceGap": 0.02109375,
+        "sizeOk": false,
+        "countOk": true,
+        "scentBad": false,
         "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 90g)"
+        "why": "용량이 다름 (찾는 것 60g)"
       },
       {
-        "countOk": true,
         "isAd": false,
         "name": "벨레다 어린이 저불소 치약 민트향, 60g, 1개",
-        "nameScore": 0.33,
         "pid": "7883920021",
         "price": 8500,
-        "priceGap": 0.5129411764705882,
         "pricesSeen": [
           8500,
           6430,
           1072
         ],
         "rank": 48,
-        "scentBad": true,
-        "sizeOk": false,
         "url": "https://www.coupang.com/vp/products/7883920021",
+        "nameScore": 0.33,
+        "priceGap": 0.3359375,
+        "sizeOk": true,
+        "countOk": false,
+        "scentBad": true,
         "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 딸기향 / 이건 민트향)"
+        "why": "향이 다름 (찾는 것 사과향 / 이건 민트향)"
       }
     ],
-    "cat": "유아치약",
-    "id": "유아치약-09",
+    "source": "목록화면",
     "log": [
       "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
       "확실 · 이름일치 100% · 가격차 0%"
     ],
-    "matchedName": "조르단 뉴스텝1 어린이 불소 치약 딸기향, 90g, 1개",
-    "matchedPrice": 6500,
-    "name": "조르단 뉴스텝1 어린이 불소 치약 딸기향",
-    "pid": "8428289204",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/8428289204",
-    "verdict": "확실",
-    "wantCount": "1개",
-    "wantPrice": 4250,
-    "wantSize": "90g"
-  },
-  "유아치약-10": {
-    "at": "2026-10-12T08:53:05.500Z",
-    "candidates": [
-      {
-        "countOk": null,
-        "isAd": true,
-        "name": "티타드 주니어 불소 치약, 60g, 1개입, 4개",
-        "nameScore": 1,
-        "pid": "9167355510",
-        "price": 28700,
-        "priceGap": 0.8394630872483222,
-        "pricesSeen": [
-          28700,
-          1196,
-          287
-        ],
-        "rank": 16,
-        "scentBad": false,
-        "sizeOk": null,
-        "url": "https://www.coupang.com/vp/products/9167355510",
-        "verdict": "확실",
-        "why": "이름 100% (제목에 규격 표기 없음)"
-      },
-      {
-        "countOk": null,
-        "isAd": false,
-        "name": "2080 일사오공 고불소 주니어 치약 애플라임향                                    11,600원",
-        "nameScore": 0.5,
-        "pid": "7444603797",
-        "price": 11600,
-        "priceGap": 0.5570469798657718,
-        "pricesSeen": [
-          11600
-        ],
-        "rank": 2,
-        "scentBad": false,
-        "sizeOk": null,
-        "url": "https://www.coupang.com/vp/products/7444603797",
-        "verdict": "애매",
-        "why": "이름 50% · 가격차 56%"
-      },
-      {
-        "countOk": null,
-        "isAd": true,
-        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
-        "nameScore": 0.5,
-        "pid": "9021724259",
-        "price": 20900,
-        "priceGap": 0.6375838926174496,
-        "pricesSeen": [
-          20900,
-          12200,
-          277,
-          122
-        ],
-        "rank": 6,
-        "scentBad": false,
-        "sizeOk": null,
-        "url": "https://www.coupang.com/vp/products/9021724259",
-        "verdict": "애매",
-        "why": "이름 50% · 가격차 64%"
-      },
-      {
-        "countOk": null,
-        "isAd": true,
-        "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향, 110g, 4개",
-        "nameScore": 0.5,
-        "pid": "7646155579",
-        "price": 20900,
-        "priceGap": 0.47516778523489933,
-        "pricesSeen": [
-          20900,
-          10990,
-          250,
-          110
-        ],
-        "rank": 11,
-        "scentBad": false,
-        "sizeOk": null,
-        "url": "https://www.coupang.com/vp/products/7646155579",
-        "verdict": "애매",
-        "why": "이름 50% · 가격차 48%"
-      },
-      {
-        "countOk": null,
-        "isAd": true,
-        "name": "크리오 치카부 고불소 비건 주니어 충치 치약 3단계 메론향, 90g, 1개입, 6개",
-        "nameScore": 0.5,
-        "pid": "9675159337",
-        "price": 33800,
-        "priceGap": 0.9567785234899329,
-        "pricesSeen": [
-          33800,
-          17370,
-          322,
-          174
-        ],
-        "rank": 15,
-        "scentBad": false,
-        "sizeOk": null,
-        "url": "https://www.coupang.com/vp/products/9675159337",
-        "verdict": "애매",
-        "why": "이름 50% · 가격차 96%"
-      }
-    ],
-    "cat": "유아치약",
-    "id": "유아치약-10",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
-      "확실 · 이름일치 100% · 가격차 84%"
-    ],
-    "matchedName": "티타드 주니어 불소 치약, 60g, 1개입, 4개",
-    "matchedPrice": 28700,
-    "name": "티타드 주니어 불소 치약",
-    "pid": "9167355510",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/9167355510",
-    "verdict": "확실",
-    "wantCount": "",
-    "wantPrice": 7450,
-    "wantSize": ""
-  },
-  "유아치약-11": {
-    "at": "2026-10-12T08:53:13.271Z",
-    "candidates": [
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "에이카랩스 코뿔소 어린이 불소 치약 청포도향, 60g, 1개",
-        "nameScore": 1,
-        "pid": "7560673413",
-        "price": 10000,
-        "priceGap": 0,
-        "pricesSeen": [
-          10000,
-          6400,
-          1067
-        ],
-        "rank": 12,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/7560673413",
-        "verdict": "확실",
-        "why": "이름 100% + 용량·구성 일치"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "지그비 대용량 주니어 마일드 고불소 구취케어 어린이 치약 엄마배우 Pick 청포도향, 4개, 117g",
-        "nameScore": 0.5,
-        "pid": "8757252802",
-        "price": 15900,
-        "priceGap": 0.859375,
-        "pricesSeen": [
-          15900,
-          11900,
-          254,
-          119
-        ],
-        "rank": 33,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8757252802",
-        "verdict": "애매",
-        "why": "용량이 다름 (찾는 것 60g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "제니튼 닥터제니 저불소 어린이 치약                                    4,490원",
-        "nameScore": 0.33,
-        "pid": "6326970654",
-        "price": 4490,
-        "priceGap": 0.2984375,
-        "pricesSeen": [
-          4490
-        ],
-        "rank": 4,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/6326970654",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 60g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "닥터노아 불소 유아 아기 치약 라즈베리 레몬향, 60g, 3개",
-        "nameScore": 0.33,
-        "pid": "6422565931",
-        "price": 36000,
-        "priceGap": 0.85015625,
-        "pricesSeen": [
-          36000,
-          17260,
-          959,
-          173
-        ],
-        "rank": 6,
-        "scentBad": true,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/6422565931",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 청포도향 / 이건 레몬향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "조르단 뉴스텝2 어린이 고불소 치약 포도향, 90g, 3개",
-        "nameScore": 0.33,
-        "pid": "8428356943",
-        "price": 19200,
-        "priceGap": 0.684375,
-        "pricesSeen": [
-          19200,
-          10780,
-          399,
-          108
-        ],
-        "rank": 15,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8428356943",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 청포도향 / 이건 포도향)"
-      }
-    ],
-    "cat": "유아치약",
-    "id": "유아치약-11",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
-      "확실 · 이름일치 100% · 가격차 0%"
-    ],
-    "matchedName": "에이카랩스 코뿔소 어린이 불소 치약 청포도향, 60g, 1개",
-    "matchedPrice": 10000,
-    "name": "에이카랩스 코뿔소 어린이 불소 치약 청포도향",
-    "pid": "7560673413",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/7560673413",
-    "verdict": "확실",
-    "wantCount": "1개",
-    "wantPrice": 6400,
-    "wantSize": "60g"
-  },
-  "유아치약-12": {
-    "at": "2026-10-12T08:53:28.103Z",
-    "candidates": [
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "제니튼 닥터제니 1450 고불소 주니어치약 샤인머스켓향, 60g, 2개",
-        "nameScore": 1,
-        "pid": "7923007337",
-        "price": 19800,
-        "priceGap": 0,
-        "pricesSeen": [
-          19800,
-          14100,
-          1175,
-          141
-        ],
-        "rank": 43,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/7923007337",
-        "verdict": "확실",
-        "why": "이름 100% + 용량·구성 일치"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "제니튼 닥터제니 주니어치약 라임향 불소함유, 60g, 3개입, 1개",
-        "nameScore": 0.5,
-        "pid": "1291548190",
-        "price": 15760,
-        "priceGap": 0.07801418439716312,
-        "pricesSeen": [
-          15760,
-          15200,
-          2533,
-          152
-        ],
-        "rank": 14,
-        "scentBad": true,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/1291548190",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 샤인머스켓향 / 이건 라임향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "제니튼 닥터제니 주니어치약 라임향 + 민트향, 1세트, 60g",
-        "nameScore": 0.5,
-        "pid": "1417484291",
-        "price": 10900,
-        "priceGap": 0.22695035460992907,
-        "pricesSeen": [
-          10900,
-          1817,
-          109
-        ],
-        "rank": 16,
-        "scentBad": true,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/1417484291",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 샤인머스켓향 / 이건 라임향, 민트향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 주니어 1450 고불소 충치케어 펌핑치약                                    12,250원",
-        "nameScore": 0.33,
-        "pid": "8544556420",
-        "price": 12250,
-        "priceGap": 0.13120567375886524,
-        "pricesSeen": [
-          12250
-        ],
-        "rank": 1,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8544556420",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 60g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "제니튼 닥터제니 베이비 치약, 60g, 1개",
-        "nameScore": 0.33,
-        "pid": "9930927",
-        "price": 8000,
-        "priceGap": 0.4326241134751773,
-        "pricesSeen": [
-          8000,
-          4490,
-          748,
-          4350
-        ],
-        "rank": 20,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/9930927",
-        "verdict": "못찾음",
-        "why": "이름 33% — 기준 미달"
-      }
-    ],
-    "cat": "유아치약",
-    "id": "유아치약-12",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
-      "확실 · 이름일치 100% · 가격차 0%"
-    ],
-    "matchedName": "제니튼 닥터제니 1450 고불소 주니어치약 샤인머스켓향, 60g, 2개",
-    "matchedPrice": 19800,
-    "name": "제니튼 닥터제니 1450 고불소 주니어치약 샤인머스켓향",
-    "pid": "7923007337",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/7923007337",
-    "verdict": "확실",
-    "wantCount": "2개",
-    "wantPrice": 14100,
-    "wantSize": "60g"
-  },
-  "유아치약-13": {
-    "at": "2026-10-12T08:53:13.273Z",
-    "candidates": [
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "조르단 뉴스텝2 어린이 고불소 치약 포도향, 90g, 3개",
-        "nameScore": 1,
-        "pid": "8428356943",
-        "price": 19200,
-        "priceGap": 0,
-        "pricesSeen": [
-          19200,
-          10780,
-          399,
-          108
-        ],
-        "rank": 15,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/8428356943",
-        "verdict": "확실",
-        "why": "이름 100% + 용량·구성 일치"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "벨레다 어린이 고불소 마일드 민트 치약, 50g, 1개",
-        "nameScore": 0.5,
-        "pid": "9536173729",
-        "price": 7000,
-        "priceGap": 0.35064935064935066,
-        "pricesSeen": [
-          7000,
-          1400
-        ],
-        "rank": 17,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9536173729",
-        "verdict": "애매",
-        "why": "용량이 다름 (찾는 것 90g)"
-      },
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "조르단 뉴스텝2 어린이 고불소 치약 청사과향, 90g, 3개",
-        "nameScore": 0.83,
-        "pid": "8510746226",
-        "price": 19200,
-        "priceGap": 0.06215213358070501,
-        "pricesSeen": [
-          19200,
-          11450,
-          424,
-          115
-        ],
-        "rank": 32,
-        "scentBad": true,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/8510746226",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 포도향 / 이건 청사과향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "지그비 대용량 주니어 마일드 고불소 구취케어 어린이 치약 엄마배우 Pick 청포도향, 4개, 117g",
-        "nameScore": 0.5,
-        "pid": "8757252802",
-        "price": 15900,
-        "priceGap": 0.1038961038961039,
-        "pricesSeen": [
-          15900,
-          11900,
-          254,
-          119
-        ],
-        "rank": 33,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8757252802",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 포도향 / 이건 청포도향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "벨레다 1450 고불소 어린이 치약 스피아민트향, 50g, 4개",
-        "nameScore": 0.5,
-        "pid": "8475675696",
-        "price": 34000,
-        "priceGap": 0.873191094619666,
-        "pricesSeen": [
-          34000,
-          27330,
-          1367,
-          273
-        ],
-        "rank": 34,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8475675696",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 포도향 / 이건 스피아민트향)"
-      }
-    ],
-    "cat": "유아치약",
-    "id": "유아치약-13",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
-      "확실 · 이름일치 100% · 가격차 0%"
-    ],
-    "matchedName": "조르단 뉴스텝2 어린이 고불소 치약 포도향, 90g, 3개",
-    "matchedPrice": 19200,
-    "name": "조르단 뉴스텝2 어린이 고불소 치약 포도향",
-    "pid": "8428356943",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/8428356943",
-    "verdict": "확실",
-    "wantCount": "3개",
-    "wantPrice": 10780,
-    "wantSize": "90g"
-  },
-  "유아치약-14": {
-    "at": "2026-10-12T08:53:05.503Z",
-    "candidates": [
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 풍선껌향, 120g, 1개입, 4개",
-        "nameScore": 1,
-        "pid": "9278059411",
-        "price": 200,
-        "priceGap": 0.10040160642570281,
-        "pricesSeen": [
-          200,
-          21500,
-          8960,
-          187
-        ],
-        "rank": 30,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/9278059411",
-        "verdict": "확실",
-        "why": "이름 100% + 용량·구성 일치"
-      },
-      {
-        "countOk": true,
-        "isAd": true,
-        "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향, 110g, 4개",
-        "nameScore": 0.5,
-        "pid": "7646155579",
-        "price": 20900,
-        "priceGap": 0.10341365461847389,
-        "pricesSeen": [
-          20900,
-          10990,
-          250,
-          110
-        ],
-        "rank": 11,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/7646155579",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 풍선껌향 / 이건 딸기향)"
-      },
-      {
-        "countOk": true,
-        "isAd": true,
-        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
-        "nameScore": 0.38,
-        "pid": "9021724259",
-        "price": 20900,
-        "priceGap": 0.2248995983935743,
-        "pricesSeen": [
-          20900,
-          12200,
-          277,
-          122
-        ],
-        "rank": 6,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9021724259",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 풍선껌향 / 이건 사과향)"
-      },
-      {
-        "countOk": false,
-        "isAd": true,
-        "name": "크리오 치카부 고불소 비건 주니어 충치 치약 3단계 메론향, 90g, 1개입, 6개",
-        "nameScore": 0.38,
-        "pid": "9675159337",
-        "price": 33800,
-        "priceGap": 0.7439759036144579,
-        "pricesSeen": [
-          33800,
-          17370,
-          322,
-          174
-        ],
-        "rank": 15,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9675159337",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 풍선껌향 / 이건 메론향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "크리오 치카부 고불소 비건 주니어 잇몸 치약 3단계 라즈베리향, 90g, 1개입, 3개",
-        "nameScore": 0.38,
-        "pid": "9682046373",
-        "price": 16900,
-        "priceGap": 0.10542168674698796,
-        "pricesSeen": [
-          16900,
-          8910,
-          330
-        ],
-        "rank": 24,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9682046373",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 풍선껌향 / 이건 라즈베리향)"
-      }
-    ],
-    "cat": "유아치약",
-    "id": "유아치약-14",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
-      "확실 · 이름일치 100% · 가격차 10%"
-    ],
-    "matchedName": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 풍선껌향, 120g, 1개입, 4개",
-    "matchedPrice": 200,
-    "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 풍선껌향",
-    "pid": "9278059411",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/9278059411",
-    "verdict": "확실",
-    "wantCount": "4개",
-    "wantPrice": 9960,
-    "wantSize": "120g"
-  },
-  "유아치약-15": {
-    "at": "2026-10-12T08:53:34.279Z",
-    "candidates": [
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 주니어 1450 고불소 충치케어 펌핑치약                                    12,250원",
-        "nameScore": 1,
-        "pid": "8544556420",
-        "price": 12250,
-        "priceGap": 0,
-        "pricesSeen": [
-          12250
-        ],
-        "rank": 1,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8544556420",
-        "verdict": "애매",
-        "why": "용량이 다름 (찾는 것 220g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 일사오공 고불소 주니어 치약 애플라임향                                    11,600원",
-        "nameScore": 0.5,
-        "pid": "7444603797",
-        "price": 11600,
-        "priceGap": 0.053061224489795916,
-        "pricesSeen": [
-          11600
-        ],
-        "rank": 3,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/7444603797",
-        "verdict": "애매",
-        "why": "용량이 다름 (찾는 것 220g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "페리오 키즈 엄마치약이투명해요 1450 고불소 펌핑치약 민트향, 160g, 2개",
-        "nameScore": 0.5,
-        "pid": "9359566097",
-        "price": 15790,
-        "priceGap": 0.24979591836734694,
-        "pricesSeen": [
-          15790,
-          15310,
-          478,
-          153
-        ],
-        "rank": 37,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9359566097",
-        "verdict": "애매",
-        "why": "용량이 다름 (찾는 것 220g)"
-      },
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "페리오 키즈 효소의 발견 1450 고불소 치약 퓨어민트향, 80g, 1개",
-        "nameScore": 0.33,
-        "pid": "9371086951",
-        "price": 9900,
-        "priceGap": 0.19183673469387755,
-        "pricesSeen": [
-          9900,
-          4700,
-          588
-        ],
-        "rank": 41,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9371086951",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 220g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "덴탈업 치과 병원전용 1450 고불소 충치집중케어 어린이치약 / 치과전용 충치예방 구취제거 프로폴리스 함유, 5개, 80g",
-        "nameScore": 0.33,
-        "pid": "9690968798",
-        "price": 32000,
-        "priceGap": 0.8367346938775511,
-        "pricesSeen": [
-          32000,
-          22500,
-          563,
-          225
-        ],
-        "rank": 46,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9690968798",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 220g)"
-      }
-    ],
-    "cat": "유아치약",
-    "confirmedByUser": true,
-    "id": "유아치약-15",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
-      "애매 · 이름일치 100% · 가격차 0%",
-      "사람이 확인해 확정함: 8544556420 · 2080 주니어 1450 고불소 충치케어 펌핑치약                       "
-    ],
-    "matchedName": "2080 주니어 1450 고불소 충치케어 펌핑치약                                    12,250원",
-    "matchedPrice": 12250,
-    "name": "2080 주니어 1450 고불소 충치케어 펌핑치약",
-    "pid": "8544556420",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/8544556420",
-    "verdict": "확실",
-    "wantCount": "1개",
-    "wantPrice": 12250,
-    "wantSize": "220g"
-  },
-  "유아치약-16": {
-    "at": "2026-10-12T08:53:13.274Z",
-    "candidates": [
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "벨레다 어린이 고불소 마일드 민트 치약, 50g, 1개",
-        "nameScore": 1,
-        "pid": "9536173729",
-        "price": 7000,
-        "priceGap": 0,
-        "pricesSeen": [
-          7000,
-          1400
-        ],
-        "rank": 17,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/9536173729",
-        "verdict": "확실",
-        "why": "이름 100% + 용량·구성 일치"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "지그비 대용량 주니어 마일드 고불소 구취케어 어린이 치약 엄마배우 Pick 청포도향, 4개, 117g",
-        "nameScore": 0.67,
-        "pid": "8757252802",
-        "price": 15900,
-        "priceGap": 0.7,
-        "pricesSeen": [
-          15900,
-          11900,
-          254,
-          119
-        ],
-        "rank": 33,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8757252802",
-        "verdict": "애매",
-        "why": "용량이 다름 (찾는 것 50g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "벨레다 1450 고불소 어린이 치약 스피아민트향, 50g, 4개",
-        "nameScore": 0.67,
-        "pid": "8475675696",
-        "price": 34000,
-        "priceGap": 0.8047142857142857,
-        "pricesSeen": [
-          34000,
-          27330,
-          1367,
-          273
-        ],
-        "rank": 34,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/8475675696",
-        "verdict": "애매",
-        "why": "용량은 맞으나 구성이 다름 (찾는 것 1개)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "조르단 뉴스텝2 어린이 고불소 치약 청사과향, 90g, 3개",
-        "nameScore": 0.5,
-        "pid": "8510746226",
-        "price": 19200,
-        "priceGap": 0.6357142857142857,
-        "pricesSeen": [
-          19200,
-          11450,
-          424,
-          115
-        ],
-        "rank": 32,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8510746226",
-        "verdict": "애매",
-        "why": "용량이 다름 (찾는 것 50g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
-        "nameScore": 0.5,
-        "pid": "9021724259",
-        "price": 20900,
-        "priceGap": 0.7428571428571429,
-        "pricesSeen": [
-          20900,
-          12200,
-          277,
-          122
-        ],
-        "rank": 41,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9021724259",
-        "verdict": "애매",
-        "why": "용량이 다름 (찾는 것 50g)"
-      }
-    ],
-    "cat": "유아치약",
-    "id": "유아치약-16",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
-      "확실 · 이름일치 100% · 가격차 0%"
-    ],
-    "matchedName": "벨레다 어린이 고불소 마일드 민트 치약, 50g, 1개",
-    "matchedPrice": 7000,
-    "name": "벨레다 어린이 고불소 마일드 민트 치약",
-    "pid": "9536173729",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/9536173729",
-    "verdict": "확실",
-    "wantCount": "1개",
-    "wantPrice": 7000,
-    "wantSize": "50g"
-  },
-  "유아치약-17": {
-    "at": "2026-10-12T08:53:05.504Z",
-    "candidates": [
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "오루루 캐치티니핑 고불소치약, 2개, 80g",
-        "nameScore": 1,
-        "pid": "9325937896",
-        "price": 6300,
-        "priceGap": 0,
-        "pricesSeen": [
-          6300,
-          394
-        ],
-        "rank": 35,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/9325937896",
-        "verdict": "확실",
-        "why": "이름 100% + 용량·구성 일치"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 키즈크리닉 4스텝 치약 순한민트향                                    9,300원",
-        "nameScore": 0,
-        "pid": "6456138397",
-        "price": 9300,
-        "priceGap": 0.47619047619047616,
-        "pricesSeen": [
-          9300
-        ],
-        "rank": 1,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/6456138397",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 80g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 일사오공 고불소 주니어 치약 애플라임향                                    11,600원",
-        "nameScore": 0,
-        "pid": "7444603797",
-        "price": 11600,
-        "priceGap": 0.8412698412698413,
-        "pricesSeen": [
-          11600
-        ],
-        "rank": 2,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/7444603797",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 80g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "포프랑설거지비누 끝까지 무르지 않고 거품 잘나고 물때없는 주방비누 과일세척                                    9,890원",
-        "nameScore": 0,
-        "pid": "8479194569",
-        "price": 9890,
-        "priceGap": 0.5698412698412698,
-        "pricesSeen": [
-          9890
-        ],
-        "rank": 3,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8479194569",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 80g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "제니튼 닥터제니 저불소 어린이 치약                                    4,490원",
-        "nameScore": 0,
-        "pid": "6326970654",
-        "price": 4490,
-        "priceGap": 0.2873015873015873,
-        "pricesSeen": [
-          4490
-        ],
-        "rank": 4,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/6326970654",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 80g)"
-      }
-    ],
-    "cat": "유아치약",
-    "id": "유아치약-17",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
-      "확실 · 이름일치 100% · 가격차 0%"
-    ],
-    "matchedName": "오루루 캐치티니핑 고불소치약, 2개, 80g",
-    "matchedPrice": 6300,
-    "name": "오루루 캐치티니핑 고불소치약",
-    "pid": "9325937896",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/9325937896",
-    "verdict": "확실",
-    "wantCount": "2개",
-    "wantPrice": 6300,
-    "wantSize": "80g"
-  },
-  "유아치약-18": {
-    "at": "2026-10-12T08:53:05.505Z",
-    "candidates": [
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "조르단 아동용 뉴스텝2 고불소 펌프치약 포도향 188g + 리필 188g 세트, 1세트, 376g",
-        "nameScore": 1,
-        "pid": "8599187819",
-        "price": 17940,
-        "priceGap": 0,
-        "pricesSeen": [
-          17940,
-          477
-        ],
-        "rank": 46,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/8599187819",
-        "verdict": "확실",
-        "why": "이름 100% + 용량·구성 일치"
-      },
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "조르단 아동용 뉴스텝2 고불소 펌프치약 포도향 188g + 리필 188g 세트, 1세트",
-        "nameScore": 1,
-        "pid": "8814722975",
-        "price": 23800,
-        "priceGap": 0,
-        "pricesSeen": [
-          23800,
-          17940,
-          954,
-          179
-        ],
-        "rank": 39,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8814722975",
-        "verdict": "애매",
-        "why": "용량이 다름 (찾는 것 376g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "치카포카 고불소 충치케어 어린이 치약 포도향, 100g, 4개",
-        "nameScore": 0.22,
-        "pid": "8680397702",
-        "price": 200,
-        "priceGap": 0.09253065774804906,
-        "pricesSeen": [
-          200,
-          19600,
-          8800,
-          220
-        ],
-        "rank": 38,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8680397702",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 376g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 일사오공 고불소 주니어 치약 애플라임향                                    11,600원",
-        "nameScore": 0.11,
-        "pid": "7444603797",
-        "price": 11600,
-        "priceGap": 0.3534002229654404,
-        "pricesSeen": [
-          11600
-        ],
-        "rank": 2,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/7444603797",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 포도향 / 이건 애플라임향)"
-      },
-      {
-        "countOk": false,
-        "isAd": true,
-        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
-        "nameScore": 0.11,
-        "pid": "9021724259",
-        "price": 20900,
-        "priceGap": 0.16499442586399107,
-        "pricesSeen": [
-          20900,
-          12200,
-          277,
-          122
-        ],
-        "rank": 6,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9021724259",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 포도향 / 이건 사과향)"
-      }
-    ],
-    "cat": "유아치약",
-    "id": "유아치약-18",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
-      "확실 · 이름일치 100% · 가격차 0%"
-    ],
-    "matchedName": "조르단 아동용 뉴스텝2 고불소 펌프치약 포도향 188g + 리필 188g 세트, 1세트, 376g",
-    "matchedPrice": 17940,
-    "name": "조르단 아동용 뉴스텝2 고불소 펌프치약 포도향 188g + 리필 188g 세트",
-    "pid": "8599187819",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/8599187819",
-    "verdict": "확실",
-    "wantCount": "1세트",
-    "wantPrice": 17940,
-    "wantSize": "376g"
-  },
-  "유아치약-19": {
-    "at": "2026-10-12T08:53:05.506Z",
-    "candidates": [
-      {
-        "countOk": true,
-        "isAd": true,
-        "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향, 110g, 4개",
-        "nameScore": 1,
-        "pid": "7646155579",
-        "price": 20900,
-        "priceGap": 0,
-        "pricesSeen": [
-          20900,
-          10990,
-          250,
-          110
-        ],
-        "rank": 11,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/7646155579",
-        "verdict": "확실",
-        "why": "이름 100% + 용량·구성 일치"
-      },
-      {
-        "countOk": true,
-        "isAd": true,
-        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
-        "nameScore": 0.67,
-        "pid": "9021724259",
-        "price": 20900,
-        "priceGap": 0.11010009099181074,
-        "pricesSeen": [
-          20900,
-          12200,
-          277,
-          122
-        ],
-        "rank": 6,
-        "scentBad": true,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/9021724259",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 딸기향 / 이건 사과향)"
-      },
-      {
-        "countOk": false,
-        "isAd": true,
-        "name": "크리오 치카부 고불소 비건 주니어 충치 치약 3단계 메론향, 90g, 1개입, 6개",
-        "nameScore": 0.44,
-        "pid": "9675159337",
-        "price": 33800,
-        "priceGap": 0.5805277525022748,
-        "pricesSeen": [
-          33800,
-          17370,
-          322,
-          174
-        ],
-        "rank": 15,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9675159337",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 딸기향 / 이건 메론향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "크리오 치카부 고불소 비건 주니어 잇몸 치약 3단계 라즈베리향, 90g, 1개입, 3개",
-        "nameScore": 0.44,
-        "pid": "9682046373",
-        "price": 16900,
-        "priceGap": 0.18926296633303002,
-        "pricesSeen": [
-          16900,
-          8910,
-          330
-        ],
-        "rank": 24,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9682046373",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 딸기향 / 이건 라즈베리향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 일사오공 고불소 주니어 치약 애플라임향                                    11,600원",
-        "nameScore": 0.33,
-        "pid": "7444603797",
-        "price": 11600,
-        "priceGap": 0.055505004549590536,
-        "pricesSeen": [
-          11600
-        ],
-        "rank": 2,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/7444603797",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 딸기향 / 이건 애플라임향)"
-      }
-    ],
-    "cat": "유아치약",
-    "id": "유아치약-19",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
-      "확실 · 이름일치 100% · 가격차 0%"
-    ],
-    "matchedName": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향, 110g, 4개",
-    "matchedPrice": 20900,
-    "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향",
-    "pid": "7646155579",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/7646155579",
-    "verdict": "확실",
-    "wantCount": "4개",
-    "wantPrice": 10990,
-    "wantSize": "110g"
-  },
-  "유아치약-20": {
-    "at": "2026-10-12T08:53:13.274Z",
-    "candidates": [
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 포도향, 120g, 4개",
-        "nameScore": 1,
-        "pid": "8803856645",
-        "price": 220,
-        "priceGap": 0,
-        "pricesSeen": [
-          220,
-          21500,
-          9960,
-          208,
-          100
-        ],
-        "rank": 24,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/8803856645",
-        "verdict": "확실",
-        "why": "이름 100% + 용량·구성 일치"
-      },
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 복숭아향, 120g, 4개",
-        "nameScore": 0.88,
-        "pid": "8837090071",
-        "price": 220,
-        "priceGap": 0,
-        "pricesSeen": [
-          220,
-          21500,
-          9960,
-          208,
-          100
-        ],
-        "rank": 51,
-        "scentBad": true,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/8837090071",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 포도향 / 이건 복숭아향)"
-      },
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "지그비 대용량 주니어 마일드 고불소 구취케어 어린이 치약 엄마배우 Pick 청포도향, 4개, 117g",
-        "nameScore": 0.38,
-        "pid": "8757252802",
-        "price": 15900,
-        "priceGap": 0.19477911646586346,
-        "pricesSeen": [
-          15900,
-          11900,
-          254,
-          119
-        ],
-        "rank": 33,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8757252802",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 포도향 / 이건 청포도향)"
-      },
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
-        "nameScore": 0.38,
-        "pid": "9021724259",
-        "price": 20900,
-        "priceGap": 0.2248995983935743,
-        "pricesSeen": [
-          20900,
-          12200,
-          277,
-          122
-        ],
-        "rank": 41,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9021724259",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 포도향 / 이건 사과향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "크리오 치카부 고불소 비건 주니어 잇몸 치약 3단계 라즈베리향, 90g, 1개입, 3개",
-        "nameScore": 0.38,
-        "pid": "9682046373",
-        "price": 16900,
-        "priceGap": 0.10542168674698796,
-        "pricesSeen": [
-          16900,
-          8910,
-          330
-        ],
-        "rank": 44,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9682046373",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 포도향 / 이건 라즈베리향)"
-      }
-    ],
-    "cat": "유아치약",
-    "id": "유아치약-20",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
-      "확실 · 이름일치 100% · 가격차 0%"
-    ],
-    "matchedName": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 포도향, 120g, 4개",
-    "matchedPrice": 220,
-    "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 포도향",
-    "pid": "8803856645",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/8803856645",
-    "verdict": "확실",
-    "wantCount": "4개",
-    "wantPrice": 9960,
-    "wantSize": "120g"
-  },
-  "유아치약-21": {
-    "at": "2026-10-12T08:53:05.507Z",
-    "candidates": [
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "라이온 키즈세이프 충치 집중케어 치약, 60g, 3개",
-        "nameScore": 1,
-        "pid": "6185905318",
-        "price": 11250,
-        "priceGap": 0,
-        "pricesSeen": [
-          11250,
-          6340,
-          352
-        ],
-        "rank": 25,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/6185905318",
-        "verdict": "확실",
-        "why": "이름 100% + 용량·구성 일치"
-      },
-      {
-        "countOk": false,
-        "isAd": true,
-        "name": "크리오 치카부 고불소 비건 주니어 충치 치약 3단계 메론향, 90g, 1개입, 6개",
-        "nameScore": 0.4,
-        "pid": "9675159337",
-        "price": 33800,
-        "priceGap": 0.9492113564668769,
-        "pricesSeen": [
-          33800,
-          17370,
-          322,
-          174
-        ],
-        "rank": 15,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9675159337",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 60g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 키즈크리닉 4스텝 치약 순한민트향                                    9,300원",
-        "nameScore": 0.2,
-        "pid": "6456138397",
-        "price": 9300,
-        "priceGap": 0.4668769716088328,
-        "pricesSeen": [
-          9300
-        ],
-        "rank": 1,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/6456138397",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 60g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 일사오공 고불소 주니어 치약 애플라임향                                    11,600원",
-        "nameScore": 0.2,
-        "pid": "7444603797",
-        "price": 11600,
-        "priceGap": 0.8296529968454258,
-        "pricesSeen": [
-          11600
-        ],
-        "rank": 2,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/7444603797",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 60g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "제니튼 닥터제니 저불소 어린이 치약                                    4,490원",
-        "nameScore": 0.2,
-        "pid": "6326970654",
-        "price": 4490,
-        "priceGap": 0.2917981072555205,
-        "pricesSeen": [
-          4490
-        ],
-        "rank": 4,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/6326970654",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 60g)"
-      }
-    ],
-    "cat": "유아치약",
-    "id": "유아치약-21",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
-      "확실 · 이름일치 100% · 가격차 0%"
-    ],
-    "matchedName": "라이온 키즈세이프 충치 집중케어 치약, 60g, 3개",
-    "matchedPrice": 11250,
-    "name": "라이온 키즈세이프 충치 집중케어 치약",
-    "pid": "6185905318",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/6185905318",
-    "verdict": "확실",
-    "wantCount": "3개",
-    "wantPrice": 6340,
-    "wantSize": "60g"
-  },
-  "유아치약-22": {
-    "at": "2026-10-12T08:53:13.275Z",
-    "candidates": [
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "예꼬맘 3단계 어린이치약 고불소 60g + 미니치약 15g 스피아민트향, 3세트, 75g",
-        "nameScore": 1,
-        "pid": "1514135504",
-        "price": 11700,
-        "priceGap": 0,
-        "pricesSeen": [
-          11700,
-          520,
-          117
-        ],
-        "rank": 19,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/1514135504",
-        "verdict": "확실",
-        "why": "이름 100% + 용량·구성 일치"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "픽킷 1000 고불소 어린이치약 블루베리향, 60g, 1개",
-        "nameScore": 0.38,
-        "pid": "9232548216",
-        "price": 9000,
-        "priceGap": 0.23076923076923078,
-        "pricesSeen": [
-          9000,
-          6300,
-          1050
-        ],
-        "rank": 38,
-        "scentBad": true,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9232548216",
-        "verdict": "못찾음",
-        "why": "향이 다름 (찾는 것 스피아민트향 / 이건 블루베리향)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "픽킷 1450 고불소 어린이치약 라즈베리 & 민트, 60g, 2개",
-        "nameScore": 0.38,
-        "pid": "9232581339",
-        "price": 18000,
-        "priceGap": 0.1358974358974359,
-        "pricesSeen": [
-          18000,
-          10110,
-          843,
-          101
-        ],
-        "rank": 52,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9232581339",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 75g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "덴탈업 치과 병원전용 1450 고불소 충치집중케어 어린이치약 / 치과전용 충치예방 구취제거 프로폴리스 함유, 5개, 80g",
-        "nameScore": 0.25,
-        "pid": "9690968798",
-        "price": 32000,
-        "priceGap": 0.9230769230769231,
-        "pricesSeen": [
-          32000,
-          22500,
-          563,
-          225
-        ],
-        "rank": 27,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9690968798",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 75g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "벨레다 1450 고불소 어린이 치약 스피아민트향, 50g, 4개",
-        "nameScore": 0.25,
-        "pid": "8475675696",
-        "price": 34000,
-        "priceGap": 0.8831623931623932,
-        "pricesSeen": [
-          34000,
-          27330,
-          1367,
-          273
-        ],
-        "rank": 34,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8475675696",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 75g)"
-      }
-    ],
-    "cat": "유아치약",
-    "id": "유아치약-22",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
-      "확실 · 이름일치 100% · 가격차 0%"
-    ],
-    "matchedName": "예꼬맘 3단계 어린이치약 고불소 60g + 미니치약 15g 스피아민트향, 3세트, 75g",
-    "matchedPrice": 11700,
-    "name": "예꼬맘 3단계 어린이치약 고불소 60g + 미니치약 15g 스피아민트향",
-    "pid": "1514135504",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/1514135504",
-    "verdict": "확실",
-    "wantCount": "3세트",
-    "wantPrice": 11700,
-    "wantSize": "75g"
-  },
-  "유아치약-23": {
-    "at": "2026-10-12T08:53:05.508Z",
-    "candidates": [
-      {
-        "countOk": true,
-        "isAd": false,
-        "name": "에이카랩스 어린이 코뿔소 치약 사과향 1450ppm, 60g, 2개",
-        "nameScore": 1,
-        "pid": "7560527159",
-        "price": 20000,
-        "priceGap": 0,
-        "pricesSeen": [
-          20000,
-          12800,
-          1067,
-          128
-        ],
-        "rank": 31,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/7560527159",
-        "verdict": "확실",
-        "why": "이름 100% + 용량·구성 일치"
-      },
-      {
-        "countOk": false,
-        "isAd": true,
-        "name": "베르단테 1450ppm 어린이 고불소 치약 사과향, 80g, 3개",
-        "nameScore": 0.67,
-        "pid": "9302449855",
-        "price": 420,
-        "priceGap": 0.4765625,
-        "pricesSeen": [
-          420,
-          33000,
-          18900,
-          788,
-          189
-        ],
-        "rank": 8,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9302449855",
-        "verdict": "애매",
-        "why": "용량이 다름 (찾는 것 60g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "제니튼 닥터제니 저불소 어린이 치약                                    4,490원",
-        "nameScore": 0.33,
-        "pid": "6326970654",
-        "price": 4490,
-        "priceGap": 0.64921875,
-        "pricesSeen": [
-          4490
-        ],
-        "rank": 4,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/6326970654",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 60g)"
-      },
-      {
-        "countOk": false,
-        "isAd": true,
-        "name": "뷰카 주니어 마일드 고불소 비건 치약 사과향, 110g, 4개",
-        "nameScore": 0.33,
-        "pid": "9021724259",
-        "price": 20900,
-        "priceGap": 0.046875,
-        "pricesSeen": [
-          20900,
-          12200,
-          277,
-          122
-        ],
-        "rank": 6,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9021724259",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 60g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "덴티본조르노 일사오공 고불소 주니어 치약 사과향, 80g, 1개",
-        "nameScore": 0.33,
-        "pid": "9254081530",
-        "price": 10940,
-        "priceGap": 0.1453125,
-        "pricesSeen": [
-          10940,
-          5600,
-          700
-        ],
-        "rank": 32,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/9254081530",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 60g)"
-      }
-    ],
-    "cat": "유아치약",
-    "id": "유아치약-23",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 2080 주니어 1450 고불소 충치케어 펌핑치약 관련 혜택과 특가",
-      "확실 · 이름일치 100% · 가격차 0%"
-    ],
-    "matchedName": "에이카랩스 어린이 코뿔소 치약 사과향 1450ppm, 60g, 2개",
-    "matchedPrice": 20000,
-    "name": "에이카랩스 어린이 코뿔소 치약 사과향 1450ppm",
-    "pid": "7560527159",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/7560527159",
-    "verdict": "확실",
-    "wantCount": "2개",
-    "wantPrice": 12800,
-    "wantSize": "60g"
-  },
-  "유아치약-24": {
-    "at": "2026-10-12T08:53:34.280Z",
-    "candidates": [
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 일사오공 고불소 주니어 치약 애플라임향                                    11,600원",
-        "nameScore": 0.6,
-        "pid": "7444603797",
-        "price": 11600,
-        "priceGap": 0.09433962264150944,
-        "pricesSeen": [
-          11600
-        ],
-        "rank": 3,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/7444603797",
-        "verdict": "애매",
-        "why": "용량이 다름 (찾는 것 80g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 주니어 1450 고불소 충치케어 펌핑치약                                    12,250원",
-        "nameScore": 0.4,
-        "pid": "8544556420",
-        "price": 12250,
-        "priceGap": 0.15566037735849056,
-        "pricesSeen": [
-          12250
-        ],
-        "rank": 1,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8544556420",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 80g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "2080 키즈크리닉 4스텝 치약 순한민트향                                    9,300원",
-        "nameScore": 0.4,
-        "pid": "6456138397",
-        "price": 9300,
-        "priceGap": 0.12264150943396226,
-        "pricesSeen": [
-          9300
-        ],
-        "rank": 2,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/6456138397",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 80g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "제니튼 주니어 치약 민트향, 60g, 3개입, 1개",
-        "nameScore": 0.4,
-        "pid": "1291548235",
-        "price": 15760,
-        "priceGap": 0.4339622641509434,
-        "pricesSeen": [
-          15760,
-          15200,
-          2533,
-          152
-        ],
-        "rank": 12,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/1291548235",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 80g)"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "지그비 대용량 주니어 마일드 고불소 구취케어 어린이 치약 엄마배우 Pick 청포도향, 4개, 117g",
-        "nameScore": 0.4,
-        "pid": "8757252802",
-        "price": 15900,
-        "priceGap": 0.12264150943396226,
-        "pricesSeen": [
-          15900,
-          11900,
-          254,
-          119
-        ],
-        "rank": 53,
-        "scentBad": false,
-        "sizeOk": false,
-        "url": "https://www.coupang.com/vp/products/8757252802",
-        "verdict": "못찾음",
-        "why": "용량이 다름 (찾는 것 80g)"
-      }
-    ],
-    "cat": "유아치약",
-    "confirmedByUser": true,
-    "id": "유아치약-24",
-    "log": [
-      "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
-      "애매 · 이름일치 60% · 가격차 9%",
-      "사람이 주소를 직접 넣음: 7444603797"
-    ],
-    "manualUrl": true,
-    "matchedName": "(사람이 직접 넣은 주소)",
-    "matchedPrice": null,
-    "name": "2080 주니어 자일리 플러스 치약",
-    "pid": "7444603797",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/7444603797?itemId=19367024138&vendorItemId=86479922183",
-    "verdict": "확실",
-    "wantCount": "6개",
-    "wantPrice": 10600,
-    "wantSize": "80g"
+    "at": "2026-10-12T13:04:28.502Z"
   },
   "유아치약-25": {
-    "at": "2026-10-12T08:53:28.105Z",
+    "id": "유아치약-25",
+    "cat": "유아치약",
+    "name": "제니튼 닥터제니 저불소 어린이 치약",
+    "wantPrice": 8790,
+    "wantSize": "60g",
+    "wantCount": "2개",
+    "verdict": "확실",
+    "pid": "6326970654",
+    "url": "https://www.coupang.com/vp/products/6326970654",
+    "matchedName": "제니튼 닥터제니 저불소 어린이 치약, 60g, 2개",
+    "matchedPrice": 18000,
     "candidates": [
       {
-        "countOk": true,
         "isAd": false,
         "name": "제니튼 닥터제니 저불소 어린이 치약, 60g, 2개",
-        "nameScore": 1,
         "pid": "6326970654",
         "price": 18000,
-        "priceGap": 0,
         "pricesSeen": [
           18000,
           8790,
           733
         ],
-        "rank": 40,
-        "scentBad": false,
-        "sizeOk": true,
+        "rank": 39,
         "url": "https://www.coupang.com/vp/products/6326970654",
+        "nameScore": 1,
+        "priceGap": 0,
+        "sizeOk": true,
+        "countOk": true,
+        "scentBad": false,
         "verdict": "확실",
         "why": "이름 100% + 용량·구성 일치"
       },
       {
-        "countOk": false,
         "isAd": false,
         "name": "제니튼 닥터제니 베이비 치약, 60g, 1개",
-        "nameScore": 0.6,
         "pid": "9930927",
         "price": 8000,
-        "priceGap": 0.08987485779294653,
         "pricesSeen": [
           8000,
           4490,
           748,
           4350
         ],
-        "rank": 20,
-        "scentBad": false,
-        "sizeOk": true,
+        "rank": 19,
         "url": "https://www.coupang.com/vp/products/9930927",
+        "nameScore": 0.6,
+        "priceGap": 0.08987485779294653,
+        "sizeOk": true,
+        "countOk": false,
+        "scentBad": false,
         "verdict": "애매",
         "why": "용량은 맞으나 구성이 다름 (찾는 것 2개)"
       },
       {
-        "countOk": false,
         "isAd": false,
         "name": "제니튼 주니어 치약 민트향, 60g, 3개입, 1개",
-        "nameScore": 0.4,
         "pid": "1291548235",
         "price": 15760,
+        "pricesSeen": [
+          15760,
+          15200,
+          2533,
+          152
+        ],
+        "rank": 12,
+        "url": "https://www.coupang.com/vp/products/1291548235",
+        "nameScore": 0.4,
         "priceGap": 0.7118316268486917,
+        "sizeOk": true,
+        "countOk": false,
+        "scentBad": false,
+        "verdict": "애매",
+        "why": "이름 40% · 용량 일치 · 가격차 71%"
+      },
+      {
+        "isAd": false,
+        "name": "제니튼 닥터제니 주니어치약 라임향 불소함유, 60g, 3개입, 1개",
+        "pid": "1291548190",
+        "price": 15760,
         "pricesSeen": [
           15760,
           15200,
@@ -2984,69 +2565,125 @@
           152
         ],
         "rank": 13,
-        "scentBad": false,
-        "sizeOk": true,
-        "url": "https://www.coupang.com/vp/products/1291548235",
-        "verdict": "애매",
-        "why": "이름 40% · 용량 일치 · 가격차 71%"
-      },
-      {
-        "countOk": false,
-        "isAd": false,
-        "name": "제니튼 닥터제니 주니어치약 라임향 불소함유, 60g, 3개입, 1개",
-        "nameScore": 0.4,
-        "pid": "1291548190",
-        "price": 15760,
-        "priceGap": 0.7118316268486917,
-        "pricesSeen": [
-          15760,
-          15200,
-          2533,
-          152
-        ],
-        "rank": 14,
-        "scentBad": false,
-        "sizeOk": true,
         "url": "https://www.coupang.com/vp/products/1291548190",
+        "nameScore": 0.4,
+        "priceGap": 0.7118316268486917,
+        "sizeOk": true,
+        "countOk": false,
+        "scentBad": false,
         "verdict": "애매",
         "why": "이름 40% · 용량 일치 · 가격차 71%"
       },
       {
-        "countOk": false,
         "isAd": false,
         "name": "제니튼 닥터제니 주니어치약 라임향 + 민트향, 1세트, 60g",
-        "nameScore": 0.4,
         "pid": "1417484291",
         "price": 10900,
-        "priceGap": 0.24004550625711035,
         "pricesSeen": [
           10900,
           1817,
           109
         ],
-        "rank": 16,
-        "scentBad": false,
-        "sizeOk": true,
+        "rank": 15,
         "url": "https://www.coupang.com/vp/products/1417484291",
+        "nameScore": 0.4,
+        "priceGap": 0.24004550625711035,
+        "sizeOk": true,
+        "countOk": false,
+        "scentBad": false,
         "verdict": "애매",
         "why": "이름 40% · 용량 일치 · 가격차 24%"
       }
     ],
-    "cat": "유아치약",
-    "id": "유아치약-25",
+    "source": "목록화면",
     "log": [
       "목록 화면에서 맞춤: 쿠팡이 추천하는 어린이치약 관련 혜택과 특가",
       "확실 · 이름일치 100% · 가격차 0%"
     ],
-    "matchedName": "제니튼 닥터제니 저불소 어린이 치약, 60g, 2개",
-    "matchedPrice": 18000,
-    "name": "제니튼 닥터제니 저불소 어린이 치약",
-    "pid": "6326970654",
-    "source": "목록화면",
-    "url": "https://www.coupang.com/vp/products/6326970654",
+    "at": "2026-10-12T13:04:23.290Z"
+  },
+  "유아치약-01": {
+    "id": "유아치약-01",
+    "cat": "유아치약",
+    "name": "닥터노아 중금속 안심 불소 유아 아기 치약 라즈베리 레몬향",
+    "wantPrice": 7080,
+    "wantSize": "60g",
+    "wantCount": "1개",
     "verdict": "확실",
-    "wantCount": "2개",
-    "wantPrice": 8790,
-    "wantSize": "60g"
+    "pid": "6422565931",
+    "url": "https://www.coupang.com/vp/products/6422565931?itemId=27338652458&vendorItemId=95175834890",
+    "matchedName": "(사람이 직접 넣은 주소)",
+    "matchedPrice": null,
+    "candidates": [],
+    "log": [
+      "후보에 한 번도 걸리지 않은 항목",
+      "사람이 주소를 직접 넣음: 6422565931"
+    ],
+    "at": "2026-10-12T13:05:22.312Z",
+    "confirmedByUser": true,
+    "manualUrl": true
+  },
+  "유아치약-06": {
+    "id": "유아치약-06",
+    "cat": "유아치약",
+    "name": "2080 일사오공 고불소 주니어 치약 애플라임향",
+    "wantPrice": 11600,
+    "wantSize": "80g",
+    "wantCount": "3개",
+    "verdict": "확실",
+    "pid": "7444603797",
+    "url": "https://www.coupang.com/vp/products/7444603797?itemId=19367024138&vendorItemId=86479922183",
+    "matchedName": "(사람이 직접 넣은 주소)",
+    "matchedPrice": null,
+    "candidates": [],
+    "log": [
+      "후보에 한 번도 걸리지 않은 항목",
+      "사람이 주소를 직접 넣음: 7444603797"
+    ],
+    "at": "2026-10-12T13:05:44.379Z",
+    "confirmedByUser": true,
+    "manualUrl": true
+  },
+  "유아치약-08": {
+    "id": "유아치약-08",
+    "cat": "유아치약",
+    "name": "2080 키즈크리닉 4스텝 치약 순한민트향",
+    "wantPrice": 9300,
+    "wantSize": "80g",
+    "wantCount": "6개",
+    "verdict": "확실",
+    "pid": "6456138397",
+    "url": "https://www.coupang.com/vp/products/6456138397?itemId=19679031966&vendorItemId=70185039822",
+    "matchedName": "(사람이 직접 넣은 주소)",
+    "matchedPrice": null,
+    "candidates": [],
+    "log": [
+      "후보에 한 번도 걸리지 않은 항목",
+      "사람이 주소를 직접 넣음: 6456138397"
+    ],
+    "at": "2026-10-12T13:06:07.016Z",
+    "confirmedByUser": true,
+    "manualUrl": true
+  },
+  "유아치약-24": {
+    "id": "유아치약-24",
+    "cat": "유아치약",
+    "name": "2080 주니어 자일리 플러스 치약",
+    "wantPrice": 10600,
+    "wantSize": "80g",
+    "wantCount": "6개",
+    "verdict": "확실",
+    "pid": "7370916424",
+    "url": "https://www.coupang.com/vp/products/7370916424?itemId=19013436188&vendorItemId=74160017357",
+    "matchedName": "(사람이 직접 넣은 주소)",
+    "matchedPrice": null,
+    "candidates": [],
+    "log": [
+      "후보에 한 번도 걸리지 않은 항목",
+      "사람이 주소를 직접 넣음: 7370916424"
+    ],
+    "at": "2026-10-12T13:06:47.521Z",
+    "confirmedByUser": true,
+    "manualUrl": true
   }
 }
