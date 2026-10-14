@@ -1,0 +1,516 @@
+{
+  "axes": [
+    {
+      "id": "safety",
+      "label": "안전 입증 (시험성적서)"
+    },
+    {
+      "id": "clinical",
+      "label": "인체적용시험"
+    },
+    {
+      "id": "antibac",
+      "label": "항균력 수치"
+    },
+    {
+      "id": "cert",
+      "label": "인증 (비건 등)"
+    },
+    {
+      "id": "authority",
+      "label": "제3자 학회 인증"
+    },
+    {
+      "id": "patent",
+      "label": "특허번호 명시"
+    },
+    {
+      "id": "stage",
+      "label": "연령 단계 구성"
+    },
+    {
+      "id": "dose",
+      "label": "사용량 소구"
+    },
+    {
+      "id": "dosestruct",
+      "label": "사용량 구조 설계"
+    },
+    {
+      "id": "dosefix",
+      "label": "1회 토출량 고정"
+    },
+    {
+      "id": "abrasion",
+      "label": "연마도 언급"
+    },
+    {
+      "id": "rinse",
+      "label": "헹굼 방법 언급"
+    },
+    {
+      "id": "pump",
+      "label": "펌프 형태"
+    },
+    {
+      "id": "refill",
+      "label": "리필 구조"
+    },
+    {
+      "id": "mini",
+      "label": "미니치약 동봉"
+    },
+    {
+      "id": "name",
+      "label": "네임 스티커 / 이름칸"
+    },
+    {
+      "id": "char",
+      "label": "캐릭터 라이선스"
+    },
+    {
+      "id": "factory",
+      "label": "생산 공장 명시"
+    },
+    {
+      "id": "social",
+      "label": "누적 판매량 제시"
+    },
+    {
+      "id": "ingmin",
+      "label": "성분 최소화 소구"
+    }
+  ],
+  "bHigh": 1000,
+  "bLow": 300,
+  "channel": "쿠팡 TOP25",
+  "date": "2026-10-12",
+  "matrix": {
+    "abrasion": {},
+    "antibac": {
+      "2": "O",
+      "5": "O",
+      "14": "O",
+      "19": "O",
+      "20": "O"
+    },
+    "authority": {
+      "11": "O",
+      "23": "O"
+    },
+    "cert": {
+      "1": "O",
+      "2": "O",
+      "3": "O",
+      "5": "O",
+      "11": "O",
+      "14": "O",
+      "19": "O",
+      "20": "O",
+      "23": "O"
+    },
+    "char": {
+      "17": "O"
+    },
+    "clinical": {
+      "2": "O",
+      "5": "O",
+      "19": "O"
+    },
+    "dose": {
+      "1": "O",
+      "3": "O",
+      "6": "O",
+      "7": "O",
+      "21": "O"
+    },
+    "dosefix": {},
+    "dosestruct": {
+      "1": "O",
+      "3": "O"
+    },
+    "factory": {
+      "6": "O",
+      "24": "O"
+    },
+    "ingmin": {
+      "1": "O",
+      "3": "O",
+      "4": "O",
+      "6": "O",
+      "14": "O",
+      "16": "O",
+      "20": "O",
+      "21": "O",
+      "24": "O"
+    },
+    "mini": {
+      "22": "O"
+    },
+    "name": {
+      "10": "O"
+    },
+    "patent": {
+      "14": "O",
+      "20": "O"
+    },
+    "pump": {
+      "15": "O",
+      "18": "O"
+    },
+    "refill": {
+      "18": "O"
+    },
+    "rinse": {},
+    "safety": {
+      "1": "O",
+      "2": "O",
+      "3": "O",
+      "14": "O",
+      "20": "O"
+    },
+    "social": {
+      "19": "O"
+    },
+    "stage": {
+      "1": "O",
+      "3": "O",
+      "4": "O",
+      "7": "O",
+      "8": "O",
+      "9": "O",
+      "11": "O",
+      "13": "O",
+      "16": "O",
+      "23": "O"
+    }
+  },
+  "name": "유아치약",
+  "products": [
+    {
+      "brand": "닥터노아",
+      "buyers": 10000,
+      "form": "튜브",
+      "name": "닥터노아 중금속 안심 불소 유아 아기 치약 라즈베리 레몬향",
+      "pack": "1개",
+      "price": 7080,
+      "rank": 1,
+      "reviews": 14403,
+      "total": 60,
+      "unit": "60g",
+      "url": "https://www.coupang.com/vp/products/6422565931?itemId=27338652458&vendorItemId=95175834890"
+    },
+    {
+      "brand": "뷰카",
+      "buyers": 10000,
+      "form": "튜브",
+      "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 포도향",
+      "pack": "4개",
+      "price": 9800,
+      "rank": 2,
+      "reviews": 20354,
+      "total": 440,
+      "unit": "110g",
+      "url": "https://www.coupang.com/vp/products/7427543327"
+    },
+    {
+      "brand": "닥터노아",
+      "buyers": 8000,
+      "form": "튜브",
+      "name": "닥터노아 중금속 안심 1450 고불소 어린이치약 포도향",
+      "pack": "3개",
+      "price": 18480,
+      "rank": 3,
+      "reviews": 1413,
+      "total": 180,
+      "unit": "60g",
+      "url": "https://www.coupang.com/vp/products/9625125018"
+    },
+    {
+      "brand": "벨레다",
+      "buyers": 4000,
+      "form": "튜브",
+      "name": "벨레다 1450 고불소 어린이 치약 스피아민트향",
+      "pack": "1개",
+      "price": 6500,
+      "rank": 4,
+      "reviews": 4611,
+      "total": 50,
+      "unit": "50g",
+      "url": "https://www.coupang.com/vp/products/8475675696"
+    },
+    {
+      "brand": "뷰카",
+      "buyers": 5000,
+      "form": "튜브",
+      "name": "뷰카 주니어 마일드 고불소 비건치약 110g x 4종 세트 프루티믹스",
+      "pack": "4개입 1세트",
+      "price": 12200,
+      "rank": 5,
+      "reviews": 2031,
+      "total": 440,
+      "unit": "110g",
+      "url": "https://www.coupang.com/vp/products/9427894228"
+    },
+    {
+      "brand": "2080",
+      "buyers": 4000,
+      "form": "튜브",
+      "name": "2080 일사오공 고불소 주니어 치약 애플라임향",
+      "pack": "3개",
+      "price": 11600,
+      "rank": 6,
+      "reviews": 10098,
+      "total": 240,
+      "unit": "80g",
+      "url": "https://www.coupang.com/vp/products/7444603797?itemId=19367024138&vendorItemId=86479922183"
+    },
+    {
+      "brand": "블랑키즐",
+      "buyers": 4000,
+      "form": "튜브",
+      "name": "블랑키즐 유아용 고불소 치약 애플망고향",
+      "pack": "1개입 2개",
+      "price": 12900,
+      "rank": 7,
+      "reviews": 8104,
+      "total": 120,
+      "unit": "60g",
+      "url": "https://www.coupang.com/vp/products/7575239396"
+    },
+    {
+      "brand": "2080",
+      "buyers": 4000,
+      "form": "튜브",
+      "name": "2080 키즈크리닉 4스텝 치약 순한민트향",
+      "pack": "6개",
+      "price": 9300,
+      "rank": 8,
+      "reviews": 29030,
+      "total": 480,
+      "unit": "80g",
+      "url": "https://www.coupang.com/vp/products/6456138397?itemId=19679031966&vendorItemId=70185039822"
+    },
+    {
+      "brand": "조르단",
+      "buyers": 3000,
+      "form": "튜브",
+      "name": "조르단 뉴스텝1 어린이 불소 치약 딸기향",
+      "pack": "1개",
+      "price": 4250,
+      "rank": 9,
+      "reviews": 4120,
+      "total": 90,
+      "unit": "90g",
+      "url": "https://www.coupang.com/vp/products/8428289204"
+    },
+    {
+      "brand": "티타드",
+      "buyers": 2000,
+      "form": "튜브",
+      "name": "티타드 주니어 불소 치약",
+      "pack": "1개",
+      "price": 7450,
+      "rank": 10,
+      "reviews": 2164,
+      "total": 60,
+      "unit": "60g",
+      "url": "https://www.coupang.com/vp/products/9167355510"
+    },
+    {
+      "brand": "에이카랩스",
+      "buyers": 2000,
+      "form": "튜브",
+      "name": "에이카랩스 코뿔소 어린이 불소 치약 청포도향",
+      "pack": "1개",
+      "price": 6400,
+      "rank": 11,
+      "reviews": 2013,
+      "total": 60,
+      "unit": "60g",
+      "url": "https://www.coupang.com/vp/products/7560673413"
+    },
+    {
+      "brand": "제니튼",
+      "buyers": 2000,
+      "form": "튜브",
+      "name": "제니튼 닥터제니 1450 고불소 주니어치약 샤인머스켓향",
+      "pack": "2개",
+      "price": 14100,
+      "rank": 12,
+      "reviews": 2789,
+      "total": 120,
+      "unit": "60g",
+      "url": "https://www.coupang.com/vp/products/7923007337"
+    },
+    {
+      "brand": "조르단",
+      "buyers": 1000,
+      "form": "튜브",
+      "name": "조르단 뉴스텝2 어린이 고불소 치약 포도향",
+      "pack": "3개",
+      "price": 10780,
+      "rank": 13,
+      "reviews": 3589,
+      "total": 270,
+      "unit": "90g",
+      "url": "https://www.coupang.com/vp/products/8428356943"
+    },
+    {
+      "brand": "센토",
+      "buyers": 1000,
+      "form": "튜브",
+      "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 풍선껌향",
+      "pack": "1개입 4개",
+      "price": 9960,
+      "rank": 14,
+      "reviews": 1563,
+      "total": 480,
+      "unit": "120g",
+      "url": "https://www.coupang.com/vp/products/9278059411"
+    },
+    {
+      "brand": "2080",
+      "buyers": 1000,
+      "form": "펌프",
+      "name": "2080 주니어 1450 고불소 충치케어 펌핑치약",
+      "pack": "1개",
+      "price": 12250,
+      "rank": 15,
+      "reviews": 1942,
+      "total": 220,
+      "unit": "220g",
+      "url": "https://www.coupang.com/vp/products/8544556420?itemId=24739992049&vendorItemId=91748701080"
+    },
+    {
+      "brand": "벨레다",
+      "buyers": 1000,
+      "form": "튜브",
+      "name": "벨레다 어린이 고불소 마일드 민트 치약",
+      "pack": "1개",
+      "price": 7000,
+      "rank": 16,
+      "reviews": 233,
+      "total": 50,
+      "unit": "50g",
+      "url": "https://www.coupang.com/vp/products/9536173729"
+    },
+    {
+      "brand": "오루루",
+      "buyers": 1000,
+      "form": "튜브",
+      "name": "오루루 캐치티니핑 고불소치약",
+      "pack": "2개",
+      "price": 6300,
+      "rank": 17,
+      "reviews": 599,
+      "total": 160,
+      "unit": "80g",
+      "url": "https://www.coupang.com/vp/products/9325937896"
+    },
+    {
+      "brand": "조르단",
+      "buyers": 1000,
+      "form": "펌프",
+      "name": "조르단 아동용 뉴스텝2 고불소 펌프치약 포도향 188g + 리필 188g 세트",
+      "pack": "1세트(본품 188g + 리필 188g)",
+      "price": 17940,
+      "rank": 18,
+      "reviews": 987,
+      "total": 376,
+      "unit": "376g",
+      "url": "https://www.coupang.com/vp/products/8599187819"
+    },
+    {
+      "brand": "뷰카",
+      "buyers": 1000,
+      "form": "튜브",
+      "name": "뷰카 주니어 마일드 고불소 구취케어 비건 어린이 치약 딸기향",
+      "pack": "4개",
+      "price": 10990,
+      "rank": 19,
+      "reviews": 6309,
+      "total": 440,
+      "unit": "110g",
+      "url": "https://www.coupang.com/vp/products/7646155579"
+    },
+    {
+      "brand": "센토",
+      "buyers": 1000,
+      "form": "튜브",
+      "name": "센토 주니어 세이프 고불소 구취케어 비건 어린이치약 포도향",
+      "pack": "4개",
+      "price": 9960,
+      "rank": 20,
+      "reviews": 3569,
+      "total": 480,
+      "unit": "120g",
+      "url": "https://www.coupang.com/vp/products/8803856645"
+    },
+    {
+      "brand": "라이온 키즈세이프",
+      "buyers": 1000,
+      "form": "튜브",
+      "name": "라이온 키즈세이프 충치 집중케어 치약",
+      "pack": "3개",
+      "price": 6340,
+      "rank": 21,
+      "reviews": 13054,
+      "total": 180,
+      "unit": "60g",
+      "url": "https://www.coupang.com/vp/products/6185905318"
+    },
+    {
+      "brand": "예꼬맘",
+      "buyers": 1000,
+      "form": "튜브",
+      "name": "예꼬맘 3단계 어린이치약 고불소 60g + 미니치약 15g 스피아민트향",
+      "pack": "3세트(60g + 미니 15g)",
+      "price": 11700,
+      "rank": 22,
+      "reviews": 6650,
+      "total": 225,
+      "unit": "75g",
+      "url": "https://www.coupang.com/vp/products/1514135504"
+    },
+    {
+      "brand": "에이카랩스",
+      "buyers": 1000,
+      "form": "튜브",
+      "name": "에이카랩스 어린이 코뿔소 치약 사과향 1450ppm",
+      "pack": "2개",
+      "price": 12800,
+      "rank": 23,
+      "reviews": 1901,
+      "total": 120,
+      "unit": "60g",
+      "url": "https://www.coupang.com/vp/products/7560527159"
+    },
+    {
+      "brand": "2080",
+      "buyers": 1000,
+      "form": "튜브",
+      "name": "2080 주니어 자일리 플러스 치약",
+      "pack": "1개입 6개",
+      "price": 10600,
+      "rank": 24,
+      "reviews": 9597,
+      "total": 480,
+      "unit": "80g",
+      "url": "https://www.coupang.com/vp/products/7370916424?itemId=19013436188&vendorItemId=74160017357"
+    },
+    {
+      "brand": "제니튼",
+      "buyers": 1000,
+      "form": "튜브",
+      "name": "제니튼 닥터제니 저불소 어린이 치약",
+      "pack": "2개",
+      "price": 8790,
+      "rank": 25,
+      "reviews": 30764,
+      "total": 120,
+      "unit": "60g",
+      "url": "https://www.coupang.com/vp/products/6326970654"
+    }
+  ]
+}

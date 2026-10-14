@@ -1,0 +1,520 @@
+<title>제품기획 작업대</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* 레이아웃: 고정 헤더 + 탭 전환. 표가 주인공이므로 카드 장식은 최소, 격자와 수치 정렬에 공을 들인다. */
+:root{
+  --bg:#f7f8f7; --surface:#ffffff; --ink:#15201c; --muted:#5d6b65;
+  --line:#dde3e0; --line-firm:#15201c;
+  --accent:#0d5c4d; --accent-soft:#e4efeb; --accent-ink:#0a4639;
+  --warn:#8a4b12; --warn-soft:#fbeee0; --flag:#a3341f; --flag-soft:#fbe9e5;
+  --font-ui:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --font-num:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101614; --surface:#18201d; --ink:#e8efeb; --muted:#9aa9a2;
+  --line:#2b3733; --line-firm:#e8efeb;
+  --accent:#58b79f; --accent-soft:#17302a; --accent-ink:#8fd6c2;
+  --warn:#d79a56; --warn-soft:#2e2318; --flag:#e08370; --flag-soft:#331d19;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#101614; --surface:#18201d; --ink:#e8efeb; --muted:#9aa9a2;
+  --line:#2b3733; --line-firm:#e8efeb;
+  --accent:#58b79f; --accent-soft:#17302a; --accent-ink:#8fd6c2;
+  --warn:#d79a56; --warn-soft:#2e2318; --flag:#e08370; --flag-soft:#331d19;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);font-size:14px;line-height:1.55;word-break:keep-all}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1320px;margin:0 auto}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.topin{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding-block:12px}
+.brand{font-weight:700;font-size:16px;letter-spacing:-.01em;margin-right:4px}
+.brand span{color:var(--muted);font-weight:500;font-size:12px;display:block;letter-spacing:.04em}
+nav.tabs{display:flex;gap:2px;flex:1 1 auto;min-width:0;flex-wrap:wrap}
+nav.tabs button{font:inherit;font-weight:600;font-size:13px;color:var(--muted);background:none;border:0;border-bottom:2px solid transparent;padding:7px 13px;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--accent-ink);border-bottom-color:var(--accent)}
+nav.tabs button:hover{color:var(--ink)}
+nav.tabs button:focus-visible,select:focus-visible,input:focus-visible,.cell:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.saveflag{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.saveflag.on{color:var(--accent-ink)}
+main{padding-block:22px 64px}
+section.panel{margin-bottom:34px}
+h2.sec{font-size:15px;font-weight:700;margin:0 0 3px;letter-spacing:-.01em}
+.seclead{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+select,input[type=number],input[type=date],input[type=text]{font:inherit;font-size:13px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:6px 9px}
+input[type=number]{font-family:var(--font-num);text-align:right;width:92px}
+label.fld{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:18px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:12px 14px;min-width:0}
+.tile .k{font-size:11.5px;color:var(--muted);letter-spacing:.03em}
+.tile .v{font-family:var(--font-num);font-size:22px;font-weight:600;letter-spacing:-.02em;line-height:1.25;margin-top:2px}
+.tile .s{font-size:11.5px;color:var(--muted);margin-top:1px}
+.tile.flag{border-color:var(--flag);background:var(--flag-soft)}
+.tile.flag .v{color:var(--flag)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{padding:6px 9px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+thead th{background:var(--surface);position:sticky;top:0;z-index:2;font-size:11.5px;font-weight:600;color:var(--muted);border-bottom:1px solid var(--line-firm)}
+tbody tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;font-family:var(--font-num);font-variant-numeric:tabular-nums}
+td.name{white-space:normal;min-width:230px}
+td a{color:inherit;text-decoration:none;border-bottom:1px solid var(--line)}
+td a:hover{color:var(--accent-ink);border-bottom-color:var(--accent)}
+.edit{font-family:var(--font-num);text-align:right;background:none;border:1px solid transparent;border-radius:2px;padding:2px 4px;width:88px;font-size:12.5px;color:inherit}
+.edit:hover{border-color:var(--line)}
+.edit:focus{border-color:var(--accent);background:var(--surface);outline:none}
+.pill{display:inline-block;font-size:11px;font-weight:600;padding:1px 7px;border-radius:9px;background:var(--accent-soft);color:var(--accent-ink)}
+.pill.mid{background:var(--warn-soft);color:var(--warn)}
+.stackwrap{margin-bottom:6px}
+.stacklab{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em;margin-bottom:3px}
+.stack{display:flex;height:24px;border-radius:3px;overflow:hidden;font-family:var(--font-num);font-size:11px;font-weight:600}
+.stack div{display:flex;align-items:center;justify-content:center;color:#fff;min-width:0;overflow:hidden}
+.s-low{background:var(--accent)} .s-mid{background:#b9c4c0;color:var(--ink)!important} .s-high{background:var(--accent-ink)}
+:root[data-theme="dark"] .s-mid,@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .s-mid{background:#495652}}
+.matrix td.cell{text-align:center;cursor:pointer;width:30px;padding:4px 0;font-family:var(--font-num);font-size:11px;color:var(--line)}
+.matrix td.cell.on{background:var(--accent);color:#fff;font-weight:600}
+.matrix td.cell:hover{outline:1px solid var(--accent);outline-offset:-1px}
+.matrix td.axis{white-space:normal;min-width:170px;font-weight:500}
+.matrix tr.zero td.axis{color:var(--flag);font-weight:600}
+.matrix tr.zero{background:var(--flag-soft)}
+.matrix td.cnt{font-family:var(--font-num);text-align:right;font-weight:600;width:44px}
+.matrix tr.zero td.cnt{color:var(--flag)}
+.gantt td.task{white-space:normal;min-width:230px}
+.gantt td.wk{width:26px;padding:0;border-left:1px solid var(--line)}
+.gantt td.wk i{display:block;height:20px;background:var(--accent);opacity:.9}
+.gantt tr.crit td.wk i{background:var(--flag)}
+.gantt tr.crit td.task{font-weight:600;color:var(--flag)}
+.gantt th.wk{width:26px;font-size:9.5px;writing-mode:vertical-rl;text-orientation:mixed;padding:6px 0;text-align:left;border-left:1px solid var(--line)}
+.grp{display:inline-block;font-size:10.5px;font-weight:600;color:var(--muted);background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:0 5px;margin-right:6px}
+.heat td.wk{width:26px;padding:0;border-left:1px solid var(--line);text-align:center;font-family:var(--font-num);font-size:11px}
+.note{font-size:12px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--line-firm);border-radius:0 3px 3px 0;padding:9px 12px;margin:10px 0}
+.note.flag{border-left-color:var(--flag);background:var(--flag-soft);color:var(--ink)}
+.btn{font:inherit;font-size:12.5px;font-weight:600;color:var(--surface);background:var(--accent);border:0;border-radius:3px;padding:7px 14px;cursor:pointer}
+.btn.ghost{background:none;color:var(--accent-ink);border:1px solid var(--line)}
+.btn:hover{filter:brightness(1.08)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font:inherit;font-size:12.5px;font-weight:600;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:5px 13px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink)}
+.empty{padding:38px 18px;text-align:center;color:var(--muted);font-size:13px;background:var(--surface);border:1px dashed var(--line);border-radius:4px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+@media(max-width:560px){.topin{gap:8px}.brand span{display:none}.tile .v{font-size:19px}nav.tabs button{padding:6px 9px;font-size:12.5px}}
+</style>
+
+<header class="top"><div class="wrap topin">
+  <div class="brand">제품기획 작업대<span>조사 · 기획 · 일정</span></div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" id="t-survey" aria-selected="true">카테고리 조사</button>
+    <button role="tab" id="t-sched" aria-selected="false">일정</button>
+    <button role="tab" id="t-set" aria-selected="false">설정</button>
+  </nav>
+  <div class="saveflag" id="saveflag">불러오는 중</div>
+</div></header>
+
+<main class="wrap">
+  <div id="p-survey" role="tabpanel">
+    <div class="row">
+      <label class="fld">카테고리 <select id="catsel"></select></label>
+      <span class="saveflag" id="catmeta"></span>
+    </div>
+    <div class="tiles" id="tiles"></div>
+
+    <section class="panel">
+      <h2 class="sec">가격 구간</h2>
+      <p class="seclead">10g당 단가로 구간을 가른다. 경계는 카테고리마다 다르므로 직접 조정한다.</p>
+      <div class="row">
+        <label class="fld">가성비 상한 <input type="number" id="b-low" step="10"> 원</label>
+        <label class="fld">프리미엄 하한 <input type="number" id="b-high" step="10"> 원</label>
+      </div>
+      <div class="scroll"><table id="tiertbl"></table></div>
+      <div id="stacks" style="margin-top:14px"></div>
+      <div id="tiernote"></div>
+    </section>
+
+    <section class="panel">
+      <h2 class="sec">USP 매트릭스</h2>
+      <p class="seclead">칸을 눌러 보유 여부를 기록한다. 아무도 하지 않은 축이 아래에서 빨갛게 뜬다 — 그게 빈자리 후보다.</p>
+      <div class="scroll"><table class="matrix" id="matrix"></table></div>
+      <div id="zeronote"></div>
+    </section>
+
+    <section class="panel">
+      <h2 class="sec">경쟁사 전수표</h2>
+      <p class="seclead">판가·총용량·월구매자수를 고치면 10g당 단가와 매출 추산이 다시 계산된다. 채널 표기값은 쓰지 않는다.</p>
+      <div class="scroll"><table id="prodtbl"></table></div>
+      <div class="note">매출 추산 = 판가 × 월 구매자수 × 2. 구매자수 배지는 하한값이라 실제는 이보다 많을 수 있다.</div>
+    </section>
+  </div>
+
+  <div id="p-sched" role="tabpanel" hidden>
+    <section class="panel">
+      <h2 class="sec">제품별 일정</h2>
+      <p class="seclead">업무를 누르면 크리티컬 패스로 표시된다. 그 줄이 하루 밀리면 전체가 하루 밀린다.</p>
+      <div class="row chips" id="schchips"></div>
+      <div class="scroll"><table class="gantt" id="gantt"></table></div>
+      <div id="schnote"></div>
+    </section>
+
+    <section class="panel">
+      <h2 class="sec">주별 부하</h2>
+      <p class="seclead">전 제품을 한 축에 놓고 같은 주에 무엇이 몰리는지 본다. 디자인은 따로 센다.</p>
+      <div class="scroll"><table class="heat" id="heat"></table></div>
+      <div id="heatnote"></div>
+    </section>
+
+    <section class="panel">
+      <h2 class="sec">역산 계산기</h2>
+      <p class="seclead">공정 템플릿과 목표 입고일만 넣으면 각 공정이 언제 시작해야 하는지 나온다.</p>
+      <div class="row">
+        <label class="fld">공정 <select id="tmplsel"></select></label>
+        <label class="fld">목표 입고일 <input type="date" id="target"></label>
+        <button class="btn" id="calcbtn">역산</button>
+      </div>
+      <div class="scroll"><table id="calctbl"></table></div>
+    </section>
+  </div>
+
+  <div id="p-set" role="tabpanel" hidden>
+    <div class="grid2">
+      <section class="panel">
+        <h2 class="sec">리드타임 기준값</h2>
+        <p class="seclead">여기서 고치면 역산 계산기와 공정 템플릿에 함께 반영된다.</p>
+        <div class="scroll"><table id="leadtbl"></table></div>
+      </section>
+      <section class="panel">
+        <h2 class="sec">공정 템플릿</h2>
+        <p class="seclead">품목 유형별 업무 순서와 기간. 역산은 이 순서를 거꾸로 따라간다.</p>
+        <div class="scroll"><table id="proctbl"></table></div>
+      </section>
+    </div>
+    <div class="note">주차 체계는 월요일 시작. 9월 2주 = 2026-09-14이며, 모든 간트가 이 기준을 쓴다.</div>
+  </div>
+</main>
+
+<script>
+"use strict";
+var W0 = Date.UTC(2026,8,14);              // 9월 2주 시작 (월)
+var DAY = 86400000;
+function toUTC(s){ var p=String(s).split("-"); return Date.UTC(+p[0],+p[1]-1,+p[2]); }
+function wIdx(s){ return Math.floor((toUTC(s)-W0)/(7*DAY)); }
+function wStart(i){ return new Date(W0 + i*7*DAY); }
+function iso(d){ return d.toISOString().slice(0,10); }
+function wLabel(i){
+  var d=wStart(i), m=d.getUTCMonth()+1, first=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),1);
+  var fd=new Date(first), off=(8-fd.getUTCDay())%7, fm=first+off*DAY;
+  if (d.getTime()<fm){ var pm=new Date(first-DAY); var pf=Date.UTC(pm.getUTCFullYear(),pm.getUTCMonth(),1);
+    var pfd=new Date(pf), po=(8-pfd.getUTCDay())%7, pfm=pf+po*DAY;
+    return (pm.getUTCMonth()+1)+"월 "+(Math.floor((d.getTime()-pfm)/(7*DAY))+1)+"주"; }
+  return m+"월 "+(Math.floor((d.getTime()-fm)/(7*DAY))+1)+"주";
+}
+function addWorkWeeks(dateUTC, weeks){ return dateUTC - weeks*7*DAY; }
+function fmt(n){ return (n==null||isNaN(n))?"—":Math.round(n).toLocaleString("ko-KR"); }
+function eok(n){ return (n/1e8).toFixed(2)+"억"; }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+
+var DB=null, S={settings:null, cats:{}, scheds:{}, cat:null, sched:null, crit:{}};
+var flag=document.getElementById("saveflag");
+function setFlag(t,on){ flag.textContent=t; flag.classList.toggle("on",!!on); }
+
+var saveTimers={};
+function save(path, body, label){
+  if(!DB) return;
+  clearTimeout(saveTimers[path]);
+  saveTimers[path]=setTimeout(function(){
+    setFlag("저장 중");
+    DB.doc(path).set(body).then(function(){ setFlag((label||"저장됨")+" "+new Date().toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"}),true); })
+      .catch(function(e){ setFlag("저장 실패 ("+(e&&e.code||"오류")+")"); });
+  },500);
+}
+
+/* ---------- 계산 ---------- */
+function unitPrice(p){ return (p.total>0)? p.price/p.total*10 : null; }
+function revenue(p){ return p.price*p.buyers*2; }
+function tiersOf(c){
+  var lo=c.bLow, hi=c.bHigh, g={low:[],mid:[],high:[]};
+  c.products.forEach(function(p){ var u=unitPrice(p); if(u==null) return;
+    (u<=lo?g.low:(u>=hi?g.high:g.mid)).push(p); });
+  return g;
+}
+function agg(list){
+  if(!list.length) return {n:0,rev:0,price:0,total:0,unit:0};
+  var rev=0,pr=0,tt=0,un=0;
+  list.forEach(function(p){ rev+=revenue(p); pr+=p.price; tt+=p.total; un+=unitPrice(p)||0; });
+  return {n:list.length, rev:rev, price:pr/list.length, total:tt/list.length, unit:un/list.length};
+}
+
+/* ---------- 조사 렌더 ---------- */
+function renderSurvey(){
+  var c=S.cat; var host=document.getElementById("p-survey");
+  if(!c){ host.querySelectorAll("section.panel").forEach(function(s){s.hidden=true;});
+    document.getElementById("tiles").innerHTML='<div class="empty">카테고리가 없습니다. 조사 데이터를 넣으면 여기에 표시됩니다.</div>'; return; }
+  host.querySelectorAll("section.panel").forEach(function(s){s.hidden=false;});
+  document.getElementById("catmeta").textContent = (c.date||"")+" · "+(c.channel||"")+" · 제품 "+c.products.length+"개";
+  document.getElementById("b-low").value=c.bLow; document.getElementById("b-high").value=c.bHigh;
+
+  var tot=0, brands={};
+  c.products.forEach(function(p){ tot+=revenue(p); brands[p.brand]=1; });
+  var zeros=(c.axes||[]).filter(function(a){ return cntAxis(c,a.id)===0; });
+  document.getElementById("tiles").innerHTML=
+    tile("매출 추산 합계",eok(tot),"판가 × 월구매자 × 2")+
+    tile("제품 수",c.products.length+"개","")+
+    tile("브랜드 수",Object.keys(brands).length+"개","")+
+    tile("아무도 안 한 축",zeros.length+"개","빈자리 후보",zeros.length>0);
+
+  renderTiers(); renderMatrix(); renderProducts();
+}
+function tile(k,v,s,flagged){ return '<div class="tile'+(flagged?" flag":"")+'"><div class="k">'+esc(k)+'</div><div class="v">'+esc(v)+'</div>'+(s?'<div class="s">'+esc(s)+'</div>':'')+'</div>'; }
+
+function renderTiers(){
+  var c=S.cat, g=tiersOf(c), A=agg(g.low),B=agg(g.mid),C=agg(g.high);
+  var tot=A.rev+B.rev+C.rev, n=A.n+B.n+C.n;
+  var rows=[["가성비","≤ "+fmt(c.bLow)+"원",A,"s-low"],["중간",fmt(c.bLow)+"~"+fmt(c.bHigh)+"원",B,"s-mid"],["프리미엄","≥ "+fmt(c.bHigh)+"원",C,"s-high"]];
+  var h="<thead><tr><th>구간</th><th>10g당</th><th class='num'>SKU</th><th class='num'>매출 추산</th><th class='num'>매출 비중</th><th class='num'>평균 총용량</th><th class='num'>평균 판가</th></tr></thead><tbody>";
+  rows.forEach(function(r){ var a=r[2];
+    h+="<tr><td><span class='pill"+(r[3]==="s-mid"?" mid":"")+"'>"+r[0]+"</span></td><td class='num'>"+r[1]+"</td><td class='num'>"+a.n+"</td><td class='num'>"+(a.n?eok(a.rev):"—")+"</td><td class='num'>"+(tot?(a.rev/tot*100).toFixed(1)+"%":"—")+"</td><td class='num'>"+(a.n?fmt(a.total)+"g":"—")+"</td><td class='num'>"+(a.n?fmt(a.price)+"원":"—")+"</td></tr>"; });
+  document.getElementById("tiertbl").innerHTML=h+"</tbody>";
+
+  function bar(lab,vals,isPct){
+    var s='<div class="stackwrap"><div class="stacklab">'+lab+'</div><div class="stack">';
+    var t=vals[0]+vals[1]+vals[2]; if(!t) t=1;
+    ["s-low","s-mid","s-high"].forEach(function(cl,i){
+      var w=vals[i]/t*100; if(w<=0) return;
+      s+='<div class="'+cl+'" style="width:'+w.toFixed(2)+'%">'+(w>9?(isPct?w.toFixed(1)+"%":vals[i]):"")+'</div>'; });
+    return s+'</div></div>';
+  }
+  document.getElementById("stacks").innerHTML = bar("SKU 분포 ("+n+"개)",[A.n,B.n,C.n],false)+bar("매출 추산 분포",[A.rev,B.rev,C.rev],true);
+
+  var note="";
+  if(tot && B.n>=Math.max(A.n,C.n) && B.rev/tot < Math.min(A.rev,C.rev)/tot){
+    note='<div class="note flag">중간 구간이 SKU는 가장 많은데 매출은 가장 적다. 가운데가 비어 있다는 뜻이고, 신규 진입이 가면 안 되는 자리다.</div>'; }
+  var ps=[A,B,C].filter(function(a){return a.n;}).map(function(a){return a.price;});
+  if(ps.length>1 && (Math.max.apply(null,ps)-Math.min.apply(null,ps))/Math.max.apply(null,ps) < 0.12){
+    note+='<div class="note">세 구간의 평균 판가가 거의 같다. 소비자가 금액을 정해 놓고 양이 많은 쪽이냐 작고 비싼 쪽이냐를 고른다는 뜻이다.</div>'; }
+  document.getElementById("tiernote").innerHTML=note;
+}
+
+function cntAxis(c,id){ var m=c.matrix&&c.matrix[id]; if(!m) return 0; var n=0; for(var k in m){ if(m[k]) n++; } return n; }
+
+function renderMatrix(){
+  var c=S.cat, ax=c.axes||[], ps=c.products;
+  var h="<thead><tr><th>축</th>";
+  ps.forEach(function(p){ h+="<th class='num' title='"+esc(p.brand+" "+p.name)+"'>"+p.rank+"</th>"; });
+  h+="<th class='num'>보유</th></tr></thead><tbody>";
+  ax.forEach(function(a){
+    var n=cntAxis(c,a.id);
+    h+="<tr"+(n===0?" class='zero'":"")+"><td class='axis'>"+esc(a.label)+"</td>";
+    ps.forEach(function(p){ var on=!!(c.matrix[a.id]&&c.matrix[a.id][p.rank]);
+      h+="<td class='cell"+(on?" on":"")+"' tabindex='0' role='button' aria-pressed='"+on+"' data-ax='"+esc(a.id)+"' data-rk='"+p.rank+"'>"+(on?"●":"·")+"</td>"; });
+    h+="<td class='cnt'>"+n+"</td></tr>";
+  });
+  document.getElementById("matrix").innerHTML=h+"</tbody>";
+  var zeros=ax.filter(function(a){return cntAxis(c,a.id)===0;});
+  document.getElementById("zeronote").innerHTML = zeros.length
+    ? '<div class="note flag"><b>아무도 하지 않은 축 '+zeros.length+'개</b> — '+zeros.map(function(a){return esc(a.label);}).join(" / ")+'<br>하지 않는 데는 보통 이유가 있다. 쓰기 전에 <b>못 해서인지 안 해도 돼서인지</b>를 확인한다.</div>'
+    : '<div class="note">아무도 하지 않은 축이 없다. 축을 더 잘게 나눠 보거나 다른 각도를 찾아야 한다.</div>';
+}
+
+function renderProducts(){
+  var c=S.cat;
+  var h="<thead><tr><th class='num'>순위</th><th>브랜드</th><th>제품</th><th>형태</th><th>구성</th><th class='num'>총용량</th><th class='num'>판가</th><th class='num'>10g당</th><th class='num'>월구매</th><th class='num'>매출 추산</th></tr></thead><tbody>";
+  c.products.slice().sort(function(a,b){return a.rank-b.rank;}).forEach(function(p){
+    var u=unitPrice(p);
+    h+="<tr><td class='num'>"+p.rank+"</td><td>"+esc(p.brand)+"</td><td class='name'>"+
+      (p.url?"<a href='"+esc(p.url)+"' target='_blank' rel='noopener'>"+esc(p.name)+"</a>":esc(p.name))+
+      "</td><td>"+esc(p.form)+"</td><td>"+esc(p.pack)+"</td>"+
+      "<td class='num'><input class='edit' type='number' data-rk='"+p.rank+"' data-f='total' value='"+p.total+"'></td>"+
+      "<td class='num'><input class='edit' type='number' data-rk='"+p.rank+"' data-f='price' value='"+p.price+"'></td>"+
+      "<td class='num'>"+(u==null?"—":fmt(u))+"</td>"+
+      "<td class='num'><input class='edit' type='number' data-rk='"+p.rank+"' data-f='buyers' value='"+p.buyers+"'></td>"+
+      "<td class='num'>"+eok(revenue(p))+"</td></tr>";
+  });
+  document.getElementById("prodtbl").innerHTML=h+"</tbody>";
+}
+
+/* ---------- 일정 ---------- */
+function renderSchedChips(){
+  var ks=Object.keys(S.scheds);
+  document.getElementById("schchips").innerHTML = ks.length
+    ? ks.map(function(k){ var nm=(S.scheds[k]&&S.scheds[k].name)||k; return "<button class='chip' data-k='"+esc(k)+"' aria-pressed='"+(S.sched===k)+"'>"+esc(nm)+"</button>"; }).join("")
+    : "";
+}
+function renderGantt(){
+  var s=S.scheds[S.sched];
+  if(!s){ document.getElementById("gantt").innerHTML=""; document.getElementById("schnote").innerHTML='<div class="empty">일정이 없습니다.</div>'; return; }
+  var idx=s.tasks.map(function(t){ return [wIdx(t.start), wIdx(t.end)]; });
+  var lo=Math.min.apply(null,idx.map(function(a){return a[0];})), hi=Math.max.apply(null,idx.map(function(a){return a[1];}));
+  var h="<thead><tr><th>업무</th><th class='num'>시작</th><th class='num'>종료</th>";
+  for(var i=lo;i<=hi;i++) h+="<th class='wk'>"+wLabel(i)+"</th>";
+  h+="</tr></thead><tbody>";
+  var crit=S.crit[S.sched]||{};
+  s.tasks.forEach(function(t,j){
+    var a=idx[j][0], b=idx[j][1], on=!!crit[j];
+    h+="<tr"+(on?" class='crit'":"")+" data-j='"+j+"'><td class='task'><span class='grp'>"+esc(t.group)+"</span>"+esc(t.name)+"</td>"+
+       "<td class='num'>"+t.start.slice(5)+"</td><td class='num'>"+t.end.slice(5)+"</td>";
+    for(var i=lo;i<=hi;i++) h+="<td class='wk'>"+(i>=a&&i<=b?"<i></i>":"")+"</td>";
+    h+="</tr>";
+  });
+  document.getElementById("gantt").innerHTML=h+"</tbody>";
+  var cn=Object.keys(crit).filter(function(k){return crit[k];}).length;
+  document.getElementById("schnote").innerHTML = cn
+    ? '<div class="note flag">'+esc(s.name||S.sched)+' — 크리티컬 패스 '+cn+'개 표시됨. 이 줄이 하루 밀리면 본품 입고도 하루 밀린다.</div>'
+    : '<div class="note">업무 줄을 누르면 크리티컬 패스로 표시된다.</div>';
+}
+function renderHeat(){
+  var ks=Object.keys(S.scheds); if(!ks.length){ document.getElementById("heat").innerHTML=""; return; }
+  var lo=1e9, hi=-1e9;
+  ks.forEach(function(k){ S.scheds[k].tasks.forEach(function(t){ lo=Math.min(lo,wIdx(t.start)); hi=Math.max(hi,wIdx(t.end)); }); });
+  var h="<thead><tr><th>제품</th>";
+  for(var i=lo;i<=hi;i++) h+="<th class='wk'>"+wLabel(i)+"</th>";
+  h+="</tr></thead><tbody>";
+  var design=[]; for(var i=lo;i<=hi;i++) design.push(0);
+  ks.forEach(function(k){
+    h+="<tr><td class='task'>"+esc(k)+"</td>";
+    for(var i=lo;i<=hi;i++){
+      var n=0, d=0;
+      S.scheds[k].tasks.forEach(function(t){ if(i>=wIdx(t.start)&&i<=wIdx(t.end)){ n++; if(t.group==="디자인") d++; } });
+      design[i-lo]+=d;
+      var op = n?Math.min(0.14+n*0.17,1):0;
+      h+="<td class='wk'"+(n?" style='background:color-mix(in srgb,var(--accent) "+Math.round(op*100)+"%,transparent)'":"")+">"+(n||"")+"</td>";
+    }
+    h+="</tr>";
+  });
+  h+="<tr><td class='task'><b>디자인 업무 합계</b></td>";
+  for(var i=lo;i<=hi;i++){ var d=design[i-lo];
+    h+="<td class='wk'"+(d>=2?" style='background:var(--flag-soft);color:var(--flag);font-weight:600'":"")+">"+(d||"")+"</td>"; }
+  document.getElementById("heat").innerHTML=h+"</tr></tbody>";
+  var peak=0, pw=-1; design.forEach(function(d,i){ if(d>peak){peak=d;pw=i+lo;} });
+  document.getElementById("heatnote").innerHTML = peak>=2
+    ? '<div class="note flag">'+wLabel(pw)+'에 디자인 업무가 '+peak+'건 겹친다. 내부 인력이면 이 주가 병목이다 — 한 건을 앞뒤로 옮길 수 있는지 본다.</div>'
+    : '<div class="note">같은 주에 디자인이 2건 이상 겹치는 구간은 없다.</div>';
+}
+
+/* ---------- 역산 ---------- */
+function renderCalc(rows){
+  if(!rows){ document.getElementById("calctbl").innerHTML="<tbody><tr><td style='color:var(--muted);padding:16px'>공정과 목표 입고일을 넣고 역산을 누르세요.</td></tr></tbody>"; return; }
+  var h="<thead><tr><th>업무</th><th>구분</th><th class='num'>기간</th><th class='num'>시작</th><th class='num'>종료</th></tr></thead><tbody>";
+  rows.forEach(function(r){ h+="<tr><td class='task'>"+esc(r.name)+"</td><td><span class='grp'>"+esc(r.group)+"</span></td><td class='num'>"+(r.weeks?r.weeks+"주":"—")+"</td><td class='num'>"+r.start+"</td><td class='num'>"+r.end+"</td></tr>"; });
+  document.getElementById("calctbl").innerHTML=h+"</tbody>";
+}
+function calc(){
+  var tn=document.getElementById("tmplsel").value, tv=document.getElementById("target").value;
+  if(!tn||!tv) return;
+  var steps=(S.settings.process[tn]||[]).slice();
+  var end=toUTC(tv), out=[];
+  for(var i=steps.length-1;i>=0;i--){
+    var st=steps[i], w=Math.max(st.weeks,0);
+    var s = w>0 ? addWorkWeeks(end,w)+DAY : end;
+    out.unshift({name:st.name,group:st.group,weeks:st.weeks,start:iso(new Date(s)),end:iso(new Date(end))});
+    end = s - 3*DAY;   // 주말을 건너 이전 공정의 종료일로
+  }
+  renderCalc(out);
+}
+
+/* ---------- 설정 ---------- */
+function renderSettings(){
+  var L=S.settings.lead;
+  var h="<thead><tr><th>공정</th><th class='num'>주</th></tr></thead><tbody>";
+  Object.keys(L).forEach(function(k){
+    h+="<tr><td>"+esc(k)+"</td><td class='num'><input class='edit' type='number' data-lead='"+esc(k)+"' value='"+L[k]+"' style='width:56px'></td></tr>"; });
+  document.getElementById("leadtbl").innerHTML=h+"</tbody>";
+  var p=S.settings.process, g="<thead><tr><th>품목 유형</th><th>업무</th><th class='num'>주</th></tr></thead><tbody>";
+  Object.keys(p).forEach(function(k){ p[k].forEach(function(st,i){
+    g+="<tr>"+(i===0?"<td rowspan='"+p[k].length+"' style='vertical-align:top;font-weight:600'>"+esc(k)+"</td>":"")+
+       "<td class='task'><span class='grp'>"+esc(st.group)+"</span>"+esc(st.name)+"</td><td class='num'>"+(st.weeks||"—")+"</td></tr>"; }); });
+  document.getElementById("proctbl").innerHTML=g+"</tbody>";
+  var sel=document.getElementById("tmplsel");
+  sel.innerHTML=Object.keys(p).map(function(k){return "<option>"+esc(k)+"</option>";}).join("");
+}
+
+/* ---------- 이벤트 ---------- */
+document.querySelectorAll("nav.tabs button").forEach(function(b){
+  b.addEventListener("click",function(){
+    document.querySelectorAll("nav.tabs button").forEach(function(x){x.setAttribute("aria-selected",x===b);});
+    document.getElementById("p-survey").hidden = b.id!=="t-survey";
+    document.getElementById("p-sched").hidden  = b.id!=="t-sched";
+    document.getElementById("p-set").hidden    = b.id!=="t-set";
+  });
+});
+document.getElementById("catsel").addEventListener("change",function(e){ S.cat=S.cats[e.target.value]; renderSurvey(); });
+["b-low","b-high"].forEach(function(id){
+  document.getElementById(id).addEventListener("input",function(e){
+    var v=parseFloat(e.target.value); if(isNaN(v)) return;
+    S.cat[id==="b-low"?"bLow":"bHigh"]=v; renderTiers(); renderSurvey2Tiles();
+    save("categories/"+S.cat.id, S.cat, "구간 저장됨");
+  });
+});
+function renderSurvey2Tiles(){ var c=S.cat,tot=0,br={};c.products.forEach(function(p){tot+=revenue(p);br[p.brand]=1;});
+  var z=(c.axes||[]).filter(function(a){return cntAxis(c,a.id)===0;});
+  document.getElementById("tiles").innerHTML=tile("매출 추산 합계",eok(tot),"판가 × 월구매자 × 2")+tile("제품 수",c.products.length+"개","")+tile("브랜드 수",Object.keys(br).length+"개","")+tile("아무도 안 한 축",z.length+"개","빈자리 후보",z.length>0); }
+
+document.getElementById("matrix").addEventListener("click",function(e){ toggleCell(e.target); });
+document.getElementById("matrix").addEventListener("keydown",function(e){
+  if((e.key==="Enter"||e.key===" ")&&e.target.classList.contains("cell")){ e.preventDefault(); toggleCell(e.target); } });
+function toggleCell(td){
+  if(!td||!td.classList.contains("cell")) return;
+  var ax=td.dataset.ax, rk=td.dataset.rk, c=S.cat;
+  c.matrix[ax]=c.matrix[ax]||{};
+  if(c.matrix[ax][rk]) delete c.matrix[ax][rk]; else c.matrix[ax][rk]="O";
+  renderMatrix(); renderSurvey2Tiles();
+  save("categories/"+c.id, c, "매트릭스 저장됨");
+}
+document.getElementById("prodtbl").addEventListener("change",function(e){
+  var el=e.target; if(!el.classList.contains("edit")) return;
+  var v=parseFloat(el.value); if(isNaN(v)||v<0) return;
+  var p=S.cat.products.filter(function(x){return x.rank==el.dataset.rk;})[0];
+  if(!p) return; p[el.dataset.f]=v;
+  renderProducts(); renderTiers(); renderSurvey2Tiles();
+  save("categories/"+S.cat.id, S.cat, "전수표 저장됨");
+});
+document.getElementById("schchips").addEventListener("click",function(e){
+  var b=e.target.closest(".chip"); if(!b) return;
+  S.sched=b.dataset.k; renderSchedChips(); renderGantt();
+});
+document.getElementById("gantt").addEventListener("click",function(e){
+  var tr=e.target.closest("tr[data-j]"); if(!tr) return;
+  var k=S.sched, j=tr.dataset.j;
+  S.crit[k]=S.crit[k]||{}; S.crit[k][j]=!S.crit[k][j];
+  renderGantt();
+  var s=S.scheds[k]; s.crit=S.crit[k]; save("schedules/"+k, s, "크리티컬 패스 저장됨");
+});
+document.getElementById("calcbtn").addEventListener("click",calc);
+document.getElementById("leadtbl").addEventListener("change",function(e){
+  var el=e.target; if(!el.dataset.lead) return;
+  var v=parseFloat(el.value); if(isNaN(v)||v<0) return;
+  S.settings.lead[el.dataset.lead]=v;
+  save("settings/main", S.settings, "기준값 저장됨");
+});
+
+/* ---------- 부팅 ---------- */
+renderCalc(null);
+document.getElementById("target").value="2026-12-30";
+(async function boot(){
+  var db = await (window.claude && window.claude.use ? window.claude.use("db") : Promise.resolve(null));
+  if(!db){ setFlag("저장 기능을 쓸 수 없는 화면입니다 — 보기 전용"); return; }
+  DB=db;
+  try{
+    var sm = await db.doc("settings/main").get();
+    S.settings = sm.exists ? sm.data() : {lead:{},process:{}};
+    if(!S.settings.process) S.settings.process={};
+    if(!S.settings.lead) S.settings.lead={};
+    renderSettings();
+
+    var cs = await db.collection("categories").get();
+    cs.docs.forEach(function(d){ var v=d.data(); v.id=d.id; v.matrix=v.matrix||{}; S.cats[d.id]=v; });
+    var keys=Object.keys(S.cats);
+    document.getElementById("catsel").innerHTML=keys.map(function(k){return "<option value='"+esc(k)+"'>"+esc(S.cats[k].name||k)+"</option>";}).join("");
+    S.cat = keys.length ? S.cats[keys[0]] : null;
+
+    var ss = await db.collection("schedules").get();
+    ss.docs.forEach(function(d){ var v=d.data(); S.scheds[d.id]=v; S.crit[d.id]=v.crit||{}; });
+    var sk=Object.keys(S.scheds); S.sched = sk.length? sk[0] : null;
+
+    renderSurvey(); renderSchedChips(); renderGantt(); renderHeat();
+    setFlag("불러옴 · 변경하면 자동 저장",true);
+  }catch(e){ setFlag("불러오기 실패 ("+(e&&e.code||"오류")+")"); }
+})();
+</script>
