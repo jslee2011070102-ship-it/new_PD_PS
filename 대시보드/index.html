@@ -41,6 +41,7 @@ nav.tabs button:hover{color:var(--ink)}
 nav.tabs button:focus-visible,select:focus-visible,input:focus-visible,.cell:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .saveflag{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 .saveflag.on{color:var(--accent-ink)}
+.errbar{margin:12px 0 0;padding:10px 12px;border:1px solid var(--flag);border-radius:8px;background:var(--flag-soft);color:var(--flag);font-size:12.5px;line-height:1.6;white-space:pre-wrap}
 main{padding-block:22px 64px}
 section.panel{margin-bottom:34px}
 h2.sec{font-size:15px;font-weight:700;margin:0 0 3px;letter-spacing:-.01em}
@@ -114,6 +115,8 @@ td a:hover{color:var(--accent-ink);border-bottom-color:var(--accent)}
   </nav>
   <div class="saveflag" id="saveflag">불러오는 중</div>
 </div></header>
+
+<div class="wrap"><div class="errbar" id="errbar" hidden></div></div>
 
 <main class="wrap">
   <div id="p-survey" role="tabpanel">
@@ -219,6 +222,18 @@ function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){retur
 var DB=null, S={settings:null, cats:{}, scheds:{}, cat:null, sched:null, crit:{}};
 var flag=document.getElementById("saveflag");
 function setFlag(t,on){ flag.textContent=t; flag.classList.toggle("on",!!on); }
+var errbar=document.getElementById("errbar");
+function errText(e){
+  if(!e) return "알 수 없는 오류";
+  var c=e.code?String(e.code):"", m=e.message?String(e.message):(typeof e==="string"?e:String(e));
+  return (c? c+" / ":"")+m;
+}
+var errLines=[];
+function showErr(line){
+  errLines.push(line);
+  errbar.hidden=false;
+  errbar.textContent="불러오는 중 문제가 생긴 부분:\n· "+errLines.join("\n· ");
+}
 
 var saveTimers={};
 function save(path, body, label){
@@ -227,7 +242,7 @@ function save(path, body, label){
   saveTimers[path]=setTimeout(function(){
     setFlag("저장 중");
     DB.doc(path).set(body).then(function(){ setFlag((label||"저장됨")+" "+new Date().toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"}),true); })
-      .catch(function(e){ setFlag("저장 실패 ("+(e&&e.code||"오류")+")"); });
+      .catch(function(e){ setFlag("저장 실패"); showErr("저장: "+errText(e)); });
   },500);
 }
 
@@ -493,28 +508,49 @@ document.getElementById("leadtbl").addEventListener("change",function(e){
 renderCalc(null);
 document.getElementById("target").value="2026-12-30";
 (async function boot(){
-  var db = await (window.claude && window.claude.use ? window.claude.use("db") : Promise.resolve(null));
+  var db=null;
+  try{
+    db = await (window.claude && window.claude.use ? window.claude.use("db") : Promise.resolve(null));
+  }catch(e){ showErr("db 연결: "+errText(e)); }
   if(!db){ setFlag("저장 기능을 쓸 수 없는 화면입니다 — 보기 전용"); return; }
   DB=db;
+
+  /* 한 군데가 실패해도 나머지는 그린다. */
   try{
     var sm = await db.doc("settings/main").get();
-    S.settings = sm.exists ? sm.data() : {lead:{},process:{}};
-    if(!S.settings.process) S.settings.process={};
-    if(!S.settings.lead) S.settings.lead={};
-    renderSettings();
+    var b = (sm && sm.exists) ? sm.data() : null;
+    S.settings = { lead:(b&&b.lead)||{}, process:(b&&b.process)||{} };
+  }catch(e){ S.settings={lead:{},process:{}}; showErr("설정 읽기: "+errText(e)); }
+  try{ renderSettings(); }catch(e){ showErr("설정 그리기: "+errText(e)); }
 
+  try{
     var cs = await db.collection("categories").get();
-    cs.docs.forEach(function(d){ var v=d.data(); v.id=d.id; v.matrix=v.matrix||{}; S.cats[d.id]=v; });
+    (cs.docs||[]).forEach(function(d){
+      var v = Object.assign({}, d.data()||{});
+      v.id=d.id; v.matrix=v.matrix||{}; v.products=v.products||[]; v.axes=v.axes||[];
+      S.cats[d.id]=v;
+    });
+  }catch(e){ showErr("카테고리 읽기: "+errText(e)); }
+  try{
     var keys=Object.keys(S.cats);
-    document.getElementById("catsel").innerHTML=keys.map(function(k){return "<option value='"+esc(k)+"'>"+esc(S.cats[k].name||k)+"</option>";}).join("");
+    document.getElementById("catsel").innerHTML=keys.map(function(k){
+      return "<option value='"+esc(k)+"'>"+esc(S.cats[k].name||k)+"</option>"; }).join("");
     S.cat = keys.length ? S.cats[keys[0]] : null;
+  }catch(e){ showErr("카테고리 목록: "+errText(e)); }
 
+  try{
     var ss = await db.collection("schedules").get();
-    ss.docs.forEach(function(d){ var v=d.data(); S.scheds[d.id]=v; S.crit[d.id]=v.crit||{}; });
+    (ss.docs||[]).forEach(function(d){
+      var v = Object.assign({}, d.data()||{});
+      S.scheds[d.id]=v; S.crit[d.id]=v.crit||{};
+    });
     var sk=Object.keys(S.scheds); S.sched = sk.length? sk[0] : null;
+  }catch(e){ showErr("일정 읽기: "+errText(e)); }
 
-    renderSurvey(); renderSchedChips(); renderGantt(); renderHeat();
-    setFlag("불러옴 · 변경하면 자동 저장",true);
-  }catch(e){ setFlag("불러오기 실패 ("+(e&&e.code||"오류")+")"); }
+  try{ renderSurvey(); }catch(e){ showErr("조사 화면: "+errText(e)); }
+  try{ renderSchedChips(); renderGantt(); renderHeat(); }catch(e){ showErr("일정 화면: "+errText(e)); }
+
+  if(errLines.length) setFlag("일부만 불러옴");
+  else setFlag("불러옴 · 변경하면 자동 저장",true);
 })();
 </script>
